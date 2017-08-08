@@ -17,8 +17,10 @@ INC += -Isrc/hal/support/STM32F1xx_HAL_Driver/Inc
 
 SRCS  = src/main.c
 SRCS += $(call rwildcard,src/hal/support/STM32F1xx_HAL_Driver/Src,*.c)
+SRCS += $(call rwildcard,src/hal/src,*.c)
+
 CPPSRCS =
-ASMSRC = src/hal/startup_stm32f107xc.s
+ASMSRC = $(call rwildcard,src/hal/src,*.s)
 
 CFLAGS += $(INC) -Wfatal-errors  -DSTM32F107xC
 CPPFLAGS += $(INC) -Wfatal-errors
