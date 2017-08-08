@@ -1,0 +1,7 @@
+target remote localhost:3333
+monitor reset halt
+file dist/blinky.elf
+load
+set substitute-path /build/newlib-5zwpxE/newlib-2.2.0+git20150830.5a3d536/build/arm-none-eabi/armv7e-m/fpu/newlib /usr/src/newlib/newlib-2.2.0+git20150830.5a3d536/newlib
+dir /usr/src/newlib/newlib-2.2.0+git20150830.5a3d536/newlib
+monitor reset init
