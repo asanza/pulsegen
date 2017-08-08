@@ -1,8 +1,8 @@
 # Common makefile definitions
 #
-CPU = -mcpu=cortex-m7
-FPU = -mfpu=fpv5-d16
-FLOAT-ABI = -mfloat-abi=hard
+CPU = -mcpu=cortex-m3
+FPU =
+FLOAT-ABI = 
 OPT = -O0 -ggdb -gdwarf-2
 
 MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)

@@ -1,9 +1,9 @@
 include common.mk
 
-TARGET = dist/blinky
+TARGET = dist/pulsegen
 
-LIBS += -Lsrc/platform -lc -lplat
-LDFLAGS = -Wl,-Tsrc/platform/arch/bsp/STM32F769NIHx_FLASH.ld
+LIBS +=
+LDFLAGS = -Wl,-Tsrc/hal/STM32F107RCTx_FLASH.ld
 LDFLAGS += -Wl,--gc-sections
 
 LDFLAGS += -Wl,--warn-common
@@ -11,39 +11,50 @@ LDFLAGS += -Wl,--check-sections -Wl,--Map=$(TARGET).map
 LDFLAGS += -Wl,--cref --specs=nano.specs --specs=nosys.specs
 
 
-INC = -Isrc/platform/include
-INC += -Isrc/platform/libs/lwip/src/include
-INC += -Isrc/apps/anybus/abcc_adapt
-INC += -Isrc/apps/anybus/abcc_abp
-INC += -Isrc/apps/anybus/abcc_drv/inc
-INC += -Isrc/apps/anybus/abcc_obj
-INC += -Isrc/apps/anybus/abcc_obj/nw_obj
-INC += -Isrc/apps/anybus/DevelopHelperFiles
-INC += -Isrc/apps/anybus/UTIL
-INC += -Isrc/apps/anybus
+INC  = -Isrc/hal/support/CMSIS/Include
+INC += -Isrc/hal/support/CMSIS/Device/ST/STM32F1xx/Include
+INC += -Isrc/hal/support/STM32F1xx_HAL_Driver/Inc
 
-SRCS = src/apps/main.c src/apps/webiface/src/webiface.c
-SRCS += $(call rwildcard,src/apps/anybus,*.c)
+SRCS  = src/main.c
+SRCS += $(call rwildcard,src/hal/support/STM32F1xx_HAL_Driver/Src,*.c)
+CPPSRCS =
+ASMSRC = src/hal/startup_stm32f107xc.s
 
-CFLAGS += $(INC) -DPROFINET -DELBUS_1 -D_DEBUG
-CPPFLAGS += $(INC)
+CFLAGS += $(INC) -Wfatal-errors  -DSTM32F107xC
+CPPFLAGS += $(INC) -Wfatal-errors
 
-DIRS = src/platform
+DIRS =
+
+OBJS  = $(patsubst %.c,%.o, $(SRCS))
+OBJS += $(patsubst %.cc,%.o, $(CPPSRCS))
+OBJS += $(patsubst %.s, %.o, $(ASMSRC))
+
+DEPS = $(patsubst %.o,%.d,$(OBJS))
+
 
 .PHONY: all $(DIRS)
 
-all: $(DIRS)
+all: $(OBJS)
 	$(vecho) "CC $<"
-	$(Q) $(CC) $(CFLAGS) $(LDFLAGS) $(SRCS) -o $(TARGET).elf $(LIBS)
+	$(Q) $(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $(TARGET).elf $(LIBS)
 	arm-none-eabi-size $(TARGET).elf
 	arm-none-eabi-objcopy $(TARGET).elf -O binary $(TARGET).bin
 
-web:
-#	cd apps/webiface/makefsdata && ./makefsdata -11
 
-$(DIRS):
-	$(MAKE) --directory=$@
+%.o: %.c
+	$(vecho) "CC $<"
+	$(Q) $(CC) -c $(CFLAGS) $< -o $@
 
+%.o: %.cc
+	$(vecho) "C++ $<"
+	$(Q) $(CPP) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+
+%.o: %.s
+	$(vecho) "AS $<"
+	$(Q) $(AS) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+
+$(DEPS): ;
+.PRECIOUS: $(DEPS)
 
 flash: all
 	openocd -f tools/flash.openocd
@@ -55,7 +66,8 @@ test:
 	cd test && rake test:all
 
 clean:
-	$(MAKE) -C $(DIRS) clean
-	rm -vf $(TARGET).elf *.o $(TARGET).bin
+	rm -vf $(TARGET).elf $(TARGET).bin
+	rm -vf $(OBJS)
+	rm -vf $(DEPS)
 
--include $(shell mkdir .dep 2>/dev/null) $(wildcard .dep/*)
+-include $(DEPS)
