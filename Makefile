@@ -14,10 +14,18 @@ LDFLAGS += -Wl,--cref --specs=nano.specs --specs=nosys.specs
 INC  = -Isrc/hal/support/CMSIS/Include
 INC += -Isrc/hal/support/CMSIS/Device/ST/STM32F1xx/Include
 INC += -Isrc/hal/support/STM32F1xx_HAL_Driver/Inc
+INC += -Isrc/hal/include
+INC += -Isrc/os/include
+INC += -Isrc/os/portable/GCC/ARM_CM3
 
 SRCS  = src/main.c
 SRCS += $(call rwildcard,src/hal/support/STM32F1xx_HAL_Driver/Src,*.c)
 SRCS += $(call rwildcard,src/hal/src,*.c)
+
+SRCS += $(call rwildcard,src/os/src,*.c)
+SRCS += src/os/portable/GCC/ARM_CM3/port.c
+SRCS += src/os/portable/MemMang/heap_1.c
+
 
 CPPSRCS =
 ASMSRC = $(call rwildcard,src/hal/src,*.s)

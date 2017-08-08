@@ -9,7 +9,7 @@
   *                - Set the initial SP
   *                - Set the initial PC == Reset_Handler,
   *                - Set the vector table entries with the exceptions ISR address
-  *                - Configure the clock system   
+  *                - Configure the clock system
   *                - Branches to main in the C library (which eventually
   *                  calls main()).
   *            After Reset the Cortex-M3 processor is in Thread mode,
@@ -117,18 +117,31 @@ LoopFillZerobss:
 .size Reset_Handler, .-Reset_Handler
 
 /**
- * @brief  This is the code that gets called when the processor receives an
- *         unexpected interrupt.  This simply enters an infinite loop, preserving
- *         the system state for examination by a debugger.
- *
+ * @brief  This code load the number of the executing interrupt
+           into register 2 (r2) before entering an infinite
+           loop.
  * @param  None
- * @retval : None
+ * @retval None
 */
-    .section .text.Default_Handler,"ax",%progbits
+.section  .text.Default_Handler,"ax",%progbits
 Default_Handler:
+  /* Load the address of the interrupt control register into r3. */
+  ldr r3, NVIC_INT_CTRL_CONST
+  /* Load the value of the interrupt control register into r2 from the
+  address held in r3. */
+  ldr r2, [r3, #0]
+  /* The interrupt number is in the least significant byte - clear all
+  other bits. */
+  uxtb r2, r2
 Infinite_Loop:
-  b Infinite_Loop
-  .size Default_Handler, .-Default_Handler
+  /* Now sit in an infinite loop - the number of the executing interrupt
+  is held in r2. */
+  b  Infinite_Loop
+  .size  Default_Handler, .-Default_Handler
+
+.align 4
+/* The address of the NVIC interrupt control register. */
+NVIC_INT_CTRL_CONST: .word 0xe000ed04
 
 /******************************************************************************
 *
