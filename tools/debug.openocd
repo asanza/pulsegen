@@ -7,9 +7,8 @@
 #daemon config
 telnet_port 4444
 gdb_port 3333
-source [find interface/stlink-v2-1.cfg]
+source [find interface/stlink-v2.cfg]
 transport select hla_swd
 set WORKAREASIZE 0x40000
-set CHIPNAME STM32F769
-source [find target/stm32f7x.cfg]
-
+set CHIPNAME STM32F107
+source [find target/stm32f1x.cfg]

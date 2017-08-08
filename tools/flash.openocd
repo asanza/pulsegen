@@ -5,10 +5,10 @@
 #
 
 #daemon config
-source [find interface/stlink-v2-1.cfg]
+source [find interface/stlink-v2.cfg]
 transport select hla_swd
 set WORKAREASIZE 0x40000
 # set CHIPNAME
-source [find target/stm32f7x.cfg]
+source [find target/stm32f1x.cfg]
 
 program dist/blinky.elf verify reset exit
