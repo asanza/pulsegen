@@ -48,7 +48,7 @@
 
 #define Max_Column	0x7f			// 128-1
 #define Max_Row		  0x7f			// 128-1
-#define	Brightness	0x0F
+#define	Brightness	0x08
 
 #define xData( data )	DISPL_PORT->ODR = (DISPL_PORT->ODR & 0xFF00) | data;
 
@@ -294,6 +294,10 @@ void Set_Command_Lock(unsigned char d)
   // 0x16 => All Commands are locked except 0xFD.
   // 0xB0 => Command 0xA2, 0xB1, 0xB3, 0xBB & 0xBE are inaccessible.
   // 0xB1 => All Commands are accessible.
+}
+
+void Set_Command_Invert( void ) {
+
 }
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -1108,7 +1112,7 @@ void OLED_Init()
 	Set_Command_Lock(0x12);								// Unlock Driver IC (0x12/0x16/0xB0/0xB1)
 	Set_Command_Lock(0xB1);								// Unlock All Commands (0x12/0x16/0xB0/0xB1)
 	Set_Display_On_Off(0x00);							// Display Off (0x00/0x01)
-	Set_Display_Clock(0xF1);							// Set Clock as 120 Frames/Sec
+	Set_Display_Clock(0xFF);							// Set Clock as 120 Frames/Sec
 	Set_Multiplex_Ratio(0x7F);						// 1/128 Duty (0x0F~0x7F)
 	Set_Display_Offset(0x00);							// Shift Mapping RAM Counter (0x00~0x7F)
 	Set_Start_Line(0x00);									// Set Mapping RAM Display Start Line (0x00~0x7F)
@@ -1195,14 +1199,8 @@ void disp_init( void ) {
 
     HAL_GPIO_Init(DISPL_PORT, &cfg) ;
     HAL_GPIO_WritePin(DISPL_PORT, cfg.Pin, GPIO_PIN_SET);
-    // /* assert reset */
-    // HAL_GPIO_WritePin(DISPL_PORT, DISPL_RES, GPIO_PIN_RESET);
-    // HAL_Delay(1);
-    // HAL_GPIO_WritePin(DISPL_PORT, DISPL_RES, GPIO_PIN_SET);
-    // HAL_Delay(1);
-    // displ_write(TYPE_CMD, CMD_POWERON);
-    // HAL_Delay(1000);
-    // displ_write(TYPE_CMD, CMD_DISPON);
     OLED_Init();
-    Rainbow();
+    //Rainbow();
+    Set_Display_Mode(0x03);
+    Show_String(1,"HELLO",0xFF,0xFF,0x30,0x34);
 }
