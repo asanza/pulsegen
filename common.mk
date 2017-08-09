@@ -10,8 +10,8 @@ MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 PART = STM32F769xx
 
 ### Build flags for all targets
-CFLAGS = $(MCU) -D$(PART) -ffunction-sections -fdata-sections
-CFLAGS += -Wall -Wno-variadic-macros -Wno-packed-bitfield-compat -pedantic
+CFLAGS = $(MCU) -D$(PART) -ffunction-sections -fdata-sections -std=gnu11
+CFLAGS += -Wall -Wno-variadic-macros -Wno-packed-bitfield-compat
 CFLAGS += $(OPT) -DUSE_FULL_LL_DRIVER
 CFLAGS += -nostartfiles -gdwarf-2 -g3
 

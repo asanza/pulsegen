@@ -30,6 +30,9 @@
 #define TYPE_CMD    DISPL_DC
 #define TYPE_DATA   0x00
 
+#define RGBto16(c, color)  c = ( (color >> 5) & 0xF800) | ((color >> 3) & 0x7E0) | (color & 0x1F);
+
+
 /*******************************************************************************
 * File Name          	: ODM100.c
 * Version            	: V1.1
@@ -294,10 +297,6 @@ void Set_Command_Lock(unsigned char d)
   // 0x16 => All Commands are locked except 0xFD.
   // 0xB0 => Command 0xA2, 0xB1, 0xB3, 0xBB & 0xBE are inaccessible.
   // 0xB1 => All Commands are accessible.
-}
-
-void Set_Command_Invert( void ) {
-
 }
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -1200,7 +1199,22 @@ void disp_init( void ) {
     HAL_GPIO_Init(DISPL_PORT, &cfg) ;
     HAL_GPIO_WritePin(DISPL_PORT, cfg.Pin, GPIO_PIN_SET);
     OLED_Init();
-    //Rainbow();
-    Set_Display_Mode(0x03);
+    Fill_RAM(0x00, 0x00);
     Show_String(1,"HELLO",0xFF,0xFF,0x30,0x34);
+}
+
+void disp_pset(int16_t x, int16_t y, uint32_t color) {
+    uint16_t c;
+    RGBto16(c, color);
+  	Set_Column_Address(x,x);
+  	Set_Row_Address(y,y);
+  	Set_Write_RAM();
+	Write_Data(c >> 8);
+	Write_Data(c);
+}
+
+void disp_fillframe(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t color) {
+    uint16_t c;
+    RGBto16(c, color);
+    Fill_Block(x1, x2, y1, y2, c >> 8, c);
 }

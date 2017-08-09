@@ -17,6 +17,7 @@ INC += -Isrc/hal/support/STM32F1xx_HAL_Driver/Inc
 INC += -Isrc/hal/include
 INC += -Isrc/os/include
 INC += -Isrc/os/portable/GCC/ARM_CM3
+INC += -Isrc/gfx/include
 
 SRCS  = src/main.c
 SRCS += $(call rwildcard,src/hal/support/STM32F1xx_HAL_Driver/Src,*.c)
@@ -26,6 +27,7 @@ SRCS += $(call rwildcard,src/os/src,*.c)
 SRCS += src/os/portable/GCC/ARM_CM3/port.c
 SRCS += src/os/portable/MemMang/heap_1.c
 
+SRCS += $(call rwildcard,src/gfx/src,*.c)
 
 CPPSRCS =
 ASMSRC = $(call rwildcard,src/hal/src,*.s)
