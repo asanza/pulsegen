@@ -1,3 +1,17 @@
+/*******************************************************************************
+* File Name             : ODM100.c
+* Version               : V1.1
+* Date                  : 2009-07-18
+* Description           : ODM100 Reference Code
+********************************************************************************
+********************************************************************************
+* Processor						: ATmega32 @ 8 MHz
+* Compiler						: IAR (V4.30D) & GCC (WinAVR Version 10-01-2010)
+* Dot Matrix					: 128 RGB x 128
+* Driver IC                                     : SSD1351 (Solomon Systech)
+* Interface                                     : 8-bit 8080 Parallel
+*******************************************************************************/
+
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_rcc.h"
 #include "stm32f1xx_hal_gpio.h"
@@ -27,79 +41,20 @@
 #define CMD_DISPSLEEP   0xAE
 #define CMD_DISPWAKE    0xAE
 
-#define TYPE_CMD    DISPL_DC
-#define TYPE_DATA   0x00
-
 #define RGBto16(c, color)  c = ( (color >> 5) & 0xF800) | ((color >> 3) & 0x7E0) | (color & 0x1F);
-
-
-/*******************************************************************************
-* File Name             : ODM100.c
-* Version               : V1.1
-* Date                  : 2009-07-18
-* Description           : ODM100 Reference Code
-********************************************************************************
-********************************************************************************
-* Processor						: ATmega32 @ 8 MHz
-* Compiler						: IAR (V4.30D) & GCC (WinAVR Version 10-01-2010)
-* Dot Matrix					: 128 RGB x 128
-* Driver IC                                     : SSD1351 (Solomon Systech)
-* Interface                                     : 8-bit 8080 Parallel
-*******************************************************************************/
-#       define WAIT_us(x)               HAL_Delay(1)
-
 
 #define Max_Column      0x7f                    // 128-1
 #define Max_Row           0x7f                  // 128-1
-#define Brightness      0x08
+#define Brightness      0x0B
 
-#define xData( data )   DISPL_PORT->ODR = (DISPL_PORT->ODR & 0xFF00) | data;
-
-#define RD_HIGH         HAL_GPIO_WritePin(DISPL_PORT, DISPL_ERD, GPIO_PIN_SET)
-#define RD_LOW          HAL_GPIO_WritePin(DISPL_PORT, DISPL_ERD, GPIO_PIN_RESET)
-
-#define WR_HIGH         HAL_GPIO_WritePin(DISPL_PORT, DISPL_RW, GPIO_PIN_SET)
-#define WR_LOW          HAL_GPIO_WritePin(DISPL_PORT, DISPL_RW, GPIO_PIN_RESET)
-
-#define RES_HIGH                HAL_GPIO_WritePin(DISPL_PORT, DISPL_RES, GPIO_PIN_SET)
-#define RES_LOW                 HAL_GPIO_WritePin(DISPL_PORT, DISPL_RES, GPIO_PIN_RESET)
-
-#define CS_HIGH                 HAL_GPIO_WritePin(DISPL_PORT, DISPL_CS, GPIO_PIN_SET)
-#define CS_LOW                  HAL_GPIO_WritePin(DISPL_PORT, DISPL_CS, GPIO_PIN_RESET)
-
-#define DC_HIGH                 HAL_GPIO_WritePin(DISPL_PORT, DISPL_DC, GPIO_PIN_SET)
-#define DC_LOW                  HAL_GPIO_WritePin(DISPL_PORT, DISPL_DC, GPIO_PIN_RESET)
-
-static void Write_Data(unsigned char Data) __attribute__((always_inline));
-static void Write_Command(unsigned char Data) __attribute__((always_inline));
-
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-//  Delay Time
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-void Delay(unsigned char n)             // n x 1 sec
-{
-	unsigned char i, j, k;
-
-	for (k = 0; k < n; k++) {
-		for (i = 0; i < 100; i++)
-			for (j = 0; j < 20; j++)
-				WAIT_us(500);
-	}
-}
-
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-//  Read/Write Sequence
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-inline void Write_Command(unsigned char Data)
+static inline void Write_Command(unsigned char Data)
 {
     DISPL_PORT->ODR &= ~( DISPL_DC | DISPL_CS | DISPL_RW | 0xFF );
     DISPL_PORT->ODR |= Data;
     DISPL_PORT->ODR |= ( DISPL_RW | DISPL_CS | DISPL_DC);
 }
 
-inline void Write_Data(unsigned char Data)
+static inline void Write_Data(unsigned char Data)
 {
     DISPL_PORT->ODR |= DISPL_DC;
     DISPL_PORT->ODR &= ~( DISPL_CS | DISPL_RW | 0xFF );
@@ -107,34 +62,24 @@ inline void Write_Data(unsigned char Data)
     DISPL_PORT->ODR |= ( DISPL_RW | DISPL_CS | DISPL_DC);
 }
 
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-//  Instruction Setting
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Set_Column_Address(unsigned char a, unsigned char b)
+static void Set_Column_Address(unsigned char a, unsigned char b)
 {
 	Write_Command(0x15);                    // Set Column Address
 	Write_Data(a);                          // Default => 0x00 (Start Address)
 	Write_Data(b);                          // Default => 0x7F (End Address)
 }
 
-void Set_Row_Address(unsigned char a, unsigned char b)
+static void Set_Row_Address(unsigned char a, unsigned char b)
 {
 	Write_Command(0x75);                    // Set Row Address
 	Write_Data(a);                          // Default => 0x00 (Start Address)
 	Write_Data(b);                          // Default => 0x7F (End Address)
 }
 
-void Set_Write_RAM()
-{
-	Write_Command(0x5C);                    // Enable MCU to Write into RAM
-}
+#define Set_Write_RAM() Write_Command(0x5C) // Enable MCU to Write into RAM
+#define Set_Read_RAM()	Write_Command(0x5D) // Enable MCU to Read from RAM
 
-void Set_Read_RAM()
-{
-	Write_Command(0x5D);                    // Enable MCU to Read from RAM
-}
-
-void Set_Remap_Format(unsigned char d)
+static void Set_Remap_Format(unsigned char d)
 {
 	Write_Command(0xA0);                    // Set Re-Map / Color Depth
 	Write_Data(d);                          // Default => 0x40
@@ -147,32 +92,28 @@ void Set_Remap_Format(unsigned char d)
 }
 
 
-void Set_Start_Line(unsigned char d)
+static void Set_Start_Line(unsigned char d)
 {
 	Write_Command(0xA1);                    // Set Vertical Scroll by RAM
 	Write_Data(d);                          // Default => 0x00
 }
 
 
-void Set_Display_Offset(unsigned char d)
+static void Set_Display_Offset(unsigned char d)
 {
 	Write_Command(0xA2);                    // Set Vertical Scroll by Row
 	Write_Data(d);                          // Default => 0x60
 }
 
 
-void Set_Display_Mode(unsigned char d)
-{
-	Write_Command(0xA4 | d);          //  Set Display Mode
+#define Set_Display_Mode( d) Write_Command(0xA4 | d)  //  Set Display Mode
 	//  Default => 0xA6
 	//  0xA4 (0x00) => Entire Display Off, All Pixels Turn Off
 	//  0xA5 (0x01) => Entire Display On, All Pixels Turn On at GS Level 63
 	//  0xA6 (0x02) => Normal Display
 	//  0xA7 (0x03) => Inverse Display
-}
 
-
-void Set_Function_Selection(unsigned char d)
+static void Set_Function_Selection(unsigned char d)
 {
 	Write_Command(0xAB);                    // Function Selection
 	Write_Data(d);                          // Default => 0x01
@@ -181,13 +122,10 @@ void Set_Function_Selection(unsigned char d)
 }
 
 
-void Set_Display_On_Off(unsigned char d)
-{
-	Write_Command(0xAE | d);          // Set Display On/Off
+#define Set_Display_On_Off(d) Write_Command(0xAE | d)          // Set Display On/Off
 	// Default => 0xAE
 	// 0xAE (0x00) => Display Off (Sleep Mode On)
 	// 0xAF (0x01) => Display On (Sleep Mode Off)
-}
 
 
 void Set_Phase_Length(unsigned char d)
@@ -865,14 +803,14 @@ void Vertical_Scroll(unsigned char a, unsigned char b, unsigned char c)
 		for (i = 0; i < 128; i += b) {
 			Set_Start_Line(i);
 			for (j = 0; j < c; j++)
-				WAIT_us(500);
+				HAL_Delay(1);
 		}
 		break;
 	case 1:
 		for (i = 0; i < 128; i += b) {
 			Set_Start_Line(128 - i);
 			for (j = 0; j < c; j++)
-				WAIT_us(500);
+				HAL_Delay(1);
 		}
 		break;
 	}
@@ -901,7 +839,7 @@ void Horizontal_Scroll(unsigned char a, unsigned char b, unsigned char c, unsign
 	Write_Data(0x00);
 	Write_Data(e);
 	Write_Command(0x9F);                    // Activate Horizontal Scroll
-	Delay(f);
+	HAL_Delay(f);
 }
 
 
@@ -924,9 +862,7 @@ void Fade_In()
 	Set_Display_On_Off(0x01);
 	for (i = 0; i < (Brightness + 1); i++) {
 		Set_Master_Current(i);
-		WAIT_us(500);
-		WAIT_us(500);
-		WAIT_us(500);
+		HAL_Delay(2);
 	}
 }
 
@@ -940,9 +876,7 @@ void Fade_Out()
 
 	for (i = (Brightness + 1); i > 0; i--) {
 		Set_Master_Current(i - 1);
-		WAIT_us(500);
-		WAIT_us(500);
-		WAIT_us(500);
+        HAL_Delay(2);
 	}
 	Set_Display_On_Off(0x00);
 }
@@ -1051,12 +985,9 @@ void Set_Linear_Gray_Scale_Table()
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 void OLED_Init()
 {
-	unsigned char i;
-
-	RES_LOW;
-	for (i = 0; i < 200; i++)
-		WAIT_us(500);
-	RES_HIGH;
+	HAL_GPIO_WritePin(DISPL_PORT, DISPL_RES, GPIO_PIN_RESET);
+	HAL_Delay(50);
+	HAL_GPIO_WritePin(DISPL_PORT, DISPL_RES, GPIO_PIN_SET);
 
 	Set_Command_Lock(0x12);                                                 // Unlock Driver IC (0x12/0x16/0xB0/0xB1)
 	Set_Command_Lock(0xB1);                                                 // Unlock All Commands (0x12/0x16/0xB0/0xB1)
@@ -1092,48 +1023,6 @@ void OLED_Init()
 
 	Set_Display_On_Off(0x01);                               // Display On (0x00/0x01)
 }
-
-
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-//  Main Program
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-// void main()
-// {
-//   unsigned char Name[]={37,44,54,96,33,39,0};                 // ELV AG
-//   unsigned char Tel[]={8,16,20,25,17,9,22,16,16,24,24,24,0};  // (0491)600888
-//
-//      Init_Ports();
-//      OLED_Init();
-//
-//      while(1)
-//      {
-//     Fill_RAM(0x00,0x00);		// Clear Screen
-//
-//     Draw_Rectangle(0x00,Max_Column,0x00,Max_Row,0x02,0xFF,0xFF);
-//              Delay(1);
-//
-//     Draw_Rectangle(0x10,0x6F,0x10,0x6F,0x02,0xF8,0x00);
-//              Delay(1);
-//
-//     Show_String(1,Name,0xFF,0xFF,0x30,0x34);
-//              Show_String(1,Tel,0xFF,0xFF,0x1B,0x44);
-//              Delay(3);
-//
-//     // All Pixels On (Test Pattern)
-//              Fill_RAM(0xFF,0xFF);
-//
-//              Delay(2);
-//
-//              // Checkerboard (Test Pattern)
-//              Checkerboard();
-//              Delay(2);
-//
-//              // Color Bar (Test Pattern)
-//              Rainbow();
-//              Delay(2);
-//      }
-// }
-
 
 void disp_init( void )
 {
