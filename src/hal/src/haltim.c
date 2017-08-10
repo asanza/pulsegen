@@ -1,7 +1,7 @@
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_tim.h"
 
-TIM_HandleTypeDef        htim1;
+TIM_HandleTypeDef        hTIM6;
 uint32_t                 uwIncrementState = 0;
 
 HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
@@ -11,41 +11,41 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   uint32_t              uwPrescalerValue = 0;
   uint32_t              pFLatency;
 
-  /*Configure the TIM1 IRQ priority */
-  HAL_NVIC_SetPriority(TIM1_UP_IRQn, TickPriority ,0);
+  /*Configure the TIM6 IRQ priority */
+  HAL_NVIC_SetPriority(TIM6_IRQn, TickPriority ,0);
 
-  /* Enable the TIM1 global Interrupt */
-  HAL_NVIC_EnableIRQ(TIM1_UP_IRQn);
+  /* Enable the TIM6 global Interrupt */
+  HAL_NVIC_EnableIRQ(TIM6_IRQn);
 
-  /* Enable TIM1 clock */
-  __HAL_RCC_TIM1_CLK_ENABLE();
+  /* Enable TIM6 clock */
+  __HAL_RCC_TIM6_CLK_ENABLE();
 
   /* Get clock configuration */
   HAL_RCC_GetClockConfig(&clkconfig, &pFLatency);
 
-  /* Compute TIM1 clock */
+  /* Compute TIM6 clock */
   uwTimclock = HAL_RCC_GetPCLK2Freq();
 
-  /* Compute the prescaler value to have TIM1 counter clock equal to 1MHz */
+  /* Compute the prescaler value to have TIM6 counter clock equal to 1MHz */
   uwPrescalerValue = (uint32_t) ((uwTimclock / 1000000) - 1);
 
-  /* Initialize TIM1 */
-  htim1.Instance = TIM1;
+  /* Initialize TIM6 */
+  hTIM6.Instance = TIM6;
 
   /* Initialize TIMx peripheral as follow:
-  + Period = [(TIM1CLK/1000) - 1]. to have a (1/1000) s time base.
+  + Period = [(TIM6CLK/1000) - 1]. to have a (1/1000) s time base.
   + Prescaler = (uwTimclock/1000000 - 1) to have a 1MHz counter clock.
   + ClockDivision = 0
   + Counter direction = Up
   */
-  htim1.Init.Period = (1000000 / 1000) - 1;
-  htim1.Init.Prescaler = uwPrescalerValue;
-  htim1.Init.ClockDivision = 0;
-  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  if(HAL_TIM_Base_Init(&htim1) == HAL_OK)
+  hTIM6.Init.Period = (1000000 / 1000) - 1;
+  hTIM6.Init.Prescaler = uwPrescalerValue;
+  hTIM6.Init.ClockDivision = 0;
+  hTIM6.Init.CounterMode = TIM_COUNTERMODE_UP;
+  if(HAL_TIM_Base_Init(&hTIM6) == HAL_OK)
   {
     /* Start the TIM time Base generation in interrupt mode */
-    return HAL_TIM_Base_Start_IT(&htim1);
+    return HAL_TIM_Base_Start_IT(&hTIM6);
   }
 
   /* Return function status */
@@ -54,30 +54,30 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 
 /**
   * @brief  Suspend Tick increment.
-  * @note   Disable the tick increment by disabling TIM1 update interrupt.
+  * @note   Disable the tick increment by disabling TIM6 update interrupt.
   * @param  None
   * @retval None
   */
 void HAL_SuspendTick(void)
 {
-  /* Disable TIM1 update Interrupt */
-  __HAL_TIM_DISABLE_IT(&htim1, TIM_IT_UPDATE);
+  /* Disable TIM6 update Interrupt */
+  __HAL_TIM_DISABLE_IT(&hTIM6, TIM_IT_UPDATE);
 }
 
 /**
   * @brief  Resume Tick increment.
-  * @note   Enable the tick increment by Enabling TIM1 update interrupt.
+  * @note   Enable the tick increment by Enabling TIM6 update interrupt.
   * @param  None
   * @retval None
   */
 void HAL_ResumeTick(void)
 {
-  /* Enable TIM1 Update interrupt */
-  __HAL_TIM_ENABLE_IT(&htim1, TIM_IT_UPDATE);
+  /* Enable TIM6 Update interrupt */
+  __HAL_TIM_ENABLE_IT(&hTIM6, TIM_IT_UPDATE);
 }
 
-void TIM1_UP_IRQHandler(void)
+void TIM6_IRQHandler(void)
 {
-  HAL_TIM_IRQHandler(&htim1);
+  HAL_TIM_IRQHandler(&hTIM6);
   HAL_IncTick();
 }
