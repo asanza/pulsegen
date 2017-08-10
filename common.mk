@@ -3,7 +3,7 @@
 CPU = -mcpu=cortex-m3
 FPU =
 FLOAT-ABI =
-OPT = -O0 -ggdb -gdwarf-2
+OPT = -O0  -gdwarf-2 -g3
 
 MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 
@@ -13,7 +13,7 @@ PART = STM32F769xx
 CFLAGS = $(MCU) -D$(PART) -ffunction-sections -fdata-sections -std=gnu11
 CFLAGS += -Wall -Wno-variadic-macros -Wno-packed-bitfield-compat
 CFLAGS += $(OPT) -DUSE_FULL_LL_DRIVER
-CFLAGS += -nostartfiles -gdwarf-2 -g3
+CFLAGS += -nostartfiles
 
 # Generate dependency information
 CFLAGS += -MMD -MP
