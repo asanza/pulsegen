@@ -43,23 +43,23 @@
 
 #define RGBto16(c, color)  c = ( (color >> 5) & 0xF800) | ((color >> 3) & 0x7E0) | (color & 0x1F);
 
-#define Max_Column      0x7f                    // 128-1
-#define Max_Row           0x7f                  // 128-1
-#define Brightness      0x0B
+#define MAX_COLS        0x7f                    // 128-1
+#define MAX_ROWS        0x7f                    // 128-1
+#define BRIGHTNESS      0xFF
 
 static inline void Write_Command(unsigned char Data)
 {
-    DISPL_PORT->ODR &= ~( DISPL_DC | DISPL_CS | DISPL_RW | 0xFF );
-    DISPL_PORT->ODR |= Data;
-    DISPL_PORT->ODR |= ( DISPL_RW | DISPL_CS | DISPL_DC);
+	DISPL_PORT->ODR &= ~( DISPL_DC | DISPL_CS | DISPL_RW | 0xFF );
+	DISPL_PORT->ODR |= Data;
+	DISPL_PORT->ODR |= ( DISPL_RW | DISPL_CS | DISPL_DC);
 }
 
 static inline void Write_Data(unsigned char Data)
 {
-    DISPL_PORT->ODR |= DISPL_DC;
-    DISPL_PORT->ODR &= ~( DISPL_CS | DISPL_RW | 0xFF );
-    DISPL_PORT->ODR |= Data;
-    DISPL_PORT->ODR |= ( DISPL_RW | DISPL_CS | DISPL_DC);
+	DISPL_PORT->ODR |= DISPL_DC;
+	DISPL_PORT->ODR &= ~( DISPL_CS | DISPL_RW | 0xFF );
+	DISPL_PORT->ODR |= Data;
+	DISPL_PORT->ODR |= ( DISPL_RW | DISPL_CS | DISPL_DC);
 }
 
 static void Set_Column_Address(unsigned char a, unsigned char b)
@@ -76,8 +76,8 @@ static void Set_Row_Address(unsigned char a, unsigned char b)
 	Write_Data(b);                          // Default => 0x7F (End Address)
 }
 
-#define Set_Write_RAM() Write_Command(0x5C) // Enable MCU to Write into RAM
-#define Set_Read_RAM()	Write_Command(0x5D) // Enable MCU to Read from RAM
+#define Set_Write_RAM() Write_Command(0x5C)     // Enable MCU to Write into RAM
+#define Set_Read_RAM()  Write_Command(0x5D)     // Enable MCU to Read from RAM
 
 static void Set_Remap_Format(unsigned char d)
 {
@@ -107,11 +107,11 @@ static void Set_Display_Offset(unsigned char d)
 
 
 #define Set_Display_Mode( d) Write_Command(0xA4 | d)  //  Set Display Mode
-	//  Default => 0xA6
-	//  0xA4 (0x00) => Entire Display Off, All Pixels Turn Off
-	//  0xA5 (0x01) => Entire Display On, All Pixels Turn On at GS Level 63
-	//  0xA6 (0x02) => Normal Display
-	//  0xA7 (0x03) => Inverse Display
+//  Default => 0xA6
+//  0xA4 (0x00) => Entire Display Off, All Pixels Turn Off
+//  0xA5 (0x01) => Entire Display On, All Pixels Turn On at GS Level 63
+//  0xA6 (0x02) => Normal Display
+//  0xA7 (0x03) => Inverse Display
 
 static void Set_Function_Selection(unsigned char d)
 {
@@ -123,9 +123,9 @@ static void Set_Function_Selection(unsigned char d)
 
 
 #define Set_Display_On_Off(d) Write_Command(0xAE | d)          // Set Display On/Off
-	// Default => 0xAE
-	// 0xAE (0x00) => Display Off (Sleep Mode On)
-	// 0xAF (0x01) => Display On (Sleep Mode Off)
+// Default => 0xAE
+// 0xAE (0x00) => Display Off (Sleep Mode On)
+// 0xAF (0x01) => Display On (Sleep Mode Off)
 
 
 void Set_Phase_Length(unsigned char d)
@@ -573,8 +573,8 @@ void Fill_Block(unsigned char a, unsigned char b, unsigned char c, unsigned char
 	Set_Row_Address(c, d);
 	Set_Write_RAM();
 
-	for (i = (d - c + 1); i != 0 ; i--) {
-		for (j = (b - a + 1); j != 0 ; j--) {
+	for (i = (d - c + 1); i != 0; i--) {
+		for (j = (b - a + 1); j != 0; j--) {
 			Write_Data(e);
 			Write_Data(f);
 		}
@@ -614,28 +614,28 @@ void Checkerboard()
 void Rainbow()
 {
 	// White => Column 1~16
-	Fill_Block(0x00, 0x0F, 0x00, Max_Row, 0xFF, 0xFF);
+	Fill_Block(0x00, 0x0F, 0x00, MAX_ROWS, 0xFF, 0xFF);
 
 	// Yellow => Column 17~32
-	Fill_Block(0x10, 0x1F, 0x00, Max_Row, 0xFF, 0xE0);
+	Fill_Block(0x10, 0x1F, 0x00, MAX_ROWS, 0xFF, 0xE0);
 
 	// Purple => Column 33~48
-	Fill_Block(0x20, 0x2F, 0x00, Max_Row, 0xF8, 0x1F);
+	Fill_Block(0x20, 0x2F, 0x00, MAX_ROWS, 0xF8, 0x1F);
 
 	// Cyan => Column 49~64
-	Fill_Block(0x30, 0x3F, 0x00, Max_Row, 0x07, 0xFF);
+	Fill_Block(0x30, 0x3F, 0x00, MAX_ROWS, 0x07, 0xFF);
 
 	// Red => Column 65~80
-	Fill_Block(0x40, 0x4F, 0x00, Max_Row, 0xF8, 0x00);
+	Fill_Block(0x40, 0x4F, 0x00, MAX_ROWS, 0xF8, 0x00);
 
 	// Green => Column 81~96
-	Fill_Block(0x50, 0x5F, 0x00, Max_Row, 0x07, 0xE0);
+	Fill_Block(0x50, 0x5F, 0x00, MAX_ROWS, 0x07, 0xE0);
 
 	// Blue => Column 97~112
-	Fill_Block(0x60, 0x6F, 0x00, Max_Row, 0x00, 0x1F);
+	Fill_Block(0x60, 0x6F, 0x00, MAX_ROWS, 0x00, 0x1F);
 
 	// Black => Column 113~128
-	Fill_Block(0x70, Max_Column, 0x00, Max_Row, 0x00, 0x00);
+	Fill_Block(0x70, MAX_COLS, 0x00, MAX_ROWS, 0x00, 0x00);
 }
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -668,7 +668,7 @@ void Show_Font57(unsigned char a, unsigned char b, unsigned char c, unsigned cha
 			if (Pick & (1 << bit)) {
 				Write_Data(c);
 				Write_Data(d);
-			}else  {
+			}else {
 				Write_Data(0);
 				Write_Data(0);
 			}
@@ -860,7 +860,7 @@ void Fade_In()
 	unsigned int i;
 
 	Set_Display_On_Off(0x01);
-	for (i = 0; i < (Brightness + 1); i++) {
+	for (i = 0; i < (BRIGHTNESS + 1); i++) {
 		Set_Master_Current(i);
 		HAL_Delay(2);
 	}
@@ -874,9 +874,9 @@ void Fade_Out()
 {
 	unsigned int i;
 
-	for (i = (Brightness + 1); i > 0; i--) {
+	for (i = (BRIGHTNESS + 1); i > 0; i--) {
 		Set_Master_Current(i - 1);
-        HAL_Delay(2);
+		HAL_Delay(2);
 	}
 	Set_Display_On_Off(0x00);
 }
@@ -1010,7 +1010,7 @@ void OLED_Init()
 	Set_Contrast_Color(0xC8, 0x80, 0x8A);                   // Set Contrast of Color A (Red)
 	// Set Contrast of Color B (Green)
 	// Set Contrast of Color C (Blue)
-	Set_Master_Current(Brightness);                         // Set Scale Factor of Segment Output Current Control
+	Set_Master_Current(BRIGHTNESS);                         // Set Scale Factor of Segment Output Current Control
 	Set_Gray_Scale_Table();                                 // Set Pulse Width for Gray Scale Table
 	Set_Phase_Length(0x32);                                 // Set Phase 1 as 5 Clocks & Phase 2 as 3 Clocks
 	Set_Precharge_Voltage(0x17);                            // Set Pre-Charge Voltage Level as 0.50*VCC
@@ -1047,7 +1047,8 @@ void disp_init( void )
 void disp_pset(int16_t x, int16_t y, uint32_t color)
 {
 	uint16_t c;
-    RGBto16(c, color);
+
+	RGBto16(c, color);
 	Set_Column_Address(x, x);
 	Set_Row_Address(y, y);
 	Set_Write_RAM();
@@ -1058,6 +1059,7 @@ void disp_pset(int16_t x, int16_t y, uint32_t color)
 void disp_fillframe(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t color)
 {
 	uint16_t c;
-    RGBto16(c, color);
+
+	RGBto16(c, color);
 	Fill_Block(x1, x2, y1, y2, c >> 8, c);
 }
