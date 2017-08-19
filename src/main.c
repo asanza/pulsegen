@@ -18,8 +18,9 @@ void blink(void* param) {
 struct hal_timer tim;
 
 int main(void) {
-    dac_init(0x0FFF);
+    dac_init(0x0300);
     timer_init(&tim);
+    keybd_init(NULL);
     xTaskCreate(blink, "blink", 100, NULL, 3, NULL);
     vTaskStartScheduler();
 }
