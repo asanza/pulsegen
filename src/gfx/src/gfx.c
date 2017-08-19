@@ -11,6 +11,7 @@ static UG_RESULT _HW_DrawLine( UG_S16 x1, UG_S16 y1, UG_S16 x2, UG_S16 y2,
         UG_COLOR c );
 
 void gfx_init( void ) {
+    disp_init();
     UG_Init(&gui, disp_pset, 128, 128);
     UG_DriverRegister( DRIVER_FILL_FRAME, (void*) _HW_FillFrame );
     UG_DriverRegister( DRIVER_DRAW_LINE, (void*) _HW_DrawLine );

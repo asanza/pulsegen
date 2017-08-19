@@ -1,8 +1,8 @@
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_tim.h"
 
-TIM_HandleTypeDef        hTIM6;
-uint32_t                 uwIncrementState = 0;
+static TIM_HandleTypeDef        hTIM6;
+static uint32_t                 uwIncrementState = 0;
 
 HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
