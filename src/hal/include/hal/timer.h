@@ -1,6 +1,10 @@
 #ifndef HAL_TIMER_H_
 #define HAL_TIMER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 enum timer_mode {
@@ -19,5 +23,9 @@ struct hal_timer {
 void timer_init(struct hal_timer* timer);
 void timer_stop( void );
 void timer_start( void );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

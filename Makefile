@@ -18,8 +18,8 @@ INC += -Isrc/hal/include
 INC += -Isrc/os/include
 INC += -Isrc/os/portable/GCC/ARM_CM3
 INC += -Isrc/gfx/include
+INC += -Isrc/pulsegen/include
 
-SRCS  = src/main.c
 SRCS += $(call rwildcard,src/hal/support/STM32F1xx_HAL_Driver/Src,*.c)
 SRCS += $(call rwildcard,src/hal/src,*.c)
 
@@ -29,7 +29,9 @@ SRCS += src/os/portable/MemMang/heap_1.c
 
 SRCS += $(call rwildcard,src/gfx/src,*.c)
 
-CPPSRCS =
+CPPSRCS  = $(call rwildcard,src/pulsegen/src,*.cc)
+CPPSRCS += src/main.cc
+
 ASMSRC = $(call rwildcard,src/hal/src,*.s)
 
 CFLAGS += $(INC) -Wfatal-errors  -DSTM32F107xC

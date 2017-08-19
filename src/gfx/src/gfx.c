@@ -37,3 +37,7 @@ static UG_RESULT _HW_DrawLine( UG_S16 x1, UG_S16 y1, UG_S16 x2, UG_S16 y2,
 
     return UG_RESULT_FAIL;
 }
+
+void gfx_clear( void ) {
+    UG_FillScreen(C_BLACK);   
+}

@@ -30,14 +30,14 @@ void keybd_init(key_handler_t fn){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
     if(keyfn != NULL) {
         switch(GPIO_Pin){
-            case GPIO_PIN_8: keyfn(KEY_TA1); break;
-            case GPIO_PIN_9: keyfn(KEY_TA1); break;
-            case GPIO_PIN_10: keyfn(KEY_TA1); break;
-            case GPIO_PIN_11: keyfn(KEY_TA1); break;
-            case GPIO_PIN_12: keyfn(KEY_TA1); break;
-            case GPIO_PIN_13: keyfn(KEY_TA1); break;
-            case GPIO_PIN_14: keyfn(KEY_TA1); break;
-            case GPIO_PIN_15: keyfn(KEY_TA1); break;
+            case GPIO_PIN_8 : keyfn(KEY_TA1); break;
+            case GPIO_PIN_9 : keyfn(KEY_TA2); break;
+            case GPIO_PIN_10: keyfn(KEY_TA3); break;
+            case GPIO_PIN_11: keyfn(KEY_TA4); break;
+            case GPIO_PIN_12: keyfn(KEY_TA5); break;
+            case GPIO_PIN_13: keyfn(KEY_POW); break;
+            case GPIO_PIN_14: keyfn(ENC_DEC); break;
+            case GPIO_PIN_15: keyfn(ENC_INC); break;
             default: HAL_ASSERT(0);
         }
     }
