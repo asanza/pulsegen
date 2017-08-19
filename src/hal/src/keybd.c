@@ -45,14 +45,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 
 void EXTI9_5_IRQHandler(void)
 {
-    uint16_t pin = GPIOB->IDR;
+    uint16_t pin = EXTI->PR;
     HAL_GPIO_EXTI_IRQHandler(pin & GPIO_PIN_8);
     HAL_GPIO_EXTI_IRQHandler(pin & GPIO_PIN_9);
 }
 
 void EXTI15_10_IRQHandler(void)
 {
-    uint16_t pin = GPIOB->IDR;
+    uint16_t pin = EXTI->PR;
     HAL_GPIO_EXTI_IRQHandler(pin & GPIO_PIN_10);
     HAL_GPIO_EXTI_IRQHandler(pin & GPIO_PIN_11);
     HAL_GPIO_EXTI_IRQHandler(pin & GPIO_PIN_12);
