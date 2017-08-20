@@ -35,6 +35,9 @@
 #ifndef __UGUI_H
 #define __UGUI_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* -------------------------------------------------------------------------------- */
 /* -- CONFIG SECTION                                                             -- */
@@ -844,6 +847,10 @@ UG_RESULT UG_ImageShow( UG_WINDOW* wnd, UG_U8 id );
 UG_RESULT UG_ImageHide( UG_WINDOW* wnd, UG_U8 id );
 UG_RESULT UG_ImageSetBMP( UG_WINDOW* wnd, UG_U8 id, const UG_BMP* bmp );
 
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

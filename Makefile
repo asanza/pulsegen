@@ -31,6 +31,7 @@ SRCS += $(call rwildcard,src/gfx/src,*.c)
 
 CPPSRCS  = $(call rwildcard,src/pulsegen/src,*.cc)
 CPPSRCS += src/main.cc
+CPPSRCS += $(call rwildcard,src/gfx/src,*.cc)
 
 ASMSRC = $(call rwildcard,src/hal/src,*.s)
 

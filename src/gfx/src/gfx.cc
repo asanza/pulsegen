@@ -10,7 +10,7 @@ static UG_RESULT _HW_FillFrame( UG_S16 x1, UG_S16 y1, UG_S16 x2, UG_S16 y2,
 static UG_RESULT _HW_DrawLine( UG_S16 x1, UG_S16 y1, UG_S16 x2, UG_S16 y2,
         UG_COLOR c );
 
-void gfx_init( void ) {
+Gfx::Gfx( void ) {
     disp_init();
     UG_Init(&gui, disp_pset, 128, 128);
     UG_DriverRegister( DRIVER_FILL_FRAME, (void*) _HW_FillFrame );
@@ -19,11 +19,11 @@ void gfx_init( void ) {
     UG_FontSelect( &FONT_6X8 ) ;
     UG_SetBackcolor( C_BLACK ) ;
     UG_SetForecolor( C_WHITE ) ;
-    UG_PutString(0 ,10 , "ON : 0:000.00" );
-    UG_PutString(0 ,30 , "OFF: 00:000.00" );
-    UG_PutString(0 ,60 , "Count: 000" );
-    UG_PutString(0 ,80 , "Level: 0.00" );
-    UG_PutString(0 ,100 , "Pulse Mode" );
+    UG_PutString(0 ,10 , (char*)"ON : 0:000.00" );
+    UG_PutString(0 ,30 , (char*)"OFF: 00:000.00" );
+    UG_PutString(0 ,60 , (char*)"Count: 000" );
+    UG_PutString(0 ,80 , (char*)"Level: 0.00" );
+    UG_PutString(0 ,100 , (char*)"Pulse Mode" );
 }
 
 static UG_RESULT _HW_FillFrame ( UG_S16 x1 , UG_S16 y1 , UG_S16 x2 , UG_S16 y2 ,
@@ -38,6 +38,6 @@ static UG_RESULT _HW_DrawLine( UG_S16 x1, UG_S16 y1, UG_S16 x2, UG_S16 y2,
     return UG_RESULT_FAIL;
 }
 
-void gfx_clear( void ) {
-    UG_FillScreen(C_BLACK);   
+void Gfx::Clear( void ) {
+    UG_FillScreen(C_BLACK);
 }
