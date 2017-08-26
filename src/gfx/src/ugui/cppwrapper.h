@@ -21,6 +21,7 @@ public:
     void setCursor(int16_t x, int16_t y);
 private:
     int16_t x, y;
+    uint32_t forecolor, backcolor;
 };
 
 #endif

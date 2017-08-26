@@ -23,9 +23,9 @@ void blink(void* param) {
     hal_gpio_init_out(5, 0);
     hal_gpio_init_out(POWER_HOLD, 1);
     while (1){
-        vTaskDelay(250/portTICK_RATE_MS);
+        vTaskDelay(500/portTICK_RATE_MS);
         hal_gpio_toggle(6);
-        ui.Clear();
+        ui.update();
     }
 }
 
@@ -39,17 +39,16 @@ static void input_task(void* param){
 
 static void display_task(void *param){
     while(1){
-        //xQueueReceive(display_queue, NULL, portMAX_DELAY);
-        //gfx_update(NULL);
     }
 }
 
 int main(void) {
+    ui.init();
     dac_init(0x0300);
     timer_init(&tim);
     keybd_init(key_handler);
     input_queue = xQueueCreate(10, sizeof(enum key_type));
-    xTaskCreate(blink, "blink", 100, NULL, 3, NULL);
+    xTaskCreate(blink, "blink", 1020, NULL, 3, NULL);
     vTaskStartScheduler();
 }
 
@@ -57,4 +56,22 @@ void key_handler( enum key_type key) {
     portBASE_TYPE retval;
     xQueueSendFromISR(input_queue, &key, &retval);
     portEND_SWITCHING_ISR(retval);
+}
+
+extern "C" {
+
+    void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName ) {
+        asm("BKPT");
+        while(1);
+    }
+
+    void vApplicationIdleHook( void ) {
+
+    }
+
+    void vApplicationMallocFailedHook( void ) {
+        asm("BKPT");
+        while(1);
+    }
+
 }

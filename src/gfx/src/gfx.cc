@@ -8,9 +8,28 @@ static UGui ui;
 Gfx::Gfx( void ) {
 }
 
+void Gfx::clear( void ) {
+}
 
-void Gfx::Clear( void ) {
-    //ui.fillScreen(COLOR_BLACK);
-    TonFreq.setDisplay(&ui);
-    TonFreq.setUp(0, 0, "HELLO", "HEllo", "lo");
+void Gfx::init( void ) {
+    int i;
+    for( i = 0; i < widget_count; i++ ) {
+        widgets[i].setDisplay(&ui);
+    }
+    widgets[0].setUp(5, 10, "Low:", "00:000.00", "");
+    widgets[1].setUp(5, 30, "Hi :", "00:000.00", "");
+    widgets[2].setUp(5, 60, "Count:", "0000", "");
+    widgets[3].setUp(5, 80, "Level:", "0.000", "");
+    widgets[4].setUp(10, 110, "", "Pulse Mode", "");
+    //widgets[0].setValue(3123);
+}
+static int it = 0;
+void Gfx::update( void ) {
+    //int i;
+    widgets[0].setValue(it++);
+    //widgets[3].setValue(it++);
+    widgets[2].setValue(it++);
+    // for(i = 0; i < widget_count; i++){
+    //     widgets[i].blink();
+    // }
 }

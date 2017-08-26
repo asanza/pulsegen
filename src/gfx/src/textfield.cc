@@ -1,6 +1,7 @@
 #include <gfx/textfield.h>
 #include "ugui/cppwrapper.h"
 #include <string.h>
+#include <stdlib.h>
 #include "stdio.h"
 
 void TextField::setUp(int16_t x, int16_t y, const char* label, const char* fmt,
@@ -24,18 +25,15 @@ void TextField::update(){
     if(!_visible) {
         return;
     }
-    //if(inverted)
-        Ui->setTextColor(0xFFFF, 0x0000);
-    //else
-    //    Ui->setTextColor(0xFFFF, 0x0000);
+    Ui->setTextColor(COLOR_WHITE, COLOR_BLACK);
     sprintf(field, "%s %s %s", label, format, units);
     Ui->setCursor(x,y);
-    Ui->putString(&field[0]);
+    Ui->putString(field);
 }
 
 void TextField::invert(bool value) {
     this->inverted = value;
-    //update();
+    update();
 }
 
 void TextField::visible(bool value) {
@@ -45,8 +43,41 @@ void TextField::visible(bool value) {
 }
 
 void TextField::clear(){
-    int16_t _x,_y;
-    uint16_t w,h;
-    //Ui->getTextBounds(field,x,y,&_x,&_y, &w, &h);
-    //Ui->fillRect(x,y,w,h,0x0000);
+    Ui->setTextColor(COLOR_BLACK);
+    Ui->putString(field);
+}
+
+void TextField::blink() {
+
+    update();
+}
+
+void TextField::setBlink( int pos ) {
+    this->pos = pos;
+}
+
+void TextField::setValue( int val ) {
+    this->value = val;
+    printValue();
+    update();
+}
+
+void TextField::printValue( void ) {
+    /* how to print the field value into format:
+       well, we take the digits from low to hi and
+       put them in the respective position */
+    char res[3];
+    int i = strlen(format);
+    int temp = value;
+    while( i-- ) {
+        if(format[i] == ':' || format[i] == '.') {
+            continue;
+        } else if ( format [i] == 0 ) {
+            /* end of string */
+            return;
+        }
+        utoa(temp % 10, res, 10);
+        format[i] = res[0];
+        temp = temp / 10;
+    }
 }

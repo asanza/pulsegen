@@ -28,6 +28,7 @@ UGui::UGui() {
 }
 
 void UGui::fillScreen(uint32_t color) {
+    backcolor = color;
     UG_FillScreen(color);
 }
 
@@ -42,10 +43,13 @@ void UGui::putString( const char* str ) {
 }
 
 void UGui::setTextColor(uint32_t color) {
+    forecolor = color;
     UG_SetForecolor( color );
 }
 
 void UGui::setTextColor(uint32_t forecolor, uint32_t backcolor) {
+    this->forecolor = forecolor;
+    this->backcolor = backcolor;
     UG_SetForecolor( forecolor );
     UG_SetBackcolor( backcolor );
 }

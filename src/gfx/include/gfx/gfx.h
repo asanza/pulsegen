@@ -7,9 +7,12 @@
 class Gfx {
 public:
     Gfx( void );
-    void Clear( void );
+    void clear( void );
+    void update( void );
+    void init( void );
 private:
-    TextField TonFreq;
+    static const int widget_count = 5;
+    TextField widgets[widget_count];
 };
 
 #endif /* H_GFX_ */
