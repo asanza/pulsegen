@@ -25,6 +25,7 @@ void blink(void* param) {
     while (1){
         vTaskDelay(250/portTICK_RATE_MS);
         hal_gpio_toggle(6);
+        ui.Clear();
     }
 }
 
