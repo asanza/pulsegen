@@ -15,6 +15,7 @@ public:
     void visible(bool value);
     void setBlink(int pos);
     void setValue(int value);
+    void forceRedraw();
     void clear();
     void blink();
 private:

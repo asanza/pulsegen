@@ -57,3 +57,11 @@ void UGui::setTextColor(uint32_t forecolor, uint32_t backcolor) {
 void UGui::setCursor(int16_t x, int16_t y) {
     this->x = x; this-> y = y;
 }
+
+void UGui::turnOn() {
+    disp_on();
+}
+
+void UGui::turnOff() {
+    disp_off();
+}

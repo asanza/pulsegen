@@ -19,6 +19,8 @@ public:
     void putString(int16_t x, int16_t y, const char* string);
     void putString( const char* str );
     void setCursor(int16_t x, int16_t y);
+    void turnOff();
+    void turnOn();
 private:
     int16_t x, y;
     uint32_t forecolor, backcolor;

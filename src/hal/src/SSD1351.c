@@ -1019,9 +1019,9 @@ void OLED_Init()
 	Set_VCOMH(0x05);                                        // Set Common Pins Deselect Voltage Level as 0.82*VCC
 	Set_Display_Mode(0x02);                                 // Normal Display Mode (0x00/0x01/0x02/0x03)
 
-	Fill_RAM(0x00, 0x00);                                   // Clear Screen
+	Fill_RAM(0x00, 0x00);                           // Clear Screen
 
-	Set_Display_On_Off(0x01);                               // Display On (0x00/0x01)
+	//Set_Display_On_Off(0x01);                    // Display On (0x00/0x01)
 }
 
 void disp_init( void )
@@ -1061,4 +1061,12 @@ void disp_fillframe(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t col
 
 	RGBto16(c, color);
 	Fill_Block(x1, x2, y1, y2, c >> 8, c);
+}
+
+void disp_on(void) {
+	Set_Display_On_Off(0x01);
+}
+
+void disp_off(void) {
+	Set_Display_On_Off(0x00);
 }

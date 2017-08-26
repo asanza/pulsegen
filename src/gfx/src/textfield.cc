@@ -15,6 +15,7 @@ void TextField::setUp(int16_t x, int16_t y, const char* label, const char* fmt,
     this->units[sizeof(this->units) - 1] = 0;
     this->clear();
     Ui->setTextColor(COLOR_WHITE, COLOR_BLACK);
+    forceRedraw();
 }
 
 void TextField::setDisplay(UGui* ui) {
@@ -34,6 +35,16 @@ void TextField::update(){
     Ui->putString(field);
 }
 
+void TextField::forceRedraw() {
+    if(!_visible) {
+        clear();
+        return;
+    }
+    sprintf(field, "%s %s %s", label, format, units);
+    Ui->setCursor(x,y);
+    Ui->putString(field);
+}
+
 void TextField::invert(bool value) {
     this->inverted = value;
 }
@@ -41,13 +52,16 @@ void TextField::invert(bool value) {
 void TextField::visible(bool value) {
     if( _visible == value) return;
     this->_visible = value;
-    clear();
+    if(!_visible)
+        clear();
+    forceRedraw();
 }
 
 void TextField::clear(){
     Ui->setTextColor(COLOR_BLACK);
     Ui->setCursor(x,y);
     Ui->putString(field);
+    Ui->setTextColor(COLOR_WHITE);
 }
 
 void TextField::blink() {
