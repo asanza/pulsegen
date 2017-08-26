@@ -21,15 +21,11 @@ void Gfx::init( void ) {
     widgets[2].setUp(5, 60, "Count:", "0000", "");
     widgets[3].setUp(5, 80, "Level:", "0.000", "");
     widgets[4].setUp(10, 110, "", "Pulse Mode", "");
-    //widgets[0].setValue(3123);
 }
-static int it = 0;
+
 void Gfx::update( void ) {
-    //int i;
-    widgets[0].setValue(it++);
-    //widgets[3].setValue(it++);
-    widgets[2].setValue(it++);
-    // for(i = 0; i < widget_count; i++){
-    //     widgets[i].blink();
-    // }
+    int i;
+    for(i = 0; i < widget_count; i++){
+         widgets[i].blink();
+    }
 }
