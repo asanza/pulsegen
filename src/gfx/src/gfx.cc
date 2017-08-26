@@ -42,7 +42,7 @@ void Gfx::setPWMMode() {
     widgets[1].setUp(5, 30, "Dty:", "000", "%");
     widgets[2].visible(false);
     widgets[3].setUp(5, 80, "Level:", "0.000", "");
-    widgets[4].setUp(30, 110, "PWM Mode", "", "");
+    widgets[4].setUp(25, 110, "PWM Mode", "", "");
 }
 
 void Gfx::toggleMode() {

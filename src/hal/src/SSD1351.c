@@ -979,49 +979,40 @@ void Set_Linear_Gray_Scale_Table()
 	Write_Command(0xB9);                    // Default
 }
 
-
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-//  Initialization
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 void OLED_Init()
 {
 	HAL_GPIO_WritePin(DISPL_PORT, DISPL_RES, GPIO_PIN_RESET);
 	HAL_Delay(50);
 	HAL_GPIO_WritePin(DISPL_PORT, DISPL_RES, GPIO_PIN_SET);
 
-	Set_Command_Lock(0x12);                                                 // Unlock Driver IC (0x12/0x16/0xB0/0xB1)
-	Set_Command_Lock(0xB1);                                                 // Unlock All Commands (0x12/0x16/0xB0/0xB1)
-	Set_Display_On_Off(0x00);                                               // Display Off (0x00/0x01)
-	Set_Display_Clock(0xFF);                                                // Set Clock as 120 Frames/Sec
-	Set_Multiplex_Ratio(0x7F);                                              // 1/128 Duty (0x0F~0x7F)
-	Set_Display_Offset(0x00);                                               // Shift Mapping RAM Counter (0x00~0x7F)
-	Set_Start_Line(0x00);                                                   // Set Mapping RAM Display Start Line (0x00~0x7F)
-	Set_Remap_Format(0x74);                                                 // Set Horizontal Address Increment
+	Set_Command_Lock(0x12);   // Unlock Driver IC (0x12/0x16/0xB0/0xB1)
+	Set_Command_Lock(0xB1);   // Unlock All Commands (0x12/0x16/0xB0/0xB1)
+	Set_Display_On_Off(0x00); // Display Off (0x00/0x01)
+	Set_Display_Clock(0xFF);  // Set Clock as 120 Frames/Sec
+	Set_Multiplex_Ratio(0x7F); // 1/128 Duty (0x0F~0x7F)
+	Set_Display_Offset(0x00); // Shift Mapping RAM Counter (0x00~0x7F)
+	Set_Start_Line(0x00);   // Set Mapping RAM Display Start Line (0x00~0x7F)
+	Set_Remap_Format(0x74); // Set Horizontal Address Increment
 	// Column Address 0 Mapped to SEG0
 	// Color Sequence D[15:0]=[RRRRR:GGGGGG:BBBBB]
 	// Scan from COM127 to COM0
 	// Enable COM Split Odd Even
 	// 65,536 Colors Mode (0x74)
 	// * 262,144 Colors Mode (0xB4)
-	Set_GPIO(0x00);                                         // Set Low Voltage Level of SEG Pin
-	Set_Function_Selection(0x01);                           // Enable Internal VDD Regulator
+	Set_GPIO(0x00);                  // Set Low Voltage Level of SEG Pin
+	Set_Function_Selection(0x01);    // Enable Internal VDD Regulator
 	// Select 8-bit Parallel Interface
-	Set_VSL(0xA0);                                          // Enable External VSL
-	Set_Contrast_Color(0xC8, 0x80, 0x8A);                   // Set Contrast of Color A (Red)
-	// Set Contrast of Color B (Green)
-	// Set Contrast of Color C (Blue)
-	Set_Master_Current(BRIGHTNESS);                         // Set Scale Factor of Segment Output Current Control
-	Set_Gray_Scale_Table();                                 // Set Pulse Width for Gray Scale Table
-	Set_Phase_Length(0x32);                                 // Set Phase 1 as 5 Clocks & Phase 2 as 3 Clocks
-	Set_Precharge_Voltage(0x17);                            // Set Pre-Charge Voltage Level as 0.50*VCC
-	Set_Display_Enhancement(0xA4);                          // Enhance Display Performance
-	Set_Precharge_Period(0x01);                             // Set Second Pre-Charge Period as 1 Clock
-	Set_VCOMH(0x05);                                        // Set Common Pins Deselect Voltage Level as 0.82*VCC
-	Set_Display_Mode(0x02);                                 // Normal Display Mode (0x00/0x01/0x02/0x03)
-
-	Fill_RAM(0x00, 0x00);                           // Clear Screen
-
-	//Set_Display_On_Off(0x01);                    // Display On (0x00/0x01)
+	Set_VSL(0xA0);                         // Enable External VSL
+	Set_Contrast_Color(0xC8, 0x80, 0x8A);  // Set Contrast of Color A (Red)
+	Set_Master_Current(BRIGHTNESS); // Set Scale Factor of Segment Output Current Control
+	Set_Gray_Scale_Table();         // Set Pulse Width for Gray Scale Table
+	Set_Phase_Length(0x32);         // Set Phase 1 as 5 Clocks & Phase 2 as 3 Clocks
+	Set_Precharge_Voltage(0x17);    // Set Pre-Charge Voltage Level as 0.50*VCC
+	Set_Display_Enhancement(0xA4);   // Enhance Display Performance
+	Set_Precharge_Period(0x01);      // Set Second Pre-Charge Period as 1 Clock
+	Set_VCOMH(0x05);         // Set Common Pins Deselect Voltage Level as 0.82*VCC
+	Set_Display_Mode(0x02);  // Normal Display Mode (0x00/0x01/0x02/0x03)
+	Fill_RAM(0x00, 0x00);    // Clear Screen
 }
 
 void disp_init( void )
@@ -1040,7 +1031,6 @@ void disp_init( void )
 	HAL_GPIO_Init(DISPL_PORT, &cfg);
 	HAL_GPIO_WritePin(DISPL_PORT, cfg.Pin, GPIO_PIN_SET);
 	OLED_Init();
-	Fill_RAM(0x00, 0x00);
 }
 
 void disp_pset(int16_t x, int16_t y, uint32_t color)

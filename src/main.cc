@@ -15,24 +15,29 @@ static struct hal_timer tim;
 static void key_handler(enum key_type key);
 
 static QueueHandle_t input_queue;
-static QueueHandle_t display_queue;
 static Gfx ui;
 
-void blink(void* param) {
+void update_display(void* param) {
+    enum key_type kinp;
     hal_gpio_init_out(6, 1);
     hal_gpio_init_out(5, 0);
     hal_gpio_init_out(POWER_HOLD, 1);
     while (1){
-        vTaskDelay(250/portTICK_RATE_MS);
+        if ( xQueueReceive(input_queue, &kinp, 250 / portTICK_PERIOD_MS) ) {
+            switch(kinp) {
+                case KEY_TA4:
+                    /* change mode */
+                    ui.toggleMode();
+                break;
+            }
+        }
         hal_gpio_toggle(6);
         ui.update();
     }
 }
 
 static void input_task(void* param){
-    enum key_type kinp;
     while(1){
-        xQueueReceive(input_queue, &kinp, portMAX_DELAY);
        // pulsegen.update(kinp);
     }
 }
@@ -48,7 +53,7 @@ int main(void) {
     timer_init(&tim);
     keybd_init(key_handler);
     input_queue = xQueueCreate(10, sizeof(enum key_type));
-    xTaskCreate(blink, "blink", 1020, NULL, 3, NULL);
+    xTaskCreate(update_display, "display", 1020, NULL, 3, NULL);
     vTaskStartScheduler();
 }
 
