@@ -7,13 +7,14 @@
 void TextField::setUp(int16_t x, int16_t y, const char* label, const char* fmt,
             const char* units){
     this->x = x; this->y = y;
-    this->clear();
     if(label) memcpy(this->label, label, sizeof(this->label));
     if(fmt) memcpy(this->format, fmt, sizeof(this->format));
     if(units) memcpy(this->units, units, sizeof(this->units));
     this->label[sizeof(this->label) - 1] = 0;
     this->format[sizeof(this->format) - 1] = 0;
     this->units[sizeof(this->units) - 1] = 0;
+    this->clear();
+    Ui->setTextColor(COLOR_WHITE, COLOR_BLACK);
 }
 
 void TextField::setDisplay(UGui* ui) {
@@ -24,7 +25,10 @@ void TextField::update(){
     if(!_visible) {
         return;
     }
-    Ui->setTextColor(COLOR_WHITE, COLOR_BLACK);
+    /* only do update if the string has changed */
+    if( strstr(field, label) && strstr(field, format) && strstr(field, units) ){
+        return;
+    }
     sprintf(field, "%s %s %s", label, format, units);
     Ui->setCursor(x,y);
     Ui->putString(field);
