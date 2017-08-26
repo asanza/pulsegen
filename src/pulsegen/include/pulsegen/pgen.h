@@ -11,7 +11,7 @@ public:
 
     enum Mode{PWM, PULSE};
     void setMode(Mode mode);
-    void toggleMode(void);
+    Mode toggleMode(void);
     Mode getMode( void );
 
     /* pulse mode interface */
@@ -51,6 +51,8 @@ public:
     int getLevel( void );
     int levelUp( void );
     int levelDown( void );
+    void start( void );
+    void stop( void );
 
 private:
     Mode mode;
