@@ -13,6 +13,8 @@ public:
 private:
     static const int widget_count = 5;
     TextField widgets[widget_count];
+    void setPulseMode( void );
+    void setPWMMode( void );
 };
 
 #endif /* H_GFX_ */

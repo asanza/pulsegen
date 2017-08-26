@@ -23,7 +23,7 @@ void blink(void* param) {
     hal_gpio_init_out(5, 0);
     hal_gpio_init_out(POWER_HOLD, 1);
     while (1){
-        vTaskDelay(500/portTICK_RATE_MS);
+        vTaskDelay(250/portTICK_RATE_MS);
         hal_gpio_toggle(6);
         ui.update();
     }

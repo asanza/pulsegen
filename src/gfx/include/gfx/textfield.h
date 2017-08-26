@@ -7,7 +7,7 @@ class UGui;
 
 class TextField {
 public:
-    TextField(){inverted = false; _visible = true;_blink = false}
+    TextField(){inverted = false; _visible = true;_blink = false;}
     void setUp(int16_t x, int16_t y, const char* label, const char* fmt,
                 const char* units);
     void setDisplay(UGui* Ui);
@@ -20,7 +20,7 @@ public:
 private:
     UGui* Ui;
     int16_t x,y, pos;
-    char label[10] = {0};
+    char label[11] = {0};
     char format[15] = {0};
     bool inverted, _visible, _blink;
     char units[3] = {0};

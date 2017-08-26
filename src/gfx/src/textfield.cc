@@ -14,7 +14,6 @@ void TextField::setUp(int16_t x, int16_t y, const char* label, const char* fmt,
     this->label[sizeof(this->label) - 1] = 0;
     this->format[sizeof(this->format) - 1] = 0;
     this->units[sizeof(this->units) - 1] = 0;
-    update();
 }
 
 void TextField::setDisplay(UGui* ui) {
@@ -33,22 +32,22 @@ void TextField::update(){
 
 void TextField::invert(bool value) {
     this->inverted = value;
-    update();
 }
 
 void TextField::visible(bool value) {
+    if( _visible == value) return;
     this->_visible = value;
     clear();
-    update();
 }
 
 void TextField::clear(){
     Ui->setTextColor(COLOR_BLACK);
+    Ui->setCursor(x,y);
     Ui->putString(field);
 }
 
 void TextField::blink() {
-
+    printValue();
     update();
 }
 
@@ -58,14 +57,13 @@ void TextField::setBlink( int pos ) {
 
 void TextField::setValue( int val ) {
     this->value = val;
-    printValue();
-    update();
 }
 
 void TextField::printValue( void ) {
     /* how to print the field value into format:
        well, we take the digits from low to hi and
        put them in the respective position */
+    int p = pos;
     char res[3];
     int i = strlen(format);
     int temp = value;
@@ -76,8 +74,18 @@ void TextField::printValue( void ) {
             /* end of string */
             return;
         }
+        p--;
         utoa(temp % 10, res, 10);
-        format[i] = res[0];
         temp = temp / 10;
+        if(p < 0 || p > 0) {
+            format[i] = res[0];
+            continue;
+        }
+        if(_blink) {
+            format[i] = res[0];
+        } else {
+            format[i] = '_';
+        }
+        _blink = !_blink;
     }
 }
