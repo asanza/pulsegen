@@ -23,6 +23,8 @@ UGui::UGui() {
     UG_DriverRegister( DRIVER_FILL_FRAME, (void*) _HW_FillFrame );
     UG_DriverRegister( DRIVER_DRAW_LINE, (void*) _HW_DrawLine );
     UG_FontSelect( &FONT_8X12 ) ;
+    UG_FontSetHSpace ( 0 );
+    x = 0; y = 0;
 }
 
 void UGui::fillScreen(uint32_t color) {
@@ -31,13 +33,23 @@ void UGui::fillScreen(uint32_t color) {
 
 
 void UGui::putString( int16_t x, int16_t y, const char* str ) {
-    UG_PutString(x, y, (char*) str );
+    this->x = x; this->y = y;
+    UG_PutString(this->x, this->y, (char*) str );
 }
 
-void UGui::setForeground(uint32_t color) {
+void UGui::putString( const char* str ) {
+    UG_PutString(this->x, this->y, (char*) str);
+}
+
+void UGui::setTextColor(uint32_t color) {
     UG_SetForecolor( color );
 }
 
-void UGui::setBackground(uint32_t color) {
-    UG_SetBackcolor( color );
+void UGui::setTextColor(uint32_t forecolor, uint32_t backcolor) {
+    UG_SetForecolor( forecolor );
+    UG_SetBackcolor( backcolor );
+}
+
+void UGui::setCursor(int16_t x, int16_t y) {
+    this->x = x; this-> y = y;
 }

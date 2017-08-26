@@ -1041,7 +1041,6 @@ void disp_init( void )
 	HAL_GPIO_WritePin(DISPL_PORT, cfg.Pin, GPIO_PIN_SET);
 	OLED_Init();
 	Fill_RAM(0x00, 0x00);
-	//Show_String(1,"HELLO",0xFF,0xFF,0x30,0x34);
 }
 
 void disp_pset(int16_t x, int16_t y, uint32_t color)

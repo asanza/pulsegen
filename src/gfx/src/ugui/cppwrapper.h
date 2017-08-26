@@ -14,9 +14,13 @@ public:
     void fillScreen(uint32_t color);
     void fontSelect(UGuiFont* font);
     void setBackground(uint32_t color);
-    void setForeground(uint32_t color);
+    void setTextColor(uint32_t color);
+    void setTextColor(uint32_t forecolor, uint32_t backcolor);
     void putString(int16_t x, int16_t y, const char* string);
+    void putString( const char* str );
+    void setCursor(int16_t x, int16_t y);
 private:
+    int16_t x, y;
 };
 
 #endif
