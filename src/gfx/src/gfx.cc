@@ -56,19 +56,11 @@ void Gfx::toggleMode() {
     pulseMode = !pulseMode;
 }
 
-void Gfx::setFreq(int val) {
+void Gfx::setTonFreq(int val) {
     widgets[0].setValue(val);
 }
 
-void Gfx::setDuty(int val) {
-    widgets[1].setValue(val);
-}
-
-void Gfx::setTon(int val) {
-    widgets[0].setValue(val);
-}
-
-void Gfx::setToff(int val) {
+void Gfx::setToffDuty(int val) {
     widgets[1].setValue(val);
 }
 

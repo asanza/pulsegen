@@ -1,25 +1,17 @@
 #include "controller.h"
 
 static const int pow10[] = {
-    1,
-    10,
-    100,
-    1000,
-    10000,
-    100000,
-    1000000,
-    10000000,
-    100000000,
+    1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000,
 };
 
 void Controller::init() {
     view.init();
     updateMode();
-    view.outputActive(model.isStarted());
-    view.setLevel(model.getLevel());
-    view.setFreq(model.getTonFreq());
-    view.setDuty(model.getToffDuty());
-    view.setCount(model.getCount());
+    view.outputActive( model.isStarted() );
+    view.setLevel( model.getLevel() );
+    view.setTonFreq ( model.getTonFreq() );
+    view.setToffDuty ( model.getToffDuty() );
+    view.setCount( model.getCount() );
 }
 
 void Controller::updateMode() {
@@ -32,8 +24,8 @@ void Controller::updateMode() {
             view.setCount(model.getCount());
         break;
     }
-    view.setTon(model.getTonFreq());
-    view.setToff(model.getToffDuty());
+    view.setTonFreq(model.getTonFreq());
+    view.setToffDuty(model.getToffDuty());
 }
 
 void Controller::clearBlinks() {
@@ -109,11 +101,11 @@ void Controller::decrease() {
     switch( adj ) {
         case TON:
             model.setTonFreq(model.getTonFreq() - pow10[blinkpos - 1]);
-            view.setTon(model.getTonFreq());
+            view.setTonFreq(model.getTonFreq());
         break;
         case TOFF:
             model.setToffDuty(model.getToffDuty() - pow10[blinkpos - 1]);
-            view.setToff(model.getToffDuty());
+            view.setToffDuty(model.getToffDuty());
         break;
         case LEVEL :
             model.setLevel(model.getLevel() - pow10[blinkpos - 1]);
@@ -126,11 +118,11 @@ void Controller::increase() {
     switch( adj ) {
         case TON:
             model.setTonFreq(model.getTonFreq() + pow10[blinkpos - 1]);
-            view.setTon(model.getTonFreq());
+            view.setTonFreq(model.getTonFreq());
         break;
         case TOFF:
             model.setToffDuty(model.getToffDuty() + pow10[blinkpos - 1]);
-            view.setToff(model.getToffDuty());
+            view.setToffDuty(model.getToffDuty());
         break;
         case LEVEL :
             model.setLevel(model.getLevel() + pow10[blinkpos - 1]);

@@ -15,10 +15,8 @@ public:
     void setPulseMode( void );
     void setPWMMode( void );
     void setLevel( int val );
-    void setFreq(int val);
-    void setDuty(int val);
-    void setTon(int val);
-    void setToff(int val);
+    void setTonFreq(int val);
+    void setToffDuty(int val);
     void setCount(int val);
 
     int blinkLevel( int val );
