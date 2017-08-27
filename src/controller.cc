@@ -1,5 +1,17 @@
 #include "controller.h"
 
+static const int pow10[] = {
+    1,
+    10,
+    100,
+    1000,
+    10000,
+    100000,
+    1000000,
+    10000000,
+    100000000,
+};
+
 void Controller::init() {
     view.init();
     view.setLevel(model.getLevel());
@@ -84,12 +96,20 @@ void Controller::power() {
 
 void Controller::decrease() {
     switch( adj ) {
-        case TON:
-            view.setTon(model.tonFreqDown());
+        case TON: view.setTon(model.tonFreqDown()); break;
+        case LEVEL :
+            model.setLevel(model.getLevel() - pow10[blinkpos - 1]);
+            view.setLevel( model.getLevel());
         break;
     }
 }
 
 void Controller::increase() {
-
+    switch( adj ) {
+        case TON: view.setTon(model.tonFreqDown()); break;
+        case LEVEL :
+            model.setLevel(model.getLevel() + pow10[blinkpos - 1]);
+            view.setLevel( model.getLevel());
+        break;
+    }
 }
