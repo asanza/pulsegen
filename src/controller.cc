@@ -18,7 +18,8 @@ void Controller::init() {
     updateMode();
     view.outputActive(model.isStarted());
     view.setLevel(model.getLevel());
-    view.setTonFreq(model.getTonFreq());
+    view.setFreq(model.getTonFreq());
+    view.setDuty(model.getToffDuty());
     view.setCount(model.getCount());
 }
 

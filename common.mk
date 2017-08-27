@@ -7,7 +7,7 @@ OPT = -O0  -gdwarf-2 -g3
 
 MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 
-PART = STM32F769xx
+PART = STM32F107xC
 
 ### Build flags for all targets
 CFLAGS = $(MCU) -D$(PART) -ffunction-sections -fdata-sections
