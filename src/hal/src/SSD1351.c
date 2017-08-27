@@ -47,14 +47,14 @@
 #define MAX_ROWS        0x7f                    // 128-1
 #define BRIGHTNESS      0xFF
 
-static inline void Write_Command(unsigned char Data)
+static inline void write_command(unsigned char Data)
 {
 	DISPL_PORT->ODR &= ~( DISPL_DC | DISPL_CS | DISPL_RW | 0xFF );
 	DISPL_PORT->ODR |= Data;
 	DISPL_PORT->ODR |= ( DISPL_RW | DISPL_CS | DISPL_DC);
 }
 
-static inline void Write_Data(unsigned char Data)
+static inline void write_data(unsigned char Data)
 {
 	DISPL_PORT->ODR |= DISPL_DC;
 	DISPL_PORT->ODR &= ~( DISPL_CS | DISPL_RW | 0xFF );
@@ -64,25 +64,25 @@ static inline void Write_Data(unsigned char Data)
 
 static void Set_Column_Address(unsigned char a, unsigned char b)
 {
-	Write_Command(0x15);                    // Set Column Address
-	Write_Data(a);                          // Default => 0x00 (Start Address)
-	Write_Data(b);                          // Default => 0x7F (End Address)
+	write_command(0x15);                    // Set Column Address
+	write_data(a);                          // Default => 0x00 (Start Address)
+	write_data(b);                          // Default => 0x7F (End Address)
 }
 
 static void Set_Row_Address(unsigned char a, unsigned char b)
 {
-	Write_Command(0x75);                    // Set Row Address
-	Write_Data(a);                          // Default => 0x00 (Start Address)
-	Write_Data(b);                          // Default => 0x7F (End Address)
+	write_command(0x75);                    // Set Row Address
+	write_data(a);                          // Default => 0x00 (Start Address)
+	write_data(b);                          // Default => 0x7F (End Address)
 }
 
-#define Set_Write_RAM() Write_Command(0x5C)     // Enable MCU to Write into RAM
-#define Set_Read_RAM()  Write_Command(0x5D)     // Enable MCU to Read from RAM
+#define Set_Write_RAM() write_command(0x5C)     // Enable MCU to Write into RAM
+#define Set_Read_RAM()  write_command(0x5D)     // Enable MCU to Read from RAM
 
 static void Set_Remap_Format(unsigned char d)
 {
-	Write_Command(0xA0);                    // Set Re-Map / Color Depth
-	Write_Data(d);                          // Default => 0x40
+	write_command(0xA0);                    // Set Re-Map / Color Depth
+	write_data(d);                          // Default => 0x40
 	// Horizontal Address Increment
 	// Column Address 0 Mapped to SEG0
 	// Color Sequence: A => B => C
@@ -94,19 +94,19 @@ static void Set_Remap_Format(unsigned char d)
 
 static void Set_Start_Line(unsigned char d)
 {
-	Write_Command(0xA1);                    // Set Vertical Scroll by RAM
-	Write_Data(d);                          // Default => 0x00
+	write_command(0xA1);                    // Set Vertical Scroll by RAM
+	write_data(d);                          // Default => 0x00
 }
 
 
 static void Set_Display_Offset(unsigned char d)
 {
-	Write_Command(0xA2);                    // Set Vertical Scroll by Row
-	Write_Data(d);                          // Default => 0x60
+	write_command(0xA2);                    // Set Vertical Scroll by Row
+	write_data(d);                          // Default => 0x60
 }
 
 
-#define Set_Display_Mode( d) Write_Command(0xA4 | d)  //  Set Display Mode
+#define Set_Display_Mode( d) write_command(0xA4 | d)  //  Set Display Mode
 //  Default => 0xA6
 //  0xA4 (0x00) => Entire Display Off, All Pixels Turn Off
 //  0xA5 (0x01) => Entire Display On, All Pixels Turn On at GS Level 63
@@ -115,14 +115,14 @@ static void Set_Display_Offset(unsigned char d)
 
 static void Set_Function_Selection(unsigned char d)
 {
-	Write_Command(0xAB);                    // Function Selection
-	Write_Data(d);                          // Default => 0x01
+	write_command(0xAB);                    // Function Selection
+	write_data(d);                          // Default => 0x01
 	// Enable Internal VDD Regulator
 	// Select 8-bit Parallel Interface
 }
 
 
-#define Set_Display_On_Off(d) Write_Command(0xAE | d)          // Set Display On/Off
+#define Set_Display_On_Off(d) write_command(0xAE | d)          // Set Display On/Off
 // Default => 0xAE
 // 0xAE (0x00) => Display Off (Sleep Mode On)
 // 0xAF (0x01) => Display On (Sleep Mode Off)
@@ -130,8 +130,8 @@ static void Set_Function_Selection(unsigned char d)
 
 void Set_Phase_Length(unsigned char d)
 {
-	Write_Command(0xB1);                    // Phase 1 (Reset) & Phase 2 (Pre-Charge) Period Adjustment
-	Write_Data(d);                          // Default => 0x82 (8 Display Clocks [Phase 2] / 5 Display Clocks [Phase 1])
+	write_command(0xB1);                    // Phase 1 (Reset) & Phase 2 (Pre-Charge) Period Adjustment
+	write_data(d);                          // Default => 0x82 (8 Display Clocks [Phase 2] / 5 Display Clocks [Phase 1])
 	// D[3:0] => Phase 1 Period in 5~31 Display Clocks
 	// D[7:4] => Phase 2 Period in 3~15 Display Clocks
 }
@@ -139,17 +139,17 @@ void Set_Phase_Length(unsigned char d)
 
 void Set_Display_Enhancement(unsigned char d)
 {
-	Write_Command(0xB2);                    // Display Enhancement
-	Write_Data(d);                          // Default => 0x00 (Normal)
-	Write_Data(0x00);
-	Write_Data(0x00);
+	write_command(0xB2);                    // Display Enhancement
+	write_data(d);                          // Default => 0x00 (Normal)
+	write_data(0x00);
+	write_data(0x00);
 }
 
 
 void Set_Display_Clock(unsigned char d)
 {
-	Write_Command(0xB3);                    // Set Display Clock Divider / Oscillator Frequency
-	Write_Data(d);                          // Default => 0x00
+	write_command(0xB3);                    // Set Display Clock Divider / Oscillator Frequency
+	write_data(d);                          // Default => 0x00
 	// A[3:0] => Display Clock Divider
 	// A[7:4] => Oscillator Frequency
 }
@@ -157,70 +157,70 @@ void Set_Display_Clock(unsigned char d)
 
 void Set_VSL(unsigned char d)
 {
-	Write_Command(0xB4);                    // Set Segment Low Voltage
-	Write_Data(0xA0 | d);                   // Default => 0xA0
+	write_command(0xB4);                    // Set Segment Low Voltage
+	write_data(0xA0 | d);                   // Default => 0xA0
 	// 0xA0 (0x00) => Enable External VSL
 	// 0xA2 (0x02) => Enable Internal VSL (Kept VSL Pin N.C.)
-	Write_Data(0xB5);
-	Write_Data(0x55);
+	write_data(0xB5);
+	write_data(0x55);
 }
 
 
 void Set_GPIO(unsigned char d)
 {
-	Write_Command(0xB5);                    // General Purpose IO
-	Write_Data(d);                          // Default => 0x0A (GPIO Pins output Low Level.)
+	write_command(0xB5);                    // General Purpose IO
+	write_data(d);                          // Default => 0x0A (GPIO Pins output Low Level.)
 }
 
 
 void Set_Precharge_Period(unsigned char d)
 {
-	Write_Command(0xB6);                    // Set Second Pre-Charge Period
-	Write_Data(d);                          // Default => 0x08 (8 Display Clocks)
+	write_command(0xB6);                    // Set Second Pre-Charge Period
+	write_data(d);                          // Default => 0x08 (8 Display Clocks)
 }
 
 
 void Set_Precharge_Voltage(unsigned char d)
 {
-	Write_Command(0xBB);                    // Set Pre-Charge Voltage Level
-	Write_Data(d);                          // Default => 0x17 (0.50*VCC)
+	write_command(0xBB);                    // Set Pre-Charge Voltage Level
+	write_data(d);                          // Default => 0x17 (0.50*VCC)
 }
 
 
 void Set_VCOMH(unsigned char d)
 {
-	Write_Command(0xBE);                    // Set COM Deselect Voltage Level
-	Write_Data(d);                          // Default => 0x05 (0.82*VCC)
+	write_command(0xBE);                    // Set COM Deselect Voltage Level
+	write_data(d);                          // Default => 0x05 (0.82*VCC)
 }
 
 
 void Set_Contrast_Color(unsigned char a, unsigned char b, unsigned char c)
 {
-	Write_Command(0xC1);                    // Set Contrast Current for Color A, B, C
-	Write_Data(a);                          // Default => 0x8A (Color A)
-	Write_Data(b);                          // Default => 0x51 (Color B)
-	Write_Data(c);                          // Default => 0x8A (Color C)
+	write_command(0xC1);                    // Set Contrast Current for Color A, B, C
+	write_data(a);                          // Default => 0x8A (Color A)
+	write_data(b);                          // Default => 0x51 (Color B)
+	write_data(c);                          // Default => 0x8A (Color C)
 }
 
 
 void Set_Master_Current(unsigned char d)
 {
-	Write_Command(0xC7);                    // Master Contrast Current Control
-	Write_Data(d);                          //  Default => 0x0F (Maximum)
+	write_command(0xC7);                    // Master Contrast Current Control
+	write_data(d);                          //  Default => 0x0F (Maximum)
 }
 
 
 void Set_Multiplex_Ratio(unsigned char d)
 {
-	Write_Command(0xCA);                    // Set Multiplex Ratio
-	Write_Data(d);                          // Default => 0x7F (1/128 Duty)
+	write_command(0xCA);                    // Set Multiplex Ratio
+	write_data(d);                          // Default => 0x7F (1/128 Duty)
 }
 
 
 void Set_Command_Lock(unsigned char d)
 {
-	Write_Command(0xFD);                    // Set Command Lock
-	Write_Data(d);                          // Default => 0x12
+	write_command(0xFD);                    // Set Command Lock
+	write_data(d);                          // Default => 0x12
 	// 0x12 => Driver IC interface is unlocked from entering command.
 	// 0x16 => All Commands are locked except 0xFD.
 	// 0xB0 => Command 0xA2, 0xB1, 0xB3, 0xBB & 0xBE are inaccessible.
@@ -496,8 +496,8 @@ void Draw_Rectangle(unsigned char a, unsigned char b, unsigned char c, unsigned 
 	Set_Write_RAM();
 	for (i = 0; i < (b - a + 1); i++) {
 		for (j = 0; j < e; j++) {
-			Write_Data(f);          // Line Color - RRRRRGGG
-			Write_Data(g);          // Line Color - GGGBBBBB
+			write_data(f);          // Line Color - RRRRRGGG
+			write_data(g);          // Line Color - GGGBBBBB
 		}
 	}
 
@@ -506,8 +506,8 @@ void Draw_Rectangle(unsigned char a, unsigned char b, unsigned char c, unsigned 
 	Set_Write_RAM();
 	for (i = 0; i < (d - c + 1); i++) {
 		for (j = 0; j < e; j++) {
-			Write_Data(f);          // Line Color - RRRRRGGG
-			Write_Data(g);          // Line Color - GGGBBBBB
+			write_data(f);          // Line Color - RRRRRGGG
+			write_data(g);          // Line Color - GGGBBBBB
 		}
 	}
 
@@ -516,8 +516,8 @@ void Draw_Rectangle(unsigned char a, unsigned char b, unsigned char c, unsigned 
 	Set_Write_RAM();
 	for (i = 0; i < (b - a + 1); i++) {
 		for (j = 0; j < e; j++) {
-			Write_Data(f);          // Line Color - RRRRRGGG
-			Write_Data(g);          // Line Color - GGGBBBBB
+			write_data(f);          // Line Color - RRRRRGGG
+			write_data(g);          // Line Color - GGGBBBBB
 		}
 	}
 
@@ -526,8 +526,8 @@ void Draw_Rectangle(unsigned char a, unsigned char b, unsigned char c, unsigned 
 	Set_Write_RAM();
 	for (i = 0; i < (d - c + 1); i++) {
 		for (j = 0; j < e; j++) {
-			Write_Data(f);          // Line Color - RRRRRGGG
-			Write_Data(g);          // Line Color - GGGBBBBB
+			write_data(f);          // Line Color - RRRRRGGG
+			write_data(g);          // Line Color - GGGBBBBB
 		}
 	}
 }
@@ -549,8 +549,8 @@ void Fill_RAM(unsigned char a, unsigned char b)
 
 	for (i = 0; i < 128; i++) {
 		for (j = 0; j < 128; j++) {
-			Write_Data(a);
-			Write_Data(b);
+			write_data(a);
+			write_data(b);
 		}
 	}
 }
@@ -575,8 +575,8 @@ void Fill_Block(unsigned char a, unsigned char b, unsigned char c, unsigned char
 
 	for (i = (d - c + 1); i != 0; i--) {
 		for (j = (b - a + 1); j != 0; j--) {
-			Write_Data(e);
-			Write_Data(f);
+			write_data(e);
+			write_data(f);
 		}
 	}
 }
@@ -594,16 +594,16 @@ void Checkerboard()
 
 	for (i = 0; i < 64; i++) {
 		for (j = 0; j < 64; j++) {
-			Write_Data(0xFF);
-			Write_Data(0xFF);
-			Write_Data(0x00);
-			Write_Data(0x00);
+			write_data(0xFF);
+			write_data(0xFF);
+			write_data(0x00);
+			write_data(0x00);
 		}
 		for (j = 0; j < 64; j++) {
-			Write_Data(0x00);
-			Write_Data(0x00);
-			Write_Data(0xFF);
-			Write_Data(0xFF);
+			write_data(0x00);
+			write_data(0x00);
+			write_data(0xFF);
+			write_data(0xFF);
 		}
 	}
 }
@@ -666,11 +666,11 @@ void Show_Font57(unsigned char a, unsigned char b, unsigned char c, unsigned cha
 
 		for (unsigned char bit = 0; bit < 8; bit++) {
 			if (Pick & (1 << bit)) {
-				Write_Data(c);
-				Write_Data(d);
+				write_data(c);
+				write_data(d);
 			}else {
-				Write_Data(0);
-				Write_Data(0);
+				write_data(0);
+				write_data(0);
 			}
 		}
 	}
@@ -679,8 +679,8 @@ void Show_Font57(unsigned char a, unsigned char b, unsigned char c, unsigned cha
 	Set_Write_RAM();
 
 	for (unsigned char i = 0; i <= 8; i++) {
-		Write_Data(0x00);
-		Write_Data(0x00);
+		write_data(0x00);
+		write_data(0x00);
 	}
 	Set_Remap_Format(0x74);
 }
@@ -734,7 +734,7 @@ void Show_256_Pattern(unsigned char *Data_Pointer, unsigned char a, unsigned cha
 
 	for (i = 0; i < (d - c + 1); i++) {
 		for (j = 0; j < (b - a + 1); j++) {
-			Write_Data(*Src_Pointer);
+			write_data(*Src_Pointer);
 			Src_Pointer++;
 		}
 	}
@@ -753,9 +753,9 @@ void Show_64k_Pattern(unsigned char *Data_Pointer, unsigned char a, unsigned cha
 
 	for (i = 0; i < (d - c + 1); i++) {
 		for (j = 0; j < (b - a + 1); j++) {
-			Write_Data(*Src_Pointer);
+			write_data(*Src_Pointer);
 			Src_Pointer++;
-			Write_Data(*Src_Pointer);
+			write_data(*Src_Pointer);
 			Src_Pointer++;
 		}
 	}
@@ -774,11 +774,11 @@ void Show_256k_Pattern(unsigned char *Data_Pointer, unsigned char a, unsigned ch
 
 	for (i = 0; i < (d - c + 1); i++) {
 		for (j = 0; j < (b - a + 1); j++) {
-			Write_Data(*Src_Pointer);
+			write_data(*Src_Pointer);
 			Src_Pointer++;
-			Write_Data(*Src_Pointer);
+			write_data(*Src_Pointer);
 			Src_Pointer++;
-			Write_Data(*Src_Pointer);
+			write_data(*Src_Pointer);
 			Src_Pointer++;
 		}
 	}
@@ -832,13 +832,13 @@ void Vertical_Scroll(unsigned char a, unsigned char b, unsigned char c)
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 void Horizontal_Scroll(unsigned char a, unsigned char b, unsigned char c, unsigned char d, unsigned char e, unsigned char f)
 {
-	Write_Command(0x96);                    // Horizontal Scroll Setup
-	Write_Data((a << 7) | b);
-	Write_Data(c);
-	Write_Data(d);
-	Write_Data(0x00);
-	Write_Data(e);
-	Write_Command(0x9F);                    // Activate Horizontal Scroll
+	write_command(0x96);                    // Horizontal Scroll Setup
+	write_data((a << 7) | b);
+	write_data(c);
+	write_data(d);
+	write_data(0x00);
+	write_data(e);
+	write_command(0x9F);                    // Activate Horizontal Scroll
 	HAL_Delay(f);
 }
 
@@ -848,7 +848,7 @@ void Horizontal_Scroll(unsigned char a, unsigned char b, unsigned char c, unsign
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 void Deactivate_Scroll()
 {
-	Write_Command(0x9E);                    // Deactivate Scrolling
+	write_command(0x9E);                    // Deactivate Scrolling
 }
 
 
@@ -907,76 +907,76 @@ void Sleep(unsigned char a)
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 void Set_Gray_Scale_Table()
 {
-	Write_Command(0xB8);
-	Write_Data(0x02);                       // Gray Scale Level 1
-	Write_Data(0x03);                       // Gray Scale Level 2
-	Write_Data(0x04);                       // Gray Scale Level 3
-	Write_Data(0x05);                       // Gray Scale Level 4
-	Write_Data(0x06);                       // Gray Scale Level 5
-	Write_Data(0x07);                       // Gray Scale Level 6
-	Write_Data(0x08);                       // Gray Scale Level 7
-	Write_Data(0x09);                       // Gray Scale Level 8
-	Write_Data(0x0A);                       // Gray Scale Level 9
-	Write_Data(0x0B);                       // Gray Scale Level 10
-	Write_Data(0x0C);                       // Gray Scale Level 11
-	Write_Data(0x0D);                       // Gray Scale Level 12
-	Write_Data(0x0E);                       // Gray Scale Level 13
-	Write_Data(0x0F);                       // Gray Scale Level 14
-	Write_Data(0x10);                       // Gray Scale Level 15
-	Write_Data(0x11);                       // Gray Scale Level 16
-	Write_Data(0x12);                       // Gray Scale Level 17
-	Write_Data(0x13);                       // Gray Scale Level 18
-	Write_Data(0x15);                       // Gray Scale Level 19
-	Write_Data(0x17);                       // Gray Scale Level 20
-	Write_Data(0x19);                       // Gray Scale Level 21
-	Write_Data(0x1B);                       // Gray Scale Level 22
-	Write_Data(0x1D);                       // Gray Scale Level 23
-	Write_Data(0x1F);                       // Gray Scale Level 24
-	Write_Data(0x21);                       // Gray Scale Level 25
-	Write_Data(0x23);                       // Gray Scale Level 26
-	Write_Data(0x25);                       // Gray Scale Level 27
-	Write_Data(0x27);                       // Gray Scale Level 28
-	Write_Data(0x2A);                       // Gray Scale Level 29
-	Write_Data(0x2D);                       // Gray Scale Level 30
-	Write_Data(0x30);                       // Gray Scale Level 31
-	Write_Data(0x33);                       // Gray Scale Level 32
-	Write_Data(0x36);                       // Gray Scale Level 33
-	Write_Data(0x39);                       // Gray Scale Level 34
-	Write_Data(0x3C);                       // Gray Scale Level 35
-	Write_Data(0x3F);                       // Gray Scale Level 36
-	Write_Data(0x42);                       // Gray Scale Level 37
-	Write_Data(0x45);                       // Gray Scale Level 38
-	Write_Data(0x48);                       // Gray Scale Level 39
-	Write_Data(0x4C);                       // Gray Scale Level 40
-	Write_Data(0x50);                       // Gray Scale Level 41
-	Write_Data(0x54);                       // Gray Scale Level 42
-	Write_Data(0x58);                       // Gray Scale Level 43
-	Write_Data(0x5C);                       // Gray Scale Level 44
-	Write_Data(0x60);                       // Gray Scale Level 45
-	Write_Data(0x64);                       // Gray Scale Level 46
-	Write_Data(0x68);                       // Gray Scale Level 47
-	Write_Data(0x6C);                       // Gray Scale Level 48
-	Write_Data(0x70);                       // Gray Scale Level 49
-	Write_Data(0x74);                       // Gray Scale Level 50
-	Write_Data(0x78);                       // Gray Scale Level 51
-	Write_Data(0x7D);                       // Gray Scale Level 52
-	Write_Data(0x82);                       // Gray Scale Level 53
-	Write_Data(0x87);                       // Gray Scale Level 54
-	Write_Data(0x8C);                       // Gray Scale Level 55
-	Write_Data(0x91);                       // Gray Scale Level 56
-	Write_Data(0x96);                       // Gray Scale Level 57
-	Write_Data(0x9B);                       // Gray Scale Level 58
-	Write_Data(0xA0);                       // Gray Scale Level 59
-	Write_Data(0xA5);                       // Gray Scale Level 60
-	Write_Data(0xAA);                       // Gray Scale Level 61
-	Write_Data(0xAF);                       // Gray Scale Level 62
-	Write_Data(0xB4);                       // Gray Scale Level 63
+	write_command(0xB8);
+	write_data(0x02);                       // Gray Scale Level 1
+	write_data(0x03);                       // Gray Scale Level 2
+	write_data(0x04);                       // Gray Scale Level 3
+	write_data(0x05);                       // Gray Scale Level 4
+	write_data(0x06);                       // Gray Scale Level 5
+	write_data(0x07);                       // Gray Scale Level 6
+	write_data(0x08);                       // Gray Scale Level 7
+	write_data(0x09);                       // Gray Scale Level 8
+	write_data(0x0A);                       // Gray Scale Level 9
+	write_data(0x0B);                       // Gray Scale Level 10
+	write_data(0x0C);                       // Gray Scale Level 11
+	write_data(0x0D);                       // Gray Scale Level 12
+	write_data(0x0E);                       // Gray Scale Level 13
+	write_data(0x0F);                       // Gray Scale Level 14
+	write_data(0x10);                       // Gray Scale Level 15
+	write_data(0x11);                       // Gray Scale Level 16
+	write_data(0x12);                       // Gray Scale Level 17
+	write_data(0x13);                       // Gray Scale Level 18
+	write_data(0x15);                       // Gray Scale Level 19
+	write_data(0x17);                       // Gray Scale Level 20
+	write_data(0x19);                       // Gray Scale Level 21
+	write_data(0x1B);                       // Gray Scale Level 22
+	write_data(0x1D);                       // Gray Scale Level 23
+	write_data(0x1F);                       // Gray Scale Level 24
+	write_data(0x21);                       // Gray Scale Level 25
+	write_data(0x23);                       // Gray Scale Level 26
+	write_data(0x25);                       // Gray Scale Level 27
+	write_data(0x27);                       // Gray Scale Level 28
+	write_data(0x2A);                       // Gray Scale Level 29
+	write_data(0x2D);                       // Gray Scale Level 30
+	write_data(0x30);                       // Gray Scale Level 31
+	write_data(0x33);                       // Gray Scale Level 32
+	write_data(0x36);                       // Gray Scale Level 33
+	write_data(0x39);                       // Gray Scale Level 34
+	write_data(0x3C);                       // Gray Scale Level 35
+	write_data(0x3F);                       // Gray Scale Level 36
+	write_data(0x42);                       // Gray Scale Level 37
+	write_data(0x45);                       // Gray Scale Level 38
+	write_data(0x48);                       // Gray Scale Level 39
+	write_data(0x4C);                       // Gray Scale Level 40
+	write_data(0x50);                       // Gray Scale Level 41
+	write_data(0x54);                       // Gray Scale Level 42
+	write_data(0x58);                       // Gray Scale Level 43
+	write_data(0x5C);                       // Gray Scale Level 44
+	write_data(0x60);                       // Gray Scale Level 45
+	write_data(0x64);                       // Gray Scale Level 46
+	write_data(0x68);                       // Gray Scale Level 47
+	write_data(0x6C);                       // Gray Scale Level 48
+	write_data(0x70);                       // Gray Scale Level 49
+	write_data(0x74);                       // Gray Scale Level 50
+	write_data(0x78);                       // Gray Scale Level 51
+	write_data(0x7D);                       // Gray Scale Level 52
+	write_data(0x82);                       // Gray Scale Level 53
+	write_data(0x87);                       // Gray Scale Level 54
+	write_data(0x8C);                       // Gray Scale Level 55
+	write_data(0x91);                       // Gray Scale Level 56
+	write_data(0x96);                       // Gray Scale Level 57
+	write_data(0x9B);                       // Gray Scale Level 58
+	write_data(0xA0);                       // Gray Scale Level 59
+	write_data(0xA5);                       // Gray Scale Level 60
+	write_data(0xAA);                       // Gray Scale Level 61
+	write_data(0xAF);                       // Gray Scale Level 62
+	write_data(0xB4);                       // Gray Scale Level 63
 }
 
 
 void Set_Linear_Gray_Scale_Table()
 {
-	Write_Command(0xB9);                    // Default
+	write_command(0xB9);                    // Default
 }
 
 void OLED_Init()
@@ -1041,8 +1041,8 @@ void disp_pset(int16_t x, int16_t y, uint32_t color)
 	Set_Column_Address(x, x);
 	Set_Row_Address(y, y);
 	Set_Write_RAM();
-	Write_Data(c >> 8);
-	Write_Data(c);
+	write_data(c >> 8);
+	write_data(c);
 }
 
 void disp_fillframe(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t color)
