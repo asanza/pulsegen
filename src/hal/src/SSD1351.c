@@ -32,12 +32,14 @@
 #define CMD_SETROWADDR  0x75
 #define CMD_WRITERAM    0x5C
 #define CMD_READRAM     0x5D
+#define CMD_SETREMAP	0xA0
 #define CMD_STARTLINE   0xA1
 #define CMD_SETOFFSET   0xA2
 #define CMD_DISPOFF     0xA4
 #define CMD_DISPON      0xA5
 #define CMD_DISPRESET   0xA6
 #define CMD_DISPINV     0xA7
+#define CMD_FUNSEL		0xAB
 #define CMD_DISPSLEEP   0xAE
 #define CMD_DISPWAKE    0xAE
 
@@ -81,7 +83,7 @@ static void Set_Row_Address(unsigned char a, unsigned char b)
 
 static void Set_Remap_Format(unsigned char d)
 {
-	write_command(0xA0);                    // Set Re-Map / Color Depth
+	write_command(CMD_SETREMAP);            // Set Re-Map / Color Depth
 	write_data(d);                          // Default => 0x40
 	// Horizontal Address Increment
 	// Column Address 0 Mapped to SEG0
@@ -94,14 +96,14 @@ static void Set_Remap_Format(unsigned char d)
 
 static void Set_Start_Line(unsigned char d)
 {
-	write_command(0xA1);                    // Set Vertical Scroll by RAM
+	write_command(CMD_STARTLINE);           // Set Vertical Scroll by RAM
 	write_data(d);                          // Default => 0x00
 }
 
 
 static void Set_Display_Offset(unsigned char d)
 {
-	write_command(0xA2);                    // Set Vertical Scroll by Row
+	write_command(CMD_SETOFFSET);           // Set Vertical Scroll by Row
 	write_data(d);                          // Default => 0x60
 }
 
@@ -115,14 +117,14 @@ static void Set_Display_Offset(unsigned char d)
 
 static void Set_Function_Selection(unsigned char d)
 {
-	write_command(0xAB);                    // Function Selection
+	write_command(CMD_FUNSEL);              // Function Selection
 	write_data(d);                          // Default => 0x01
 	// Enable Internal VDD Regulator
 	// Select 8-bit Parallel Interface
 }
 
 
-#define Set_Display_On_Off(d) write_command(0xAE | d)          // Set Display On/Off
+#define Set_Display_On_Off(d) write_command( CMD_DISPSLEEP | d )          // Set Display On/Off
 // Default => 0xAE
 // 0xAE (0x00) => Display Off (Sleep Mode On)
 // 0xAF (0x01) => Display On (Sleep Mode Off)
