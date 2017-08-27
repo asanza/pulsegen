@@ -14,7 +14,6 @@ static const int pow10[] = {
 
 void Controller::init() {
     view.init();
-    model.start();
     updateMode();
     view.outputActive(model.isStarted());
     view.setLevel(model.getLevel());
@@ -122,7 +121,7 @@ void Controller::decrease() {
 void Controller::increase() {
     switch( adj ) {
         case TON:
-            model.setTonFreq(model.getTonFreq() - pow10[blinkpos - 1]);
+            model.setTonFreq(model.getTonFreq() + pow10[blinkpos - 1]);
             view.setTon(model.getTonFreq());
         break;
         case LEVEL :

@@ -11,6 +11,7 @@
 #define DEFAULT_TOFF
 
 static TIM_HandleTypeDef tim3;
+static enum timer_mode mode;
 
 extern uint32_t SystemCoreClock;
 
@@ -28,6 +29,14 @@ static void get_pwm_reg_values(uint32_t freq, uint32_t duty, uint16_t* period,
 		*prescaler = 0xFFFF;
 	else
 		*prescaler = p;
+}
+
+static  uint16_t get_prescaler( uint32_t freq ) {
+	uint32_t p;
+	p = ( SystemCoreClock * 1.0 ) / ( freq * _PERIOD * 1.0 ) - 1;
+	if (p > 0xFFFF)
+		p = 0xFFFF;
+	return p;
 }
 
 static void set_mode_pwm( uint32_t freq, uint32_t duty ) {
@@ -52,7 +61,7 @@ static void set_mode_pwm( uint32_t freq, uint32_t duty ) {
 	HAL_ASSERT(HAL_TIM_ConfigClockSource(&tim3, &clk_src_cfg)==HAL_OK);
 
 
-	HAL_ASSERT(HAL_TIM_OC_Init(&tim3)==HAL_OK);
+	HAL_ASSERT(HAL_TIM_PWM_Init(&tim3)==HAL_OK);
 	HAL_ASSERT(HAL_TIM_OnePulse_Init(&tim3, TIM_OPMODE_REPETITIVE) == HAL_OK );
 
 	master_cfg.MasterOutputTrigger = TIM_TRGO_RESET;
@@ -71,11 +80,13 @@ static set_mode_pulse( uint32_t ton, uint32_t toff, uint32_t count ) {
 
 }
 
-void timer_init( enum timer_mode mode )
+void timer_init( enum timer_mode _mode )
 {
 	TIM_ClockConfigTypeDef clk_src_cfg;
 	TIM_MasterConfigTypeDef master_cfg;
 	TIM_OC_InitTypeDef oc_cfg;
+
+	mode = _mode;
 
 	GPIO_InitTypeDef gpio_init_struct;
 
@@ -93,20 +104,28 @@ void timer_init( enum timer_mode mode )
 	HAL_GPIO_Init(GPIOC, &gpio_init_struct);
 
 	if( mode == HAL_TIMER_PWM ) {
-		set_mode_pwm (101, 20);
+		set_mode_pwm (1000, 20);
 	}
 
 	__HAL_AFIO_REMAP_TIM3_ENABLE();
 
+}
 
+void timer_set_freq(int freq) {
+	if( mode != HAL_TIMER_PWM )
+		return;
+	tim3.Init.Prescaler = get_prescaler( freq );
+	HAL_TIM_Base_Init(&tim3);
 }
 
 void timer_start( void ) {
-	HAL_ASSERT(HAL_TIM_PWM_Start(&tim3, TIM_CHANNEL_3) == HAL_OK);
+	if( mode == HAL_TIMER_PWM )
+		HAL_TIM_PWM_Start(&tim3, TIM_CHANNEL_3);
 }
 
 void timer_stop( void ) {
-	HAL_ASSERT( HAL_TIM_PWM_Stop(&tim3, TIM_CHANNEL_3) == HAL_OK );
+	if( mode == HAL_TIMER_PWM )
+		HAL_TIM_PWM_Stop(&tim3, TIM_CHANNEL_3);
 }
 
 void TIM3_IRQHandler(void)

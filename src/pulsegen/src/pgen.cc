@@ -5,14 +5,19 @@
 #define START_LEVEL 330
 #define MIN_LEVEL   150
 #define MAX_LEVEL   620
+#define START_FREQ  1000
+#define MAX_FREQ    350000
+#define MIN_FREQ    10
 
 #define INTERN_LEVEL( x ) ( ( x - 0.5719 * 1.0 ) / 0.1647 )
 
 PulseGenerator::PulseGenerator() {
     dac_init(INTERN_LEVEL(START_LEVEL));
     timer_init( HAL_TIMER_PWM );
+    timer_set_freq( START_FREQ );
     started = false;
     level = START_LEVEL;
+    freq = START_FREQ;
     mode = PWM;
 }
 
@@ -32,8 +37,17 @@ PulseGenerator::Mode PulseGenerator::toggleMode( void ) {
     return mode;
 }
 
-void PulseGenerator::setTonFreq( int ton ) {
-
+void PulseGenerator::setTonFreq( int value ) {
+   switch(mode) {
+       case PWM:
+            if( value > MAX_FREQ )
+                value = MAX_FREQ;
+            if( value < MIN_FREQ )
+                value = MIN_FREQ;
+            timer_set_freq( value );
+            freq = value;
+            break;
+   }
 }
 
 int PulseGenerator::getTonFreq() {
