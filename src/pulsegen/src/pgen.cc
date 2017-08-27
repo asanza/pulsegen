@@ -8,6 +8,9 @@
 #define START_FREQ  1000
 #define MAX_FREQ    350000
 #define MIN_FREQ    10
+#define START_DUTY  50
+#define MAX_DUTY    99
+#define MIN_DUTY    1
 
 #define INTERN_LEVEL( x ) ( ( x - 0.5719 * 1.0 ) / 0.1647 )
 
@@ -15,9 +18,11 @@ PulseGenerator::PulseGenerator() {
     dac_init(INTERN_LEVEL(START_LEVEL));
     timer_init( HAL_TIMER_PWM );
     timer_set_freq( START_FREQ );
+    timer_set_duty( START_DUTY );
     started = false;
     level = START_LEVEL;
     freq = START_FREQ;
+    duty = START_DUTY;
     mode = PWM;
 }
 
@@ -58,14 +63,6 @@ int PulseGenerator::getTonFreq() {
     return 0;
 }
 
-int PulseGenerator::tonFreqUp() {
-    return 0;
-}
-
-int PulseGenerator::tonFreqDown() {
-    return 0;
-}
-
 void PulseGenerator::setLevel(int level) {
     if( level > MAX_LEVEL ) level = MAX_LEVEL;
     if( level < MIN_LEVEL ) level = MIN_LEVEL;
@@ -77,28 +74,26 @@ int PulseGenerator::getLevel() {
     return level;
 }
 
-int PulseGenerator::levelUp() {
-    level++;
-    if (level > MAX_LEVEL)
-        level = MAX_LEVEL;
-    dac_set(INTERN_LEVEL(level));
-    return level;
-}
-
-int PulseGenerator::levelDown() {
-    level--;
-    if( level <= MIN_LEVEL)
-        level = MIN_LEVEL;
-    dac_set(INTERN_LEVEL(level));
-    return level;
-}
-
 int PulseGenerator::getToffDuty() {
     switch(mode) {
         case PWM: return duty;
         case PULSE: return toff;
     }
     return 0;
+}
+
+void PulseGenerator::setToffDuty(int val) {
+    switch(mode) {
+        case PWM:
+            if( val < MIN_DUTY )
+                val = MIN_DUTY;
+            if( val > MAX_DUTY )
+                val = MAX_DUTY;
+            timer_set_duty( val );
+            duty = val;
+        break;
+        case PULSE:;
+    }
 }
 
 int PulseGenerator::getCount() {

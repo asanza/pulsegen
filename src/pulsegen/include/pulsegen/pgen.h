@@ -16,23 +16,16 @@ public:
 
     void setCount( int count );
     int getCount( void );
-    int countUp( void );
-    int countDown( void );
 
     void setTonFreq( int freq );
     int getTonFreq( void );
-    int tonFreqUp( void );
-    int tonFreqDown( void );
 
     void setToffDuty( int duty );
     int getToffDuty( void );
-    int toffDutyUp( void );
-    int toffDutyDown( void );
 
     void setLevel(int level);
     int getLevel( void );
-    int levelUp( void );
-    int levelDown( void );
+
     void start( void );
     void stop( void );
 

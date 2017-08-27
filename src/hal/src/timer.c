@@ -118,6 +118,10 @@ void timer_set_freq(int freq) {
 	HAL_TIM_Base_Init(&tim3);
 }
 
+void timer_set_duty( int duty ) {
+	__HAL_TIM_SetCompare(&tim3, TIM_CHANNEL_3, duty);
+}
+
 void timer_start( void ) {
 	if( mode == HAL_TIMER_PWM )
 		HAL_TIM_PWM_Start(&tim3, TIM_CHANNEL_3);
