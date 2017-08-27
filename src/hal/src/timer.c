@@ -4,10 +4,9 @@
 #include <hal/gpio.h>
 #include <hal/error.h>
 
-static struct hal_timer* timer;
 static TIM_HandleTypeDef tim3;
 
-void timer_init(struct hal_timer* _timer)
+void timer_init( enum timer_mode mode )
 {
 	TIM_ClockConfigTypeDef clk_src_cfg;
 	TIM_MasterConfigTypeDef master_cfg;
@@ -45,7 +44,6 @@ void timer_init(struct hal_timer* _timer)
 	HAL_ASSERT(HAL_TIM_OC_ConfigChannel(&tim3, &oc_cfg, TIM_CHANNEL_3)==HAL_OK);
 
 	HAL_ASSERT(HAL_TIM_OC_Start(&tim3, TIM_CHANNEL_3)==HAL_OK);
-	timer = _timer;
 
 	__HAL_RCC_AFIO_CLK_ENABLE();
 	__HAL_RCC_GPIOC_CLK_ENABLE();

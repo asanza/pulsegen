@@ -12,17 +12,14 @@ enum timer_mode {
     HAL_TIMER_PWM
 };
 
-struct hal_timer {
-    uint32_t ton;
-    uint32_t toff;
-    uint32_t pwm_freq;
-    uint32_t count;
-    enum timer_mode mode;
-};
-
-void timer_init(struct hal_timer* timer);
+void timer_init( enum timer_mode mode );
 void timer_stop( void );
 void timer_start( void );
+void timer_set_mode( enum timer_mode mode );
+void timer_set_freq( int freq );
+void timer_set_ton( int ton );
+void timer_set_toff( int toff );
+
 
 #ifdef __cplusplus
 }

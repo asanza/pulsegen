@@ -2,8 +2,6 @@
 #include <hal/timer.h>
 #include <hal/dac.h>
 
-static struct hal_timer tim;
-
 #define START_LEVEL 330
 #define MIN_LEVEL   150
 #define MAX_LEVEL   620
@@ -12,13 +10,13 @@ static struct hal_timer tim;
 
 PulseGenerator::PulseGenerator() {
     dac_init(INTERN_LEVEL(START_LEVEL));
-    timer_init(&tim);
+    timer_init( HAL_TIMER_PWM );
     level = START_LEVEL;
-    mode = PULSE;
+    mode = PWM;
 }
 
 void PulseGenerator::setMode(Mode mode) {
-
+    this->mode = mode;
 }
 
 PulseGenerator::Mode PulseGenerator::getMode( void ) {
@@ -38,6 +36,10 @@ void PulseGenerator::setTonFreq( int ton ) {
 }
 
 int PulseGenerator::getTonFreq() {
+    switch(mode) {
+        case PWM: return freq;
+        case PULSE: return ton;
+    }
     return 0;
 }
 
@@ -77,6 +79,10 @@ int PulseGenerator::levelDown() {
 }
 
 int PulseGenerator::getToffDuty() {
+    switch(mode) {
+        case PWM: return duty;
+        case PULSE: return toff;
+    }
     return 0;
 }
 
