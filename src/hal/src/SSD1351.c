@@ -31,7 +31,7 @@
 #define CMD_SETCOLADDR  0x15
 #define CMD_SETROWADDR  0x75
 #define CMD_WRITERAM    0x5C
-#define CMD_READRAM     0x5C
+#define CMD_READRAM     0x5D
 #define CMD_STARTLINE   0xA1
 #define CMD_SETOFFSET   0xA2
 #define CMD_DISPOFF     0xA4
@@ -64,20 +64,20 @@ static inline void write_data(unsigned char Data)
 
 static void Set_Column_Address(unsigned char a, unsigned char b)
 {
-	write_command(0x15);                    // Set Column Address
+	write_command(CMD_SETCOLADDR);          // Set Column Address
 	write_data(a);                          // Default => 0x00 (Start Address)
 	write_data(b);                          // Default => 0x7F (End Address)
 }
 
 static void Set_Row_Address(unsigned char a, unsigned char b)
 {
-	write_command(0x75);                    // Set Row Address
+	write_command(CMD_SETROWADDR);          // Set Row Address
 	write_data(a);                          // Default => 0x00 (Start Address)
 	write_data(b);                          // Default => 0x7F (End Address)
 }
 
-#define Set_Write_RAM() write_command(0x5C)     // Enable MCU to Write into RAM
-#define Set_Read_RAM()  write_command(0x5D)     // Enable MCU to Read from RAM
+#define Set_Write_RAM() write_command(CMD_WRITERAM) // Enable MCU to Write into RAM
+#define Set_Read_RAM()  write_command(CMD_READRAM)  // Enable MCU to Read from RAM
 
 static void Set_Remap_Format(unsigned char d)
 {
