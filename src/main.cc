@@ -40,7 +40,6 @@ void update_display(void* param) {
     enum key_type kinp;
     hal_gpio_init_out(6, 1);
     hal_gpio_init_out(5, 0);
-    hal_gpio_init_out(POWER_HOLD, 1);
     while (1){
         if ( xQueueReceive(input_queue, &kinp, 250 / portTICK_PERIOD_MS) ) {
             do {
@@ -53,6 +52,7 @@ void update_display(void* param) {
 }
 
 int main(void) {
+    hal_gpio_init_out(POWER_HOLD, 1);
     dev.init();
     keybd_init(key_handler);
     input_queue = xQueueCreate(10, sizeof(enum key_type));

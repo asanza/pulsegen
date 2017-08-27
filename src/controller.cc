@@ -24,6 +24,7 @@ void Controller::updateMode() {
             view.setCount(model.getCount());
         break;
     }
+    view.outputActive( model.isStarted() );
     view.setTonFreq(model.getTonFreq());
     view.setToffDuty(model.getToffDuty());
 }

@@ -35,10 +35,19 @@ PulseGenerator::Mode PulseGenerator::getMode( void ) {
 }
 
 PulseGenerator::Mode PulseGenerator::toggleMode( void ) {
-    if(mode == PULSE)
+    stop();
+    if(mode == PULSE) {
         mode = PWM;
-    else
+        timer_set_mode(HAL_TIMER_PWM);
+        timer_set_freq(freq);
+        timer_set_duty(duty);
+    } else {
+        timer_set_mode(HAL_TIMER_PULSE);
+        timer_set_freq(freq);
+        timer_set_duty(duty);
+        timer_set_count( count );
         mode = PULSE;
+    }
     return mode;
 }
 

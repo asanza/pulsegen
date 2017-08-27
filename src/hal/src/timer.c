@@ -76,15 +76,44 @@ static void set_mode_pwm( uint32_t freq, uint32_t duty ) {
 
 }
 
-static set_mode_pulse( uint32_t ton, uint32_t toff, uint32_t count ) {
+static void set_mode_pulse( uint32_t ton, uint32_t toff, uint32_t count ) {
+
+	TIM_ClockConfigTypeDef clk_src_cfg;
+	TIM_MasterConfigTypeDef master_cfg;
+	TIM_OC_InitTypeDef oc_cfg;
+
+	uint16_t period, prescaler, pulse;
+
+	//get_pwm_reg_values( freq, duty, &period, &prescaler, &pulse );
+
+	tim3.Instance = TIM3;
+	tim3.Init.Prescaler = 2000;
+	tim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
+	tim3.Init.Period = 1000;
+	tim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+	HAL_ASSERT(HAL_TIM_Base_Init(&tim3)==HAL_OK);
+
+	clk_src_cfg.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+	clk_src_cfg.ClockPrescaler = TIM_CLOCKPRESCALER_DIV1;
+	HAL_ASSERT(HAL_TIM_ConfigClockSource(&tim3, &clk_src_cfg)==HAL_OK);
+
+
+	HAL_ASSERT(HAL_TIM_OC_Init(&tim3)==HAL_OK);
+	HAL_ASSERT(HAL_TIM_OnePulse_Init(&tim3, TIM_OPMODE_SINGLE) == HAL_OK );
+
+	master_cfg.MasterOutputTrigger = TIM_TRGO_RESET;
+	master_cfg.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+	HAL_ASSERT(HAL_TIMEx_MasterConfigSynchronization(&tim3, &master_cfg)==HAL_OK);
+
+	oc_cfg.OCMode = TIM_OCMODE_TOGGLE;
+	oc_cfg.Pulse = 500;
+	oc_cfg.OCPolarity = TIM_OCPOLARITY_LOW;
+	HAL_ASSERT(HAL_TIM_OC_ConfigChannel(&tim3, &oc_cfg, TIM_CHANNEL_3)==HAL_OK);
 
 }
 
 void timer_init( enum timer_mode _mode )
 {
-	TIM_ClockConfigTypeDef clk_src_cfg;
-	TIM_MasterConfigTypeDef master_cfg;
-	TIM_OC_InitTypeDef oc_cfg;
 
 	mode = _mode;
 
@@ -105,6 +134,8 @@ void timer_init( enum timer_mode _mode )
 
 	if( mode == HAL_TIMER_PWM ) {
 		set_mode_pwm (1000, 20);
+	} else {
+		set_mode_pulse(100, 100, 1);
 	}
 
 	__HAL_AFIO_REMAP_TIM3_ENABLE();
@@ -114,8 +145,7 @@ void timer_init( enum timer_mode _mode )
 void timer_set_freq(int freq) {
 	if( mode != HAL_TIMER_PWM )
 		return;
-	tim3.Init.Prescaler = get_prescaler( freq );
-	HAL_TIM_Base_Init(&tim3);
+	__HAL_TIM_PRESCALER( &tim3, get_prescaler( freq ) );
 }
 
 void timer_set_duty( int duty ) {
@@ -125,11 +155,30 @@ void timer_set_duty( int duty ) {
 void timer_start( void ) {
 	if( mode == HAL_TIMER_PWM )
 		HAL_TIM_PWM_Start(&tim3, TIM_CHANNEL_3);
+	else
+		HAL_TIM_OC_Start(&tim3, TIM_CHANNEL_3);
 }
 
 void timer_stop( void ) {
 	if( mode == HAL_TIMER_PWM )
 		HAL_TIM_PWM_Stop(&tim3, TIM_CHANNEL_3);
+	else
+		HAL_TIM_OC_Stop(&tim3, TIM_CHANNEL_3);
+}
+
+void timer_set_count( uint16_t count ) {
+
+}
+
+void timer_set_mode( enum timer_mode mode ) {
+	timer_stop();
+	if( mode == HAL_TIMER_PWM ) {
+		HAL_TIM_PWM_DeInit(&tim3);
+		set_mode_pwm(1000, 10);
+	} else {
+		HAL_TIM_OC_DeInit(&tim3);
+		set_mode_pulse(100, 100, 1);
+	}
 }
 
 void TIM3_IRQHandler(void)
