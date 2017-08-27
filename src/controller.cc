@@ -10,16 +10,14 @@ void Controller::updateMode() {
     switch(model.getMode()) {
         case PulseGenerator::Mode::PWM:
             view.setPWMMode();
-            view.setFreq(model.getFreq());
-            view.setDuty(model.getDuty());
         break;
         case PulseGenerator::Mode::PULSE:
             view.setPulseMode();
-            view.setTon(model.getTon());
-            view.setToff(model.getToff());
             view.setCount(model.getCount());
         break;
     }
+    view.setTon(model.getTonFreq());
+    view.setToff(model.getToffDuty());
 }
 
 void Controller::clearBlinks() {
@@ -40,6 +38,7 @@ void Controller::ton() {
         adj = TON;
     }
     blinkpos = view.blinkTon(++blinkpos);
+    if( blinkpos == 0 ) adj = NONE;
 }
 
 void Controller::level() {
@@ -49,6 +48,7 @@ void Controller::level() {
     }
 
     blinkpos = view.blinkLevel(++blinkpos);
+    if( blinkpos == 0 ) adj = NONE;
 }
 
 void Controller::toff() {
@@ -57,12 +57,14 @@ void Controller::toff() {
         adj = TOFF;
     }
     blinkpos = view.blinkDuty(++blinkpos);
+    if( blinkpos == 0 ) adj = NONE;
 }
 
 void Controller::mode() {
     clearBlinks();
     model.toggleMode();
     updateMode();
+    adj = NONE;
 }
 
 void Controller::count() {
@@ -72,14 +74,20 @@ void Controller::count() {
     }
 
     blinkpos = view.blinkCount(++blinkpos);
+    if( blinkpos == 0 ) adj = NONE;
 }
 
 void Controller::power() {
-
+    adj = NONE;
+    clearBlinks();
 }
 
 void Controller::decrease() {
-
+    switch( adj ) {
+        case TON:
+            view.setTon(model.tonFreqDown());
+        break;
+    }
 }
 
 void Controller::increase() {

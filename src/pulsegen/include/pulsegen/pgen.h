@@ -14,34 +14,21 @@ public:
     Mode toggleMode(void);
     Mode getMode( void );
 
-    /* pulse mode interface */
-    void setTon(int ton);
-    int getTon( void );
-    int tonUp( void );
-    int tonDown( void );
-
-    void setToff( int toff );
-    int getToff( void );
-    int toffUp( void );
-    int toffDown( void );
-
     void setCount( int count );
     int getCount( void );
     int countUp( void );
     int countDown( void );
 
-    /* pwm mode interface */
-    void setFreq( int freq );
-    int getFreq( void );
-    int freqUp( void );
-    int freqDown( void );
+    void setTonFreq( int freq );
+    int getTonFreq( void );
+    int tonFreqUp( void );
+    int tonFreqDown( void );
 
-    void setDuty( int duty );
-    int getDuty( void );
-    int setUp( void );
-    int setDown( void );
+    void setToffDuty( int duty );
+    int getToffDuty( void );
+    int toffDutyUp( void );
+    int toffDutyDown( void );
 
-    /* common interface */
     void setLevel(int level);
     int getLevel( void );
     int levelUp( void );

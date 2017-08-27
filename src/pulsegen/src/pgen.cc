@@ -34,19 +34,19 @@ PulseGenerator::Mode PulseGenerator::toggleMode( void ) {
     return mode;
 }
 
-void PulseGenerator::setTon( int ton ) {
+void PulseGenerator::setTonFreq( int ton ) {
 
 }
 
-int PulseGenerator::getTon() {
+int PulseGenerator::getTonFreq() {
     return 0;
 }
 
-int PulseGenerator::tonUp() {
+int PulseGenerator::tonFreqUp() {
     return 0;
 }
 
-int PulseGenerator::tonDown() {
+int PulseGenerator::tonFreqDown() {
     return 0;
 }
 
@@ -77,15 +77,7 @@ int PulseGenerator::levelDown() {
     return REAL_LEVEL(level);
 }
 
-int PulseGenerator::getFreq() {
-    return 0;
-}
-
-int PulseGenerator::getDuty() {
-    return 0;
-}
-
-int PulseGenerator::getToff() {
+int PulseGenerator::getToffDuty() {
     return 0;
 }
 
