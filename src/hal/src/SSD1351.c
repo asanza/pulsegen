@@ -489,7 +489,8 @@ unsigned char Ascii_1[][5] = {                  // Refer to "Times New Roman" Fo
 //    f: Line Color - RRRRRGGG
 //    g: Line Color - GGGBBBBB
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Draw_Rectangle(unsigned char a, unsigned char b, unsigned char c, unsigned char d, unsigned char e, unsigned char f, unsigned char g)
+void Draw_Rectangle(unsigned char a, unsigned char b, unsigned char c,
+			unsigned char d, unsigned char e, unsigned char f, unsigned char g)
 {
 	unsigned char i, j;
 
@@ -567,7 +568,8 @@ void Fill_RAM(unsigned char a, unsigned char b)
 //    e: RRRRRGGG
 //    f: GGGBBBBB
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Fill_Block(unsigned char a, unsigned char b, unsigned char c, unsigned char d, unsigned char e, unsigned char f)
+void Fill_Block(unsigned char a, unsigned char b, unsigned char c,
+					unsigned char d, unsigned char e, unsigned char f)
 {
 	unsigned char i, j;
 
@@ -652,7 +654,8 @@ void Rainbow()
 //    e: Start X Address
 //    f: Start Y Address
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Show_Font57(unsigned char a, unsigned char b, unsigned char c, unsigned char d, unsigned char e, unsigned char f)
+void Show_Font57(unsigned char a, unsigned char b, unsigned char c,
+					unsigned char d, unsigned char e, unsigned char f)
 {
 	unsigned char *Src_Pointer;
 	unsigned char Pick;
@@ -699,7 +702,8 @@ void Show_Font57(unsigned char a, unsigned char b, unsigned char c, unsigned cha
 //    e: Start Y Address
 //    * Must write "0" in the end...
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Show_String(unsigned char a, unsigned char *Data_Pointer, unsigned char b, unsigned char c, unsigned char d, unsigned char e)
+void Show_String(unsigned char a, unsigned char *Data_Pointer, unsigned char b,
+					unsigned char c, unsigned char d, unsigned char e)
 {
 	unsigned char *Src_Pointer;
 
@@ -724,7 +728,8 @@ void Show_String(unsigned char a, unsigned char *Data_Pointer, unsigned char b, 
 //    c: Row Address of Start
 //    d: Row Address of End
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Show_256_Pattern(unsigned char *Data_Pointer, unsigned char a, unsigned char b, unsigned char c, unsigned char d)
+void Show_256_Pattern(unsigned char *Data_Pointer, unsigned char a,
+							unsigned char b, unsigned char c, unsigned char d)
 {
 	unsigned char *Src_Pointer;
 	unsigned char i, j;
@@ -743,7 +748,8 @@ void Show_256_Pattern(unsigned char *Data_Pointer, unsigned char a, unsigned cha
 }
 
 
-void Show_64k_Pattern(unsigned char *Data_Pointer, unsigned char a, unsigned char b, unsigned char c, unsigned char d)
+void Show_64k_Pattern(unsigned char *Data_Pointer, unsigned char a,
+						unsigned char b, unsigned char c, unsigned char d)
 {
 	unsigned char *Src_Pointer;
 	unsigned char i, j;
@@ -764,7 +770,8 @@ void Show_64k_Pattern(unsigned char *Data_Pointer, unsigned char a, unsigned cha
 }
 
 
-void Show_256k_Pattern(unsigned char *Data_Pointer, unsigned char a, unsigned char b, unsigned char c, unsigned char d)
+void Show_256k_Pattern(unsigned char *Data_Pointer, unsigned char a,
+						unsigned char b, unsigned char c, unsigned char d)
 {
 	unsigned char *Src_Pointer;
 	unsigned char i, j;
@@ -832,7 +839,8 @@ void Vertical_Scroll(unsigned char a, unsigned char b, unsigned char c)
 //    e: Set Time Interval between Each Scroll Step in Terms of Frame Frequency
 //    f: Delay Time
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Horizontal_Scroll(unsigned char a, unsigned char b, unsigned char c, unsigned char d, unsigned char e, unsigned char f)
+void Horizontal_Scroll(unsigned char a, unsigned char b, unsigned char c,
+						unsigned char d, unsigned char e, unsigned char f)
 {
 	write_command(0x96);                    // Horizontal Scroll Setup
 	write_data((a << 7) | b);
@@ -983,6 +991,7 @@ void Set_Linear_Gray_Scale_Table()
 
 void OLED_Init()
 {
+	// reset display
 	HAL_GPIO_WritePin(DISPL_PORT, DISPL_RES, GPIO_PIN_RESET);
 	HAL_Delay(50);
 	HAL_GPIO_WritePin(DISPL_PORT, DISPL_RES, GPIO_PIN_SET);
