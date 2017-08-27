@@ -18,7 +18,6 @@ void Gfx::init( void ) {
         widgets[i].setDisplay(&ui);
     }
     setPulseMode();
-    widgets[0].setBlink(3);
 }
 
 void Gfx::update( void ) {
@@ -26,6 +25,10 @@ void Gfx::update( void ) {
     for(i = 0; i < widget_count; i++){
          widgets[i].blink();
     }
+}
+
+void Gfx::setValue( int value ) {
+    widgets[0].setValue( value );
 }
 
 void Gfx::setPulseMode() {
