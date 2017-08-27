@@ -40,12 +40,11 @@ int PulseGenerator::tonDown() {
 
 }
 
-int PulseGenerator::factorUp() {
-    udFactor *= 10;
-}
-
 void PulseGenerator::setLevel(int level) {
-
+    int val = (level - lo)*1.0 / lp;
+    if( val > max_lev ) val = max_lev;
+    if( val < min_lev ) val = min_lev;
+    this->level = val;
 }
 
 int PulseGenerator::getLevel() {

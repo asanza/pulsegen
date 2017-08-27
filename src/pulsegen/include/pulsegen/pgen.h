@@ -42,11 +42,6 @@ public:
     int setDown( void );
 
     /* common interface */
-    /**
-     * up down factor increase.
-     * @return     the actual factor. 0 = 10^0, 1 = 10^1, etc.
-     */
-    int factorUp( void );
     void setLevel(int level);
     int getLevel( void );
     int levelUp( void );
@@ -56,7 +51,6 @@ public:
 
 private:
     Mode mode;
-    int udFactor;
     int freq, duty, count, ton, toff, level;
     const int lo = 6, min_lev = 725, max_lev = 3883;
     const float lp = 1.647;
