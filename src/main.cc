@@ -15,28 +15,36 @@ static QueueHandle_t input_queue;
 static Gfx ui;
 static PulseGenerator device;
 
+static void process_key(enum key_type kinp) {
+    switch(kinp) {
+        case KEY_TA1:
+        case KEY_TA2:
+        case KEY_TA3:
+        case KEY_TA4:
+        /* change mode */
+        ui.toggleMode();
+        break;
+        case KEY_TA5:
+        case KEY_POW:
+        case ENC_INC:
+        ui.setLevel( device.levelUp() );
+        break;
+        case ENC_DEC:
+        ui.setLevel( device.levelDown() );
+        break;
+    }
+}
+
 void update_display(void* param) {
     enum key_type kinp;
     hal_gpio_init_out(6, 1);
     hal_gpio_init_out(5, 0);
     hal_gpio_init_out(POWER_HOLD, 1);
-    int i = 100;
     ui.setLevel(device.getLevel());
     while (1){
         if ( xQueueReceive(input_queue, &kinp, 250 / portTICK_PERIOD_MS) ) {
             do {
-                switch(kinp) {
-                    case KEY_TA4:
-                    /* change mode */
-                    ui.toggleMode();
-                    break;
-                    case ENC_INC:
-                    ui.setLevel( device.levelUp() );
-                    break;
-                    case ENC_DEC:
-                    ui.setLevel( device.levelDown() );
-                    break;
-                }
+                process_key(kinp);
             } while ( xQueueReceive(input_queue, &kinp, 0));
         }
         hal_gpio_toggle(6);
