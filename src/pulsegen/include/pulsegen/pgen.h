@@ -57,7 +57,9 @@ public:
 private:
     Mode mode;
     int udFactor;
-    int freq, duty, count, ton, toff;
+    int freq, duty, count, ton, toff, level;
+    const int lo = 6, min_lev = 725, max_lev = 3883;
+    const float lp = 1.647;
 };
 
 #endif /* H_CTRL_ */

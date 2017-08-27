@@ -21,20 +21,23 @@ void update_display(void* param) {
     hal_gpio_init_out(5, 0);
     hal_gpio_init_out(POWER_HOLD, 1);
     int i = 100;
+    ui.setLevel(device.getLevel());
     while (1){
         if ( xQueueReceive(input_queue, &kinp, 250 / portTICK_PERIOD_MS) ) {
-            switch(kinp) {
-                case KEY_TA4:
+            do {
+                switch(kinp) {
+                    case KEY_TA4:
                     /* change mode */
                     ui.toggleMode();
-                break;
-                case ENC_INC:
-                    ui.setValue( ++i );
-                break;
-                case ENC_DEC:
-                    ui.setValue( --i );
-                break;
-            }
+                    break;
+                    case ENC_INC:
+                    ui.setLevel( device.levelUp() );
+                    break;
+                    case ENC_DEC:
+                    ui.setLevel( device.levelDown() );
+                    break;
+                }
+            } while ( xQueueReceive(input_queue, &kinp, 0));
         }
         hal_gpio_toggle(6);
         ui.update();

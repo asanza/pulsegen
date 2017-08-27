@@ -11,7 +11,7 @@ public:
     void update( void );
     void init( void );
     void toggleMode();
-    void setValue( int val );
+    void setLevel( int val );
 private:
     static const int widget_count = 5;
     TextField widgets[widget_count];

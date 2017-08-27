@@ -6,8 +6,10 @@ static struct hal_timer tim;
 
 PulseGenerator::PulseGenerator() {
     /* initialize the hardware */
-    dac_init(0x0300);
+    int start_lev = 2000;
+    dac_init(start_lev);
     timer_init(&tim);
+    level = start_lev;
 }
 
 void PulseGenerator::setMode(Mode mode) {
@@ -36,4 +38,32 @@ int PulseGenerator::tonUp() {
 
 int PulseGenerator::tonDown() {
 
+}
+
+int PulseGenerator::factorUp() {
+    udFactor *= 10;
+}
+
+void PulseGenerator::setLevel(int level) {
+
+}
+
+int PulseGenerator::getLevel() {
+    return level * lp + lo;
+}
+
+int PulseGenerator::levelUp() {
+    level++;
+    if (level > max_lev)
+        level = max_lev;
+    dac_set(level);
+    return level * lp + lo;
+}
+
+int PulseGenerator::levelDown() {
+    level--;
+    if( level <= min_lev)
+        level = min_lev;
+    dac_set(level);
+    return level * lp + lo;
 }

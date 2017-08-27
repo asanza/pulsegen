@@ -27,8 +27,8 @@ void Gfx::update( void ) {
     }
 }
 
-void Gfx::setValue( int value ) {
-    widgets[0].setValue( value );
+void Gfx::setLevel( int value ) {
+    widgets[3].setValue( value );
 }
 
 void Gfx::setPulseMode() {
