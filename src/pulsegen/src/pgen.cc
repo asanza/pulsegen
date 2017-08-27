@@ -22,11 +22,11 @@ void PulseGenerator::setMode(Mode mode) {
 }
 
 PulseGenerator::Mode PulseGenerator::getMode( void ) {
-
+    return PULSE;
 }
 
 PulseGenerator::Mode PulseGenerator::toggleMode( void ) {
-
+    return PULSE;
 }
 
 void PulseGenerator::setTon( int ton ) {
@@ -34,15 +34,15 @@ void PulseGenerator::setTon( int ton ) {
 }
 
 int PulseGenerator::getTon() {
-
+    return 0;
 }
 
 int PulseGenerator::tonUp() {
-
+    return 0;
 }
 
 int PulseGenerator::tonDown() {
-
+    return 0;
 }
 
 void PulseGenerator::setLevel(int level) {
@@ -70,4 +70,20 @@ int PulseGenerator::levelDown() {
         level = MIN_LEVEL;
     dac_set(level);
     return REAL_LEVEL(level);
+}
+
+int PulseGenerator::getFreq() {
+    return 0;
+}
+
+int PulseGenerator::getDuty() {
+    return 0;
+}
+
+int PulseGenerator::getToff() {
+    return 0;
+}
+
+int PulseGenerator::getCount() {
+    return 0;
 }

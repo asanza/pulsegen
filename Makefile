@@ -30,7 +30,7 @@ SRCS += src/os/portable/MemMang/heap_1.c
 SRCS += $(call rwildcard,src/gfx/src,*.c)
 
 CPPSRCS  = $(call rwildcard,src/pulsegen/src,*.cc)
-CPPSRCS += src/main.cc
+CPPSRCS += src/main.cc src/controller.cc
 CPPSRCS += $(call rwildcard,src/gfx/src,*.cc)
 
 ASMSRC = $(call rwildcard,src/hal/src,*.s)

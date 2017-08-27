@@ -11,12 +11,17 @@ public:
     void update( void );
     void init( void );
     void toggleMode();
+    void setPulseMode( void );
+    void setPWMMode( void );
     void setLevel( int val );
+    void setFreq(int val);
+    void setDuty(int val);
+    void setTon(int val);
+    void setToff(int val);
+    void setCount(int val);
 private:
     static const int widget_count = 5;
     TextField widgets[widget_count];
-    void setPulseMode( void );
-    void setPWMMode( void );
     bool pulseMode = true;
 };
 
