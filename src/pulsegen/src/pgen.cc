@@ -11,7 +11,7 @@ static struct hal_timer tim;
 #define INTERN_LEVEL( x ) ( ( x - 0.5719 * 1.0 ) / 0.1647 )
 
 PulseGenerator::PulseGenerator() {
-    dac_init(START_LEVEL);
+    dac_init(INTERN_LEVEL(START_LEVEL));
     timer_init(&tim);
     level = START_LEVEL;
     mode = PULSE;
