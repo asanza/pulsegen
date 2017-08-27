@@ -15,6 +15,7 @@ PulseGenerator::PulseGenerator() {
     dac_init(START_LEVEL);
     timer_init(&tim);
     level = START_LEVEL;
+    mode = PULSE;
 }
 
 void PulseGenerator::setMode(Mode mode) {
@@ -22,11 +23,15 @@ void PulseGenerator::setMode(Mode mode) {
 }
 
 PulseGenerator::Mode PulseGenerator::getMode( void ) {
-    return PULSE;
+    return mode;
 }
 
 PulseGenerator::Mode PulseGenerator::toggleMode( void ) {
-    return PULSE;
+    if(mode == PULSE)
+        mode = PWM;
+    else
+        mode = PULSE;
+    return mode;
 }
 
 void PulseGenerator::setTon( int ton ) {

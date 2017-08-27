@@ -17,6 +17,7 @@ public:
     void freq();
     void periodicTasks();
 private:
+    void updateMode();
     Gfx view;
     PulseGenerator model;
 };

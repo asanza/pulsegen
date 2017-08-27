@@ -3,6 +3,10 @@
 void Controller::init() {
     view.init();
     view.setLevel(model.getLevel());
+    updateMode();
+}
+
+void Controller::updateMode() {
     switch(model.getMode()) {
         case PulseGenerator::Mode::PWM:
             view.setPWMMode();
@@ -36,7 +40,8 @@ void Controller::duty() {
 }
 
 void Controller::mode() {
-
+    model.toggleMode();
+    updateMode();
 }
 
 void Controller::count() {
