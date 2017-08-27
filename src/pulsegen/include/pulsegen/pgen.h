@@ -52,8 +52,6 @@ public:
 private:
     Mode mode;
     int freq, duty, count, ton, toff, level;
-    const int lo = 6;
-    const float lp = 1.647;
 };
 
 #endif /* H_CTRL_ */

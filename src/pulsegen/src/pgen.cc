@@ -8,6 +8,9 @@ static struct hal_timer tim;
 #define MIN_LEVEL   724
 #define MAX_LEVEL   3883
 
+#define REAL_LEVEL( x ) ( x * 1.647 + 6 )
+#define INTERN_LEVEL( x ) ( ( x - 6 * 1.0 ) / 1.647 )
+
 PulseGenerator::PulseGenerator() {
     dac_init(START_LEVEL);
     timer_init(&tim);
@@ -43,14 +46,14 @@ int PulseGenerator::tonDown() {
 }
 
 void PulseGenerator::setLevel(int level) {
-    int val = (level - lo)*1.0 / lp;
+    int val = INTERN_LEVEL(level);
     if( val > MAX_LEVEL ) val = MAX_LEVEL;
     if( val < MIN_LEVEL ) val = MIN_LEVEL;
     this->level = val;
 }
 
 int PulseGenerator::getLevel() {
-    return level * lp + lo;
+    return REAL_LEVEL(level);
 }
 
 int PulseGenerator::levelUp() {
@@ -58,7 +61,7 @@ int PulseGenerator::levelUp() {
     if (level > MAX_LEVEL)
         level = MAX_LEVEL;
     dac_set(level);
-    return level * lp + lo;
+    return REAL_LEVEL(level);
 }
 
 int PulseGenerator::levelDown() {
@@ -66,5 +69,5 @@ int PulseGenerator::levelDown() {
     if( level <= MIN_LEVEL)
         level = MIN_LEVEL;
     dac_set(level);
-    return level * lp + lo;
+    return REAL_LEVEL(level);
 }
