@@ -65,3 +65,7 @@ void UGui::turnOn() {
 void UGui::turnOff() {
     disp_off();
 }
+
+void UGui::fillBlock( int16_t x, int16_t y, uint16_t w, uint16_t h, uint32_t color ) {
+    UG_FillRoundFrame( x, y, x + w, y + h, 2, color );
+}

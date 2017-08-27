@@ -24,7 +24,7 @@ private:
     char label[11] = {0};
     char format[15] = {0};
     bool inverted, _visible, _blink;
-    char units[3] = {0};
+    char units[4] = {0};
     char field[ 1 + sizeof (label) + sizeof (format) + sizeof (units) ] = {0};
     int32_t value;
     void update(void);

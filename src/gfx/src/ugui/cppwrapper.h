@@ -21,6 +21,7 @@ public:
     void setCursor(int16_t x, int16_t y);
     void turnOff();
     void turnOn();
+    void fillBlock( int16_t x, int16_t y, uint16_t w, uint16_t h, uint32_t color);
 private:
     int16_t x, y;
     uint32_t forecolor, backcolor;

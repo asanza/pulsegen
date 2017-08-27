@@ -99,3 +99,11 @@ int Gfx::blinkToff(int val) {
 int Gfx::blinkCount(int val) {
     return widgets[2].setBlink(val);
 }
+
+void Gfx::outputActive( bool val ) {
+    if ( val ) {
+        ui.fillBlock(5, 110, 10, 10, 0xFF0000);
+    } else {
+        ui.fillBlock(5, 110, 10, 10, 0x000000);
+    }
+}

@@ -28,6 +28,8 @@ public:
     int blinkToff(int val);
     int blinkCount(int val);
 
+    void outputActive( bool value );
+
 private:
     static const int widget_count = 5;
     TextField widgets[widget_count];

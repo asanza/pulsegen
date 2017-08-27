@@ -14,8 +14,12 @@ static const int pow10[] = {
 
 void Controller::init() {
     view.init();
-    view.setLevel(model.getLevel());
+    model.start();
     updateMode();
+    view.outputActive(model.isStarted());
+    view.setLevel(model.getLevel());
+    view.setTonFreq(model.getTonFreq());
+    view.setCount(model.getCount());
 }
 
 void Controller::updateMode() {
@@ -92,10 +96,13 @@ void Controller::count() {
 void Controller::power() {
     adj = NONE;
     clearBlinks();
-    if ( model.isStarted() )
+    if ( model.isStarted() ) {
         model.stop();
-    else
+    }
+    else {
         model.start();
+    }
+    view.outputActive(model.isStarted());
 }
 
 void Controller::decrease() {
