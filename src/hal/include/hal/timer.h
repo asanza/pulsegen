@@ -13,12 +13,18 @@ enum timer_mode {
 };
 
 void timer_init( enum timer_mode mode );
+
 void timer_stop( void );
 void timer_start( void );
+
 void timer_set_mode( enum timer_mode mode );
+
 void timer_set_freq( int freq );
+void timer_set_duty( int duty );
+
 void timer_set_ton( int ton );
 void timer_set_toff( int toff );
+void timer_set_count( int count );
 
 
 #ifdef __cplusplus

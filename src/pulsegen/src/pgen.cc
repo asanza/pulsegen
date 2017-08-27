@@ -11,6 +11,7 @@
 PulseGenerator::PulseGenerator() {
     dac_init(INTERN_LEVEL(START_LEVEL));
     timer_init( HAL_TIMER_PWM );
+    started = false;
     level = START_LEVEL;
     mode = PWM;
 }
@@ -88,4 +89,18 @@ int PulseGenerator::getToffDuty() {
 
 int PulseGenerator::getCount() {
     return 0;
+}
+
+void PulseGenerator::start() {
+    timer_start();
+    started = true;
+}
+
+bool PulseGenerator::isStarted() {
+    return started;
+}
+
+void PulseGenerator::stop() {
+    timer_stop();
+    started = false;
 }

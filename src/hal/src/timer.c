@@ -4,7 +4,21 @@
 #include <hal/gpio.h>
 #include <hal/error.h>
 
+#define DEFAULT_FREQ
+#define DEFAULT_DUTY
+#define DEFAULT_COUNT 	1
+#define DEFAULT_TON
+#define DEFAULT_TOFF
+
 static TIM_HandleTypeDef tim3;
+
+static set_mode_pwm( uint32_t freq, uint32_t duty ) {
+
+}
+
+static set_mode_pulse( uint32_t ton, uint32_t toff, uint32_t count ) {
+
+}
 
 void timer_init( enum timer_mode mode )
 {
@@ -43,8 +57,6 @@ void timer_init( enum timer_mode mode )
 	oc_cfg.OCFastMode = TIM_OCFAST_ENABLE;
 	HAL_ASSERT(HAL_TIM_OC_ConfigChannel(&tim3, &oc_cfg, TIM_CHANNEL_3)==HAL_OK);
 
-	HAL_ASSERT(HAL_TIM_OC_Start(&tim3, TIM_CHANNEL_3)==HAL_OK);
-
 	__HAL_RCC_AFIO_CLK_ENABLE();
 	__HAL_RCC_GPIOC_CLK_ENABLE();
 	gpio_init_struct.Pull  = GPIO_PULLDOWN;
@@ -53,6 +65,14 @@ void timer_init( enum timer_mode mode )
 	gpio_init_struct.Pin   = GPIO_PIN_8;
 	HAL_GPIO_Init(GPIOC, &gpio_init_struct);
 	__HAL_AFIO_REMAP_TIM3_ENABLE();
+}
+
+void timer_start( void ) {
+	HAL_ASSERT(HAL_TIM_OC_Start(&tim3, TIM_CHANNEL_3) == HAL_OK);
+}
+
+void timer_stop( void ) {
+	HAL_ASSERT( HAL_TIM_OC_Stop(&tim3, TIM_CHANNEL_3) == HAL_OK );
 }
 
 void TIM3_IRQHandler(void)

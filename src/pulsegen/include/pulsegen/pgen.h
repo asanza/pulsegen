@@ -36,9 +36,12 @@ public:
     void start( void );
     void stop( void );
 
+    bool isStarted( void );
+
 private:
     Mode mode;
     int freq, duty, count, ton, toff, level;
+    bool started;
 };
 
 #endif /* H_CTRL_ */

@@ -92,6 +92,10 @@ void Controller::count() {
 void Controller::power() {
     adj = NONE;
     clearBlinks();
+    if ( model.isStarted() )
+        model.stop();
+    else
+        model.start();
 }
 
 void Controller::decrease() {

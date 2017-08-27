@@ -22,7 +22,7 @@ private:
     Gfx view;
     PulseGenerator model;
     int blinkpos = 0;
-    enum Adj{TON, TOFF, COUNT, LEVEL, NONE};
+    enum Adj{ TON, TOFF, COUNT, LEVEL, NONE };
     enum Adj adj = NONE;
 };
 
