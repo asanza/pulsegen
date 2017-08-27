@@ -18,11 +18,11 @@ static Controller dev;
 static void process_key(enum key_type kinp) {
     switch(kinp) {
         /* ontime/freq */
-        case KEY_TA1: dev.freq(); break;
+        case KEY_TA1: dev.ton(); break;
         /* level */
         case KEY_TA2: dev.level(); break;
         /* offtime duty */
-        case KEY_TA3: dev.duty(); break;
+        case KEY_TA3: dev.toff(); break;
         /* change mode */
         case KEY_TA4: dev.mode(); break;
         /* count */

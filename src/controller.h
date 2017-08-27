@@ -12,14 +12,18 @@ public:
     void decrease();
     void power();
     void count();
-    void duty();
+    void toff();
     void level();
-    void freq();
+    void ton();
     void periodicTasks();
 private:
     void updateMode();
+    void clearBlinks();
     Gfx view;
     PulseGenerator model;
+    int blinkpos = 0;
+    enum Adj{TON, TOFF, COUNT, LEVEL, NONE};
+    enum Adj adj = NONE;
 };
 
 #endif

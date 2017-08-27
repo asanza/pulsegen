@@ -22,30 +22,56 @@ void Controller::updateMode() {
     }
 }
 
+void Controller::clearBlinks() {
+    view.blinkLevel(0);
+    view.blinkTon(0);
+    view.blinkToff(0);
+    view.blinkCount(0);
+    blinkpos = 0;
+}
 
 void Controller::periodicTasks() {
     view.update();
 }
 
-void Controller::freq() {
-
+void Controller::ton() {
+    if( adj != TON ){
+        clearBlinks();
+        adj = TON;
+    }
+    blinkpos = view.blinkTon(++blinkpos);
 }
 
 void Controller::level() {
+    if( adj != LEVEL ) {
+        clearBlinks();
+        adj = LEVEL;
+    }
 
+    blinkpos = view.blinkLevel(++blinkpos);
 }
 
-void Controller::duty() {
-
+void Controller::toff() {
+    if( adj != TOFF ) {
+        clearBlinks();
+        adj = TOFF;
+    }
+    blinkpos = view.blinkDuty(++blinkpos);
 }
 
 void Controller::mode() {
+    clearBlinks();
     model.toggleMode();
     updateMode();
 }
 
 void Controller::count() {
+    if( adj != COUNT ) {
+        clearBlinks();
+        adj = COUNT;
+    }
 
+    blinkpos = view.blinkCount(++blinkpos);
 }
 
 void Controller::power() {

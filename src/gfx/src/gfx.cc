@@ -75,3 +75,27 @@ void Gfx::setToff(int val) {
 void Gfx::setCount(int val) {
     widgets[2].setValue(val);
 }
+
+int Gfx::blinkLevel( int val ) {
+    return widgets[3].setBlink(val);
+}
+
+int Gfx::blinkFreq(int val) {
+    return widgets[0].setBlink(val);
+}
+
+int Gfx::blinkDuty(int val) {
+    return widgets[1].setBlink(val);
+}
+
+int Gfx::blinkTon(int val) {
+    return widgets[0].setBlink(val);
+}
+
+int Gfx::blinkToff(int val) {
+    return widgets[1].setBlink(val);
+}
+
+int Gfx::blinkCount(int val) {
+    return widgets[2].setBlink(val);
+}

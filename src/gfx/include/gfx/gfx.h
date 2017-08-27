@@ -11,6 +11,7 @@ public:
     void update( void );
     void init( void );
     void toggleMode();
+
     void setPulseMode( void );
     void setPWMMode( void );
     void setLevel( int val );
@@ -19,6 +20,14 @@ public:
     void setTon(int val);
     void setToff(int val);
     void setCount(int val);
+
+    int blinkLevel( int val );
+    int blinkFreq(int val);
+    int blinkDuty(int val);
+    int blinkTon(int val);
+    int blinkToff(int val);
+    int blinkCount(int val);
+
 private:
     static const int widget_count = 5;
     TextField widgets[widget_count];

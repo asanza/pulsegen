@@ -69,8 +69,22 @@ void TextField::blink() {
     update();
 }
 
-void TextField::setBlink( int pos ) {
+int TextField::setBlink( int pos ) {
+    int i, count = 0;
+    if( pos < 0) return 0;
+    i = strlen(format);
+    while (i--) {
+        if(format[i] == ':' || format[i] == '.') {
+            continue;
+        } else if ( format [i] == 0 ) {
+            /* end of string */
+            return 0;
+        }
+        count ++;
+    }
+    if( pos > count) pos = 0;
     this->pos = pos;
+    return pos;
 }
 
 void TextField::setValue( int val ) {

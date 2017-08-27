@@ -13,7 +13,7 @@ public:
     void setDisplay(UGui* Ui);
     void invert(bool value);
     void visible(bool value);
-    void setBlink(int pos);
+    int setBlink(int pos);
     void setValue(int value);
     void forceRedraw();
     void clear();
