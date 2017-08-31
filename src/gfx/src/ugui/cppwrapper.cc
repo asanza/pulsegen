@@ -16,10 +16,11 @@ static UG_RESULT _HW_DrawLine( UG_S16 x1, UG_S16 y1, UG_S16 x2, UG_S16 y2,
     return UG_RESULT_FAIL;
 }
 
+extern "C" void user_init( void ) {
+    UG_Init(&gui, disp_pset, 128, 128);
+}
 
 UGui::UGui() {
-    disp_init();
-    UG_Init(&gui, disp_pset, 128, 128);
     UG_DriverRegister( DRIVER_FILL_FRAME, (void*) _HW_FillFrame );
     UG_DriverRegister( DRIVER_DRAW_LINE, (void*) _HW_DrawLine );
     UG_FontSelect( &FONT_8X12 ) ;

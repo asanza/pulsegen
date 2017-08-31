@@ -9,7 +9,6 @@ public:
     Gfx( void );
     void clear( void );
     void update( void );
-    void init( void );
     void toggleMode();
 
     void setPulseMode( void );

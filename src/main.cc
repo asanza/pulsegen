@@ -13,9 +13,7 @@ static void key_handler(enum key_type key);
 
 static QueueHandle_t input_queue;
 
-static Controller dev;
-
-static void process_key(enum key_type kinp) {
+static void process_key(Controller& dev, enum key_type kinp) {
     switch(kinp) {
         /* ontime/freq */
         case KEY_TA1: dev.ton(); break;
@@ -37,13 +35,14 @@ static void process_key(enum key_type kinp) {
 }
 
 void update_display(void* param) {
+    Controller dev;
     enum key_type kinp;
     hal_gpio_init_out(6, 1);
     hal_gpio_init_out(5, 0);
     while (1){
         if ( xQueueReceive(input_queue, &kinp, 250 / portTICK_PERIOD_MS) ) {
             do {
-                process_key(kinp);
+                process_key(dev, kinp);
             } while ( xQueueReceive(input_queue, &kinp, 0));
         }
         hal_gpio_toggle(6);
@@ -53,7 +52,6 @@ void update_display(void* param) {
 
 int main(void) {
     hal_gpio_init_out(POWER_HOLD, 1);
-    dev.init();
     keybd_init(key_handler);
     input_queue = xQueueCreate(10, sizeof(enum key_type));
     xTaskCreate(update_display, "display", 1020, NULL, 3, NULL);

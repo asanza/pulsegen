@@ -6,18 +6,15 @@ static UGui ui;
 #define BACKGROUND_COLOR COLOR_BLACK
 
 Gfx::Gfx( void ) {
-}
-
-void Gfx::clear( void ) {
-}
-
-void Gfx::init( void ) {
     int i;
     ui.turnOn();
     for( i = 0; i < widget_count; i++ ) {
         widgets[i].setDisplay(&ui);
     }
     setPulseMode();
+}
+
+void Gfx::clear( void ) {
 }
 
 void Gfx::update( void ) {

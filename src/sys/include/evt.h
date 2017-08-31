@@ -4,6 +4,6 @@
 class SysEvent {
 public:
     SysEvent( );
-}
+};
 
 #endif

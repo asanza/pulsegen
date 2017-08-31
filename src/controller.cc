@@ -4,8 +4,7 @@ static const int pow10[] = {
     1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000,
 };
 
-void Controller::init() {
-    view.init();
+Controller::Controller() {
     updateMode();
     view.outputActive( model.isStarted() );
     view.setLevel( model.getLevel() );

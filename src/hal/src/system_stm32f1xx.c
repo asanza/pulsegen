@@ -1,6 +1,10 @@
 #include "stm32f1xx.h"
 #include "privfn.h"
 #include <hal/error.h>
+#include <hal/SSD1351.h>
+
+/* user initialization to be called before c++ constructors */
+extern void user_init( void );
 
 #if !defined  (HSE_VALUE)
   #define HSE_VALUE    ((uint32_t)8000000) /*!< Default value of the External oscillator in Hz.
@@ -43,6 +47,8 @@ const uint8_t APBPrescTable[8] =  {0, 0, 0, 0, 1, 2, 3, 4};
 #endif /* DATA_IN_ExtSRAM */
 #endif /* STM32F100xE || STM32F101xE || STM32F101xG || STM32F103xE || STM32F103xG */
 
+
+static void SystemClock_Config(void);
 
 /**
   * @brief  Setup the microcontroller system
@@ -105,6 +111,14 @@ void SystemInit (void)
 #else
   SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH. */
 #endif
+
+    /* initialize system */
+    HAL_Init();
+    SystemClock_Config();
+    SystemCoreClockUpdate();
+    /* initialize display */
+    disp_init();
+    user_init();
 }
 
 /**
@@ -374,9 +388,6 @@ static void SystemClock_Config(void)
 
 
 void _init( void ) {
-    HAL_Init();
-    SystemClock_Config();
-    SystemCoreClockUpdate();
 }
 
 void HAL_MspInit(void)

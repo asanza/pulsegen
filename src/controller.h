@@ -6,7 +6,7 @@
 
 class Controller {
 public:
-    void init();
+    Controller();
     void increase();
     void mode();
     void decrease();
