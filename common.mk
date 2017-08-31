@@ -12,13 +12,19 @@ PART = STM32F107xC
 ### Build flags for all targets
 CFLAGS = $(MCU) -D$(PART) -ffunction-sections -fdata-sections
 CFLAGS += -Wall -Wno-variadic-macros -Wno-packed-bitfield-compat
-CFLAGS += $(OPT) -DUSE_FULL_LL_DRIVER
-CFLAGS += -nostartfiles
+CFLAGS += $(OPT) #-DUSE_FULL_LL_DRIVER
+CFLAGS += -nostartfiles -ffreestanding # -fstack-protector-strong
+
+CFLAGS += $(INC) -Wfatal-errors  -DSTM32F107xC
+CPPFLAGS += $(INC) -Wfatal-errors -fno-rtti -fno-exceptions -nostartfiles -ffreestanding
+CPPFLAGS += -fno-non-call-exceptions -fno-use-cxa-atexit
+# CPPFLAGS += -fstack-protector-strong
 
 # Generate dependency information
 CFLAGS += -MMD -MP
 
-LDFLAGS = $(MCU) -specs=nano.specs
+LDFLAGS = $(MCU)
+LDFLAGS += -Wl,--cref --specs=nano.specs #--specs=nosys.specs
 
 ARFLAGS = #$(PLUGIN)#--plugin=$(shell arm-none-eabi-gcc --print-file-name=liblto_plugin.so)
 

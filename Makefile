@@ -3,12 +3,11 @@ include common.mk
 TARGET = dist/pulsegen
 
 LIBS +=
-LDFLAGS = -Wl,-Tsrc/hal/STM32F107RCTx_FLASH.ld
-LDFLAGS += -Wl,--gc-sections
+LDFLAGS += -Wl,-Tsrc/hal/STM32F107RCTx_FLASH.ld
 
-LDFLAGS += -Wl,--warn-common
+LDFLAGS += -Wl,--gc-sections
 LDFLAGS += -Wl,--check-sections -Wl,--Map=$(TARGET).map
-LDFLAGS += -Wl,--cref --specs=nano.specs --specs=nosys.specs
+LDFLAGS += -Wl,--warn-common
 
 
 INC  = -Isrc/hal/support/CMSIS/Include
@@ -26,6 +25,7 @@ SRCS += $(call rwildcard,src/hal/src,*.c)
 SRCS += $(call rwildcard,src/os/src,*.c)
 SRCS += src/os/portable/GCC/ARM_CM3/port.c
 SRCS += src/os/portable/MemMang/heap_1.c
+SRCS += $(call rwildcard,src/sys/src,*.c)
 
 SRCS += $(call rwildcard,src/gfx/src,*.c)
 
@@ -34,9 +34,6 @@ CPPSRCS += src/main.cc src/controller.cc
 CPPSRCS += $(call rwildcard,src/gfx/src,*.cc)
 
 ASMSRC = $(call rwildcard,src/hal/src,*.s)
-
-CFLAGS += $(INC) -Wfatal-errors  -DSTM32F107xC
-CPPFLAGS += $(INC) -Wfatal-errors
 
 DIRS =
 
