@@ -3,6 +3,7 @@
 #include <queue.h>
 #include <hal/gpio.h>
 #include <hal/keybd.h>
+#include <sys/evt.h>
 
 #include "controller.h"
 
@@ -40,11 +41,7 @@ void update_display(void* param) {
     hal_gpio_init_out(6, 1);
     hal_gpio_init_out(5, 0);
     while (1){
-        if ( xQueueReceive(input_queue, &kinp, 250 / portTICK_PERIOD_MS) ) {
-            do {
-                process_key(dev, kinp);
-            } while ( xQueueReceive(input_queue, &kinp, 0));
-        }
+        evt_loop();
         hal_gpio_toggle(6);
         dev.periodicTasks();
     }
@@ -53,6 +50,7 @@ void update_display(void* param) {
 int main(void) {
     hal_gpio_init_out(POWER_HOLD, 1);
     keybd_init(key_handler);
+    evt_init();
     input_queue = xQueueCreate(10, sizeof(enum key_type));
     xTaskCreate(update_display, "display", 1020, NULL, 3, NULL);
     vTaskStartScheduler();
