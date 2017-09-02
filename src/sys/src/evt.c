@@ -17,7 +17,7 @@ void evt_init( void ) {
 }
 
 void evt_register_listener(event_listener_t listener) {
-    if(index < sizeof(fn)){
+    if(index < sizeof(fn)/sizeof(struct Event)){
         fn[index++] = listener;
     }
 }
@@ -39,7 +39,7 @@ void evt_loop( void ) {
     struct Event evt;
     if ( xQueueReceive(evtq, &evt, 250 / portTICK_PERIOD_MS) ) {
         do {
-            for( i = 0; i < sizeof(fn); i++)
+            for( i = 0; i < index; i++)
             {
                 if(fn[i]){
                     fn[i](evt.type, evt.data);
