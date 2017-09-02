@@ -18,6 +18,7 @@ INC += -Isrc/os/include
 INC += -Isrc/os/portable/GCC/ARM_CM3
 INC += -Isrc/gfx/include
 INC += -Isrc/pulsegen/include
+INC += -Isrc/sys/include
 
 SRCS += $(call rwildcard,src/hal/support/STM32F1xx_HAL_Driver/Src,*.c)
 SRCS += $(call rwildcard,src/hal/src,*.c)
