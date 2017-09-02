@@ -33,7 +33,7 @@ public:
 
 private:
     Mode mode;
-    int freq, duty, count, ton, toff, level;
+    uint32_t duty, count, ton, toff, level;
     bool started;
 };
 

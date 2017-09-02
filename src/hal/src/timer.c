@@ -17,19 +17,7 @@ extern uint32_t SystemCoreClock;
 
 #define _PERIOD ( 100 + 1 )
 
-static void get_pwm_reg_values(uint32_t freq, uint32_t duty, uint16_t* period,
-		uint16_t* prescaler, uint16_t* pulse ) {
-	uint32_t p;
-	if( duty > 100 )
-		duty = 100;
-	*period = _PERIOD;
-	*pulse = duty;
-	p = ( SystemCoreClock * 1.0 ) / ( freq * _PERIOD * 1.0 ) - 1;
-	if (p > 0xFFFF)
-		*prescaler = 0xFFFF;
-	else
-		*prescaler = p;
-}
+static uint32_t frequency;
 
 static  uint16_t get_prescaler( uint32_t freq ) {
 	uint32_t p;
@@ -39,20 +27,28 @@ static  uint16_t get_prescaler( uint32_t freq ) {
 	return p;
 }
 
+static uint32_t get_frequency( uint16_t prescaler ) {
+	uint32_t freq = SystemCoreClock * 1.0 / ( _PERIOD * ( prescaler + 1 ) * 1.0 );
+	return freq;
+}
+
+uint32_t timer_get_freq( void ) {
+	return frequency;
+}
+
 static void set_mode_pwm( uint32_t freq, uint32_t duty ) {
 
 	TIM_ClockConfigTypeDef clk_src_cfg;
 	TIM_MasterConfigTypeDef master_cfg;
 	TIM_OC_InitTypeDef oc_cfg;
 
-	uint16_t period, prescaler, pulse;
-
-	get_pwm_reg_values( freq, duty, &period, &prescaler, &pulse );
+	uint16_t prescaler = get_prescaler( freq );
+	frequency = get_frequency(prescaler);
 
 	tim3.Instance = TIM3;
 	tim3.Init.Prescaler = prescaler;
 	tim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	tim3.Init.Period = period;
+	tim3.Init.Period = _PERIOD;
 	tim3.Init.CounterMode = TIM_COUNTERMODE_UP;
 	HAL_ASSERT(HAL_TIM_Base_Init(&tim3)==HAL_OK);
 
@@ -69,7 +65,7 @@ static void set_mode_pwm( uint32_t freq, uint32_t duty ) {
 	HAL_ASSERT(HAL_TIMEx_MasterConfigSynchronization(&tim3, &master_cfg)==HAL_OK);
 
 	oc_cfg.OCMode = TIM_OCMODE_PWM2;
-	oc_cfg.Pulse = pulse;
+	oc_cfg.Pulse = duty;
 	oc_cfg.OCPolarity = TIM_OCPOLARITY_LOW;
 	oc_cfg.OCFastMode = TIM_OCFAST_ENABLE;
 	HAL_ASSERT(HAL_TIM_PWM_ConfigChannel(&tim3, &oc_cfg, TIM_CHANNEL_3)==HAL_OK);
@@ -82,7 +78,7 @@ static void set_mode_pulse( uint32_t ton, uint32_t toff, uint32_t count ) {
 	TIM_MasterConfigTypeDef master_cfg;
 	TIM_OC_InitTypeDef oc_cfg;
 
-	uint16_t period, prescaler, pulse;
+	//uint16_t period, prescaler, pulse;
 
 	//get_pwm_reg_values( freq, duty, &period, &prescaler, &pulse );
 
@@ -145,7 +141,19 @@ void timer_init( enum timer_mode _mode )
 void timer_set_freq(int freq) {
 	if( mode != HAL_TIMER_PWM )
 		return;
-	__HAL_TIM_PRESCALER( &tim3, get_prescaler( freq ) );
+	if( frequency == freq ) return;
+	if( freq < 10 ) return;
+	uint16_t prescaler = get_prescaler( freq );
+	if ( prescaler == get_prescaler( frequency ) ) {
+		if( freq > frequency )
+		{
+			if(prescaler != 0) prescaler--;
+		} else {
+			if(prescaler != 0xFFFF) prescaler++;
+		}
+	}
+	__HAL_TIM_PRESCALER( &tim3, prescaler );
+	frequency = get_frequency( prescaler );
 }
 
 void timer_set_duty( int duty ) {

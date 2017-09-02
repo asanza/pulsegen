@@ -6,8 +6,6 @@
 #define MIN_LEVEL   150
 #define MAX_LEVEL   620
 #define START_FREQ  1000
-#define MAX_FREQ    350000
-#define MIN_FREQ    10
 #define START_DUTY  50
 #define MAX_DUTY    99
 #define MIN_DUTY    1
@@ -21,7 +19,6 @@ PulseGenerator::PulseGenerator() {
     timer_set_duty( START_DUTY );
     started = false;
     level = START_LEVEL;
-    freq = START_FREQ;
     duty = START_DUTY;
     mode = PWM;
 }
@@ -39,11 +36,9 @@ PulseGenerator::Mode PulseGenerator::toggleMode( void ) {
     if(mode == PULSE) {
         mode = PWM;
         timer_set_mode(HAL_TIMER_PWM);
-        timer_set_freq(freq);
         timer_set_duty(duty);
     } else {
         timer_set_mode(HAL_TIMER_PULSE);
-        timer_set_freq(freq);
         timer_set_duty(duty);
         timer_set_count( count );
         mode = PULSE;
@@ -54,19 +49,14 @@ PulseGenerator::Mode PulseGenerator::toggleMode( void ) {
 void PulseGenerator::setTonFreq( int value ) {
    switch(mode) {
        case PWM:
-            if( value > MAX_FREQ )
-                value = MAX_FREQ;
-            if( value < MIN_FREQ )
-                value = MIN_FREQ;
             timer_set_freq( value );
-            freq = value;
             break;
    }
 }
 
 int PulseGenerator::getTonFreq() {
     switch(mode) {
-        case PWM: return freq;
+        case PWM: return timer_get_freq();
         case PULSE: return ton;
     }
     return 0;

@@ -20,6 +20,8 @@ void timer_start( void );
 void timer_set_mode( enum timer_mode mode );
 
 void timer_set_freq( int freq );
+uint32_t timer_get_freq( void );
+
 void timer_set_duty( int duty );
 
 void timer_set_ton( int ton );

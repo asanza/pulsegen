@@ -69,9 +69,9 @@ void key_handler( enum key_type key) {
         /* power/trigger */
         case KEY_POW: type = KEY_POWER; break;
         /* encoder increment */
-        case ENC_INC: type = ENCODER_DECREASE; break;
+        case ENC_INC: type = ENCODER_INCREASE; break;
         /* encoder decrement */
-        case ENC_DEC: type = ENCODER_INCREASE; break;
+        case ENC_DEC: type = ENCODER_DECREASE; break;
     }
     evt_queue_from_isr(type, 0);
 }
