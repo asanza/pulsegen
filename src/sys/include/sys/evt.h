@@ -21,6 +21,7 @@ enum EventType {
     LEVEL_CHANGED,
     COUNT_CHANGED,
     MODE_CHANGED,
+    OUTPUT_CHANGED,
 };
 
 typedef void(*event_listener_t)(enum EventType type, uint32_t data);
