@@ -17,7 +17,7 @@ CFLAGS += -nostartfiles -ffreestanding # -fstack-protector-strong
 
 CFLAGS += $(INC) -Wfatal-errors  -DSTM32F107xC
 CPPFLAGS += $(INC) -Wfatal-errors -fno-rtti -fno-exceptions -nostartfiles -ffreestanding
-CPPFLAGS += -fno-non-call-exceptions -fno-use-cxa-atexit
+CPPFLAGS += -fno-non-call-exceptions -fno-use-cxa-atexit -std=gnu++11
 # CPPFLAGS += -fstack-protector-strong
 
 # Generate dependency information
