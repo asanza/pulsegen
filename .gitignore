@@ -1,5 +1,5 @@
 # eclipse project files
-
+*.log
 .cproject
 .project
 cpc20_plat Debug.cfg
