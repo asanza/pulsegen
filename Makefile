@@ -54,6 +54,12 @@ all: $(OBJS)
 	arm-none-eabi-objcopy $(TARGET).elf -O binary $(TARGET).bin
 
 
+flash: all
+	openocd -f tools/flash.openocd
+
+debug:
+	tools/debug.sh
+
 %.o: %.c
 	$(vecho) "CC $<"
 	$(Q) $(CC) -c $(CFLAGS) $< -o $@
@@ -68,15 +74,6 @@ all: $(OBJS)
 
 $(DEPS): ;
 .PRECIOUS: $(DEPS)
-
-flash: all
-	openocd -f tools/flash.openocd
-
-winflash: all
-	sh tools/winflash.sh
-
-test:
-	cd test && rake test:all
 
 clean:
 	rm -vf $(TARGET).elf $(TARGET).bin
