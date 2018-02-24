@@ -1,6 +1,7 @@
 #include <pulsegen/pgen.h>
 #include <hal/timer.h>
 #include <hal/dac.h>
+#include <sys/evt.h>
 
 #define START_LEVEL 330
 #define MIN_LEVEL   150

@@ -14,14 +14,8 @@ enum EventType {
     KEY_COUNT,
     ENCODER_INCREASE,
     ENCODER_DECREASE,
-    FREQUENCY_CHANGED,
-    TON_CHANGED,
-    TOFF_CHANGED,
-    DUTY_CHANGED,
-    LEVEL_CHANGED,
-    COUNT_CHANGED,
-    MODE_CHANGED,
-    OUTPUT_CHANGED,
+    OUTPUT_ON,
+	OUTPUT_OFF
 };
 
 typedef void(*event_listener_t)(enum EventType type, uint32_t data);

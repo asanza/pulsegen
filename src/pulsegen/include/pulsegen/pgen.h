@@ -10,6 +10,10 @@ public:
     PulseGenerator();
 
     enum Mode{PWM, PULSE};
+    /**
+     * Set pulse generator mode. 
+     * @param mode [description]
+     */
     void setMode(Mode mode);
     Mode toggleMode(void);
     Mode getMode( void );

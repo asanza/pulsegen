@@ -115,9 +115,11 @@ void Controller::decrease() {
 }
 
 void Controller::increase() {
+	int val;
     switch( adj ) {
         case TON:
-            model.setTonFreq(model.getTonFreq() + pow10[blinkpos - 1]);
+        	val = model.getTonFreq() + pow10[blinkpos - 1];
+            model.setTonFreq(val);
             view.setTonFreq(model.getTonFreq());
         break;
         case TOFF:
@@ -129,4 +131,9 @@ void Controller::increase() {
             view.setLevel( model.getLevel());
         break;
     }
+}
+
+void Controller::notify() {
+	model.stop();
+    view.outputActive(model.isStarted());    
 }

@@ -1,5 +1,6 @@
 #include "stm32f1xx.h"
 #include "privfn.h"
+#include <embedd/cmsis_nvic.h>
 #include <hal/error.h>
 #include <hal/SSD1351.h>
 

@@ -101,8 +101,6 @@ static void set_mode_pulse( uint32_t ton, uint32_t toff, uint32_t count ) {
 	oc_cfg.Pulse = 20;
 	oc_cfg.OCPolarity = TIM_OCPOLARITY_LOW;
 	HAL_ASSERT(HAL_TIM_OC_ConfigChannel(&tim3, &oc_cfg, TIM_CHANNEL_3)==HAL_OK);
-
-	mode = HAL_TIMER_PULSE;
 }
 
 void timer_start( void ) {
@@ -180,15 +178,16 @@ void timer_set_count( uint16_t count ) {
 
 }
 
-void timer_set_mode( enum timer_mode mode ) {
+void timer_set_mode( enum timer_mode _mode ) {
 	timer_stop();
-	if( mode == HAL_TIMER_PWM ) {
+	if( _mode == HAL_TIMER_PWM ) {
 		HAL_TIM_PWM_DeInit(&tim3);
 		set_mode_pwm(1000, 10);
 	} else {
 		HAL_TIM_OC_DeInit(&tim3);
 		set_mode_pulse(100, 100, 1);
 	}
+	mode = _mode;
 }
 
 void TIM3_IRQHandler(void)

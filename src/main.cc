@@ -12,24 +12,8 @@
 #define POWER_HOLD 17
 
 static Controller dev;
-static Gfx view;
 
-void display_listener( enum EventType type, uint32_t data ) {
-	switch(type)  {
-	case TON_CHANGED:   //dev.changeFreq( data );
-	case TOFF_CHANGED:
-	case FREQUENCY_CHANGED:
-	case DUTY_CHANGED:
-	case LEVEL_CHANGED:
-	case COUNT_CHANGED:
-	case MODE_CHANGED:
-	// case BLINK_CHANGED: //view.blink(data); break;
-	// case ADJUST_CHANGED: //view.adjust(data); break;
-	default: asm ("NOP");
-	}
-}
-
-/* manage key events */
+/* manage system events */
 void device_listener( enum EventType type, uint32_t data ) {
 	switch(type) {
 	case KEY_POWER:         dev.power();       break;
@@ -40,6 +24,8 @@ void device_listener( enum EventType type, uint32_t data ) {
 	case KEY_COUNT:         dev.count();       break;
 	case ENCODER_DECREASE:  dev.decrease();    break;
 	case ENCODER_INCREASE:  dev.increase();    break;
+	case OUTPUT_ON:			dev.notify();  break;
+	case OUTPUT_OFF:		dev.notify(); break;
 	default: asm ("NOP");
 	}
 }
@@ -82,7 +68,6 @@ int main(void) {
 	hal_gpio_init_out(POWER_HOLD, 1);
 	keybd_init(key_handler);
 	evt_init();
-	evt_register_listener(display_listener);
 	evt_register_listener(device_listener);
 	xTaskCreate(event_loop, "evtloop", 1020, NULL, 3, NULL);
 	vTaskStartScheduler();
