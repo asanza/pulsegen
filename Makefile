@@ -19,9 +19,12 @@ INC += -Isrc/os/portable/GCC/ARM_CM3
 INC += -Isrc/gfx/include
 INC += -Isrc/pulsegen/include
 INC += -Isrc/sys/include
+INC += -Isrc/hal/support/embedd/include
 
 SRCS += $(call rwildcard,src/hal/support/STM32F1xx_HAL_Driver/Src,*.c)
+SRCS += $(call rwildcard,src/hal/support/embedd/src,*.c)
 SRCS += $(call rwildcard,src/hal/src,*.c)
+
 
 SRCS += $(call rwildcard,src/os/src,*.c)
 SRCS += src/os/portable/GCC/ARM_CM3/port.c
@@ -58,7 +61,7 @@ flash: all
 	openocd -f tools/flash.openocd
 
 debug:
-	tools/debug.sh
+	tools/jlink.sh
 
 %.o: %.c
 	$(vecho) "CC $<"

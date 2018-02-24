@@ -48,7 +48,7 @@
   .fpu softvfp
   .thumb
 
-.global g_pfnVectors
+.global __isr_vector
 .global Default_Handler
 
 /* start address for the initialization values of the .data section.
@@ -151,11 +151,11 @@ NVIC_INT_CTRL_CONST: .word 0xe000ed04
 *
 ******************************************************************************/
   .section .isr_vector,"a",%progbits
-  .type g_pfnVectors, %object
-  .size g_pfnVectors, .-g_pfnVectors
+  .type __isr_vector, %object
+  .size __isr_vector, .-__isr_vector
 
 
-g_pfnVectors:
+__isr_vector:
 
   .word _estack
   .word Reset_Handler

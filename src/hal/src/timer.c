@@ -10,7 +10,7 @@
 #define DEFAULT_TON
 #define DEFAULT_TOFF
 
-static TIM_HandleTypeDef tim3;
+static TIM_HandleTypeDef tim3, tim2;
 static enum timer_mode mode;
 
 extern uint32_t SystemCoreClock;
@@ -78,14 +78,10 @@ static void set_mode_pulse( uint32_t ton, uint32_t toff, uint32_t count ) {
 	TIM_MasterConfigTypeDef master_cfg;
 	TIM_OC_InitTypeDef oc_cfg;
 
-	//uint16_t period, prescaler, pulse;
-
-	//get_pwm_reg_values( freq, duty, &period, &prescaler, &pulse );
-
 	tim3.Instance = TIM3;
-	tim3.Init.Prescaler = 2000;
+	tim3.Init.Prescaler = 1;
 	tim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
-	tim3.Init.Period = 1000;
+	tim3.Init.Period = 0xFFFF;
 	tim3.Init.CounterMode = TIM_COUNTERMODE_UP;
 	HAL_ASSERT(HAL_TIM_Base_Init(&tim3)==HAL_OK);
 
@@ -97,15 +93,27 @@ static void set_mode_pulse( uint32_t ton, uint32_t toff, uint32_t count ) {
 	HAL_ASSERT(HAL_TIM_OC_Init(&tim3)==HAL_OK);
 	HAL_ASSERT(HAL_TIM_OnePulse_Init(&tim3, TIM_OPMODE_SINGLE) == HAL_OK );
 
-	master_cfg.MasterOutputTrigger = TIM_TRGO_RESET;
-	master_cfg.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+	master_cfg.MasterOutputTrigger = TIM_TRGO_OC3REF;
+	master_cfg.MasterSlaveMode = TIM_MASTERSLAVEMODE_ENABLE;
 	HAL_ASSERT(HAL_TIMEx_MasterConfigSynchronization(&tim3, &master_cfg)==HAL_OK);
 
-	oc_cfg.OCMode = TIM_OCMODE_TOGGLE;
-	oc_cfg.Pulse = 500;
+	oc_cfg.OCMode = TIM_OCMODE_PWM1;
+	oc_cfg.Pulse = 20;
 	oc_cfg.OCPolarity = TIM_OCPOLARITY_LOW;
 	HAL_ASSERT(HAL_TIM_OC_ConfigChannel(&tim3, &oc_cfg, TIM_CHANNEL_3)==HAL_OK);
 
+	mode = HAL_TIMER_PULSE;
+}
+
+void timer_start( void ) {
+	__HAL_TIM_SET_COMPARE(&tim3, TIM_CHANNEL_3, 0xFFF0);
+	__HAL_TIM_SET_COUNTER(&tim3, 10);
+	__HAL_TIM_SET_AUTORELOAD(&tim3, 0xFFFF);
+
+	if( mode == HAL_TIMER_PWM )
+	HAL_TIM_PWM_Start(&tim3, TIM_CHANNEL_3);
+	else
+	HAL_TIM_OC_Start(&tim3, TIM_CHANNEL_3);
 }
 
 void timer_init( enum timer_mode _mode )
@@ -160,12 +168,6 @@ void timer_set_duty( int duty ) {
 	__HAL_TIM_SetCompare(&tim3, TIM_CHANNEL_3, duty);
 }
 
-void timer_start( void ) {
-	if( mode == HAL_TIMER_PWM )
-		HAL_TIM_PWM_Start(&tim3, TIM_CHANNEL_3);
-	else
-		HAL_TIM_OC_Start(&tim3, TIM_CHANNEL_3);
-}
 
 void timer_stop( void ) {
 	if( mode == HAL_TIMER_PWM )

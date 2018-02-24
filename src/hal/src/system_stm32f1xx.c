@@ -116,6 +116,8 @@ void SystemInit (void)
     HAL_Init();
     SystemClock_Config();
     SystemCoreClockUpdate();
+    /* relocate interrupt vector */
+    NVIC_Relocate();
     /* initialize display */
     disp_init();
     user_init();
