@@ -52,6 +52,8 @@ void PulseGenerator::setTonFreq( int value ) {
        case PWM:
             timer_set_freq( value );
             break;
+       case PULSE:
+    	   timer_set_ton( value );
    }
 }
 
@@ -97,7 +99,7 @@ void PulseGenerator::setToffDuty(int val) {
 }
 
 int PulseGenerator::getCount() {
-    return 0;
+    return timer_get_count();
 }
 
 void PulseGenerator::start() {
@@ -112,4 +114,8 @@ bool PulseGenerator::isStarted() {
 void PulseGenerator::stop() {
     timer_stop();
     started = false;
+}
+
+void PulseGenerator::setCount(uint32_t count) {
+	timer_set_count(count);
 }

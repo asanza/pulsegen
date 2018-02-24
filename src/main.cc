@@ -24,8 +24,7 @@ void device_listener( enum EventType type, uint32_t data ) {
 	case KEY_COUNT:         dev.count();       break;
 	case ENCODER_DECREASE:  dev.decrease();    break;
 	case ENCODER_INCREASE:  dev.increase();    break;
-	case OUTPUT_ON:			dev.notify();  break;
-	case OUTPUT_OFF:		dev.notify(); break;
+	case OUTPUT_OFF:		dev.notify_stop(); break;
 	default: asm ("NOP");
 	}
 }

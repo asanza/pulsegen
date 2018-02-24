@@ -26,7 +26,8 @@ void timer_set_duty( int duty );
 
 void timer_set_ton( int ton );
 void timer_set_toff( int toff );
-void timer_set_count( uint16_t count );
+void timer_set_count( uint32_t count );
+uint32_t timer_get_count( void );
 
 
 #ifdef __cplusplus

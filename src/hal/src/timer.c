@@ -9,6 +9,7 @@
 #define DEFAULT_COUNT 	1
 #define DEFAULT_TON
 #define DEFAULT_TOFF
+#define MAX_PULSE_COUNT 9999
 
 static TIM_HandleTypeDef tim3, tim2;
 static enum timer_mode mode;
@@ -17,7 +18,7 @@ extern uint32_t SystemCoreClock;
 
 #define _PERIOD ( 100 + 1 )
 
-static uint32_t frequency;
+static uint32_t frequency, count;
 
 static  uint16_t get_prescaler( uint32_t freq ) {
 	uint32_t p;
@@ -174,8 +175,15 @@ void timer_stop( void ) {
 		HAL_TIM_OC_Stop(&tim3, TIM_CHANNEL_3);
 }
 
-void timer_set_count( uint16_t count ) {
+void timer_set_count( uint32_t _count ) {
+	if(_count >= MAX_PULSE_COUNT) {
+		return;
+	}
+	count = _count;
+}
 
+uint32_t timer_get_count( void ) {
+	return count;
 }
 
 void timer_set_mode( enum timer_mode _mode ) {
@@ -188,6 +196,10 @@ void timer_set_mode( enum timer_mode _mode ) {
 		set_mode_pulse(100, 100, 1);
 	}
 	mode = _mode;
+}
+
+void timer_set_ton(int value) {
+
 }
 
 void TIM3_IRQHandler(void)

@@ -15,7 +15,7 @@ public:
     void toff();
     void level();
     void ton();
-    void notify();
+    void notify_stop();
     void periodicTasks();
 private:
     void updateMode();

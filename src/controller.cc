@@ -110,7 +110,12 @@ void Controller::decrease() {
         case LEVEL :
             model.setLevel(model.getLevel() - pow10[blinkpos - 1]);
             view.setLevel( model.getLevel());
+        case COUNT :
+        	model.setCount(model.getCount() - pow10[blinkpos - 1]);
+        	view.setCount(model.getCount());
         break;
+        default:
+        	break;
     }
 }
 
@@ -130,10 +135,16 @@ void Controller::increase() {
             model.setLevel(model.getLevel() + pow10[blinkpos - 1]);
             view.setLevel( model.getLevel());
         break;
+        case COUNT :
+        	model.setCount(model.getCount() + pow10[blinkpos - 1]);
+        	view.setCount(model.getCount());
+        break;
+        default:
+        	break;
     }
 }
 
-void Controller::notify() {
+void Controller::notify_stop() {
 	model.stop();
     view.outputActive(model.isStarted());    
 }

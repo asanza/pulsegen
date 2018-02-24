@@ -18,7 +18,7 @@ public:
     Mode toggleMode(void);
     Mode getMode( void );
 
-    void setCount( int count );
+    void setCount( uint32_t count );
     int getCount( void );
 
     void setTonFreq( int freq );
