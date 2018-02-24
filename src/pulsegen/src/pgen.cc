@@ -60,7 +60,7 @@ void PulseGenerator::setTonFreq( int value ) {
 int PulseGenerator::getTonFreq() {
     switch(mode) {
         case PWM: return timer_get_freq();
-        case PULSE: return ton;
+        case PULSE: return timer_get_ton();
     }
     return 0;
 }
@@ -79,7 +79,7 @@ int PulseGenerator::getLevel() {
 int PulseGenerator::getToffDuty() {
     switch(mode) {
         case PWM: return duty;
-        case PULSE: return toff;
+        case PULSE: return timer_get_toff();
     }
     return 0;
 }
@@ -94,7 +94,9 @@ void PulseGenerator::setToffDuty(int val) {
             timer_set_duty( val );
             duty = val;
         break;
-        case PULSE:;
+        case PULSE:
+        	timer_set_toff(val);
+        break;
     }
 }
 

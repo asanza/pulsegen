@@ -7,9 +7,12 @@
 #define DEFAULT_FREQ
 #define DEFAULT_DUTY
 #define DEFAULT_COUNT 	1
-#define DEFAULT_TON
-#define DEFAULT_TOFF
+#define MIN_TON			1
+#define MIN_TOFF		1
+#define MAX_TON			9999999
+#define MAX_TOFF		9999999
 #define MAX_PULSE_COUNT 9999
+#define MIN_PULSE_COUNT 1
 
 static TIM_HandleTypeDef tim3, tim2;
 static enum timer_mode mode;
@@ -18,7 +21,7 @@ extern uint32_t SystemCoreClock;
 
 #define _PERIOD ( 100 + 1 )
 
-static uint32_t frequency, count;
+static uint32_t frequency, count= MIN_PULSE_COUNT, ton = MIN_TON, toff = MIN_TOFF;
 
 static  uint16_t get_prescaler( uint32_t freq ) {
 	uint32_t p;
@@ -176,7 +179,7 @@ void timer_stop( void ) {
 }
 
 void timer_set_count( uint32_t _count ) {
-	if(_count >= MAX_PULSE_COUNT) {
+	if(_count >= MAX_PULSE_COUNT|| _count < MIN_PULSE_COUNT) {
 		return;
 	}
 	count = _count;
@@ -199,7 +202,26 @@ void timer_set_mode( enum timer_mode _mode ) {
 }
 
 void timer_set_ton(int value) {
+	if(value > MAX_TON|| value < MIN_TON) {
+		return;
+	}
+	ton = value;
+}
 
+void timer_set_toff(int value) {
+	if(value > MAX_TOFF || value < MIN_TOFF) {
+		return;
+	}
+	toff = value;
+}
+
+
+int timer_get_ton(void) {
+	return ton;
+}
+
+int timer_get_toff(void) {
+	return toff;
 }
 
 void TIM3_IRQHandler(void)
