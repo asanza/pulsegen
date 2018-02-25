@@ -4,8 +4,8 @@
 #include <hal/gpio.h>
 #include <hal/error.h>
 
-#define DEFAULT_FREQ
-#define DEFAULT_DUTY
+#define DEFAULT_FREQ	1000
+#define DEFAULT_DUTY	50
 #define DEFAULT_COUNT 	1
 #define MIN_TON			1
 #define MIN_TOFF		1
@@ -13,21 +13,37 @@
 #define MAX_TOFF		9999999
 #define MAX_PULSE_COUNT 9999
 #define MIN_PULSE_COUNT 1
+#define _PERIOD ( 100 + 1 )
 
 static TIM_HandleTypeDef tim3, tim2;
-static enum timer_mode mode;
 
 extern uint32_t SystemCoreClock;
 
-#define _PERIOD ( 100 + 1 )
 
-static uint32_t frequency, count= MIN_PULSE_COUNT, ton = MIN_TON, toff = MIN_TOFF;
+struct timer_config {
+	uint32_t frequency;
+	uint32_t count;
+	uint32_t duty;
+	uint32_t ton;
+	uint32_t toff;
+	enum timer_mode mode;
+};
+
+static struct timer_config config = {
+	.frequency = DEFAULT_FREQ,
+	.count = MIN_PULSE_COUNT,
+	.duty =	DEFAULT_DUTY,
+	.ton = MIN_TON,
+	.toff = MIN_TOFF,
+	.mode = HAL_TIMER_PWM
+};
 
 static  uint16_t get_prescaler( uint32_t freq ) {
 	uint32_t p;
 	p = ( SystemCoreClock * 1.0 ) / ( freq * _PERIOD * 1.0 ) - 1;
-	if (p > 0xFFFF)
+	if (p > 0xFFFF) {
 		p = 0xFFFF;
+	}
 	return p;
 }
 
@@ -37,17 +53,17 @@ static uint32_t get_frequency( uint16_t prescaler ) {
 }
 
 uint32_t timer_get_freq( void ) {
-	return frequency;
+	return config.frequency;
 }
 
-static void set_mode_pwm( uint32_t freq, uint32_t duty ) {
+static void set_mode_pwm( struct timer_config* config ) {
 
 	TIM_ClockConfigTypeDef clk_src_cfg;
 	TIM_MasterConfigTypeDef master_cfg;
 	TIM_OC_InitTypeDef oc_cfg;
 
-	uint16_t prescaler = get_prescaler( freq );
-	frequency = get_frequency(prescaler);
+	uint16_t prescaler = get_prescaler( config->frequency );
+	config->frequency = get_frequency(prescaler);
 
 	tim3.Instance = TIM3;
 	tim3.Init.Prescaler = prescaler;
@@ -69,14 +85,14 @@ static void set_mode_pwm( uint32_t freq, uint32_t duty ) {
 	HAL_ASSERT(HAL_TIMEx_MasterConfigSynchronization(&tim3, &master_cfg)==HAL_OK);
 
 	oc_cfg.OCMode = TIM_OCMODE_PWM2;
-	oc_cfg.Pulse = duty;
+	oc_cfg.Pulse = config->duty;
 	oc_cfg.OCPolarity = TIM_OCPOLARITY_LOW;
 	oc_cfg.OCFastMode = TIM_OCFAST_ENABLE;
 	HAL_ASSERT(HAL_TIM_PWM_ConfigChannel(&tim3, &oc_cfg, TIM_CHANNEL_3)==HAL_OK);
 
 }
 
-static void set_mode_pulse( uint32_t ton, uint32_t toff, uint32_t count ) {
+static void set_mode_pulse( struct timer_config* config ) {
 
 	TIM_ClockConfigTypeDef clk_src_cfg;
 	TIM_MasterConfigTypeDef master_cfg;
@@ -107,24 +123,8 @@ static void set_mode_pulse( uint32_t ton, uint32_t toff, uint32_t count ) {
 	HAL_ASSERT(HAL_TIM_OC_ConfigChannel(&tim3, &oc_cfg, TIM_CHANNEL_3)==HAL_OK);
 }
 
-void timer_start( void ) {
-	__HAL_TIM_SET_COMPARE(&tim3, TIM_CHANNEL_3, 0xFFF0);
-	__HAL_TIM_SET_COUNTER(&tim3, 10);
-	__HAL_TIM_SET_AUTORELOAD(&tim3, 0xFFFF);
-
-	if( mode == HAL_TIMER_PWM )
-	HAL_TIM_PWM_Start(&tim3, TIM_CHANNEL_3);
-	else
-	HAL_TIM_OC_Start(&tim3, TIM_CHANNEL_3);
-}
-
-void timer_init( enum timer_mode _mode )
-{
-
-	mode = _mode;
-
+static void init_hw(struct timer_config* config) {
 	GPIO_InitTypeDef gpio_init_struct;
-
 	HAL_NVIC_SetPriority(TIM3_IRQn, 8, 0);
 	HAL_NVIC_EnableIRQ(TIM3_IRQn);
 
@@ -138,24 +138,41 @@ void timer_init( enum timer_mode _mode )
 	gpio_init_struct.Pin   = GPIO_PIN_8;
 	HAL_GPIO_Init(GPIOC, &gpio_init_struct);
 
-	if( mode == HAL_TIMER_PWM ) {
-		set_mode_pwm (1000, 20);
+	if( config->mode == HAL_TIMER_PWM ) {
+		set_mode_pwm (config);
 	} else {
-		set_mode_pulse(100, 100, 1);
+		set_mode_pulse(config);
 	}
 
 	__HAL_AFIO_REMAP_TIM3_ENABLE();
+}
 
+
+void timer_start( void ) {
+	__HAL_TIM_SET_COMPARE(&tim3, TIM_CHANNEL_3, 0xFFF0);
+	__HAL_TIM_SET_COUNTER(&tim3, 10);
+	__HAL_TIM_SET_AUTORELOAD(&tim3, 0xFFFF);
+
+	if( config.mode == HAL_TIMER_PWM )
+	HAL_TIM_PWM_Start(&tim3, TIM_CHANNEL_3);
+	else
+	HAL_TIM_OC_Start(&tim3, TIM_CHANNEL_3);
+}
+
+void timer_init( enum timer_mode _mode )
+{
+	config.mode = _mode;
+	init_hw(&config);
 }
 
 void timer_set_freq(int freq) {
-	if( mode != HAL_TIMER_PWM )
+	if( config.mode != HAL_TIMER_PWM )
 		return;
-	if( frequency == freq ) return;
+	if( config.frequency == freq ) return;
 	if( freq < 10 ) return;
 	uint16_t prescaler = get_prescaler( freq );
-	if ( prescaler == get_prescaler( frequency ) ) {
-		if( freq > frequency )
+	if ( prescaler == get_prescaler( config.frequency ) ) {
+		if( freq > config.frequency )
 		{
 			if(prescaler != 0) prescaler--;
 		} else {
@@ -163,7 +180,7 @@ void timer_set_freq(int freq) {
 		}
 	}
 	__HAL_TIM_PRESCALER( &tim3, prescaler );
-	frequency = get_frequency( prescaler );
+	config.frequency = get_frequency( prescaler );
 }
 
 void timer_set_duty( int duty ) {
@@ -172,7 +189,7 @@ void timer_set_duty( int duty ) {
 
 
 void timer_stop( void ) {
-	if( mode == HAL_TIMER_PWM )
+	if( config.mode == HAL_TIMER_PWM )
 		HAL_TIM_PWM_Stop(&tim3, TIM_CHANNEL_3);
 	else
 		HAL_TIM_OC_Stop(&tim3, TIM_CHANNEL_3);
@@ -182,46 +199,46 @@ void timer_set_count( uint32_t _count ) {
 	if(_count >= MAX_PULSE_COUNT|| _count < MIN_PULSE_COUNT) {
 		return;
 	}
-	count = _count;
+	config.count = _count;
 }
 
 uint32_t timer_get_count( void ) {
-	return count;
+	return config.count;
 }
 
 void timer_set_mode( enum timer_mode _mode ) {
 	timer_stop();
+	config.mode = _mode;
 	if( _mode == HAL_TIMER_PWM ) {
 		HAL_TIM_PWM_DeInit(&tim3);
-		set_mode_pwm(1000, 10);
+		set_mode_pwm(&config);
 	} else {
 		HAL_TIM_OC_DeInit(&tim3);
-		set_mode_pulse(100, 100, 1);
+		set_mode_pulse(&config);
 	}
-	mode = _mode;
 }
 
 void timer_set_ton(int value) {
 	if(value > MAX_TON|| value < MIN_TON) {
 		return;
 	}
-	ton = value;
+	config.ton = value;
 }
 
 void timer_set_toff(int value) {
 	if(value > MAX_TOFF || value < MIN_TOFF) {
 		return;
 	}
-	toff = value;
+	config.toff = value;
 }
 
 
 int timer_get_ton(void) {
-	return ton;
+	return config.ton;
 }
 
 int timer_get_toff(void) {
-	return toff;
+	return config.toff;
 }
 
 void TIM3_IRQHandler(void)

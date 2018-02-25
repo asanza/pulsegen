@@ -22,6 +22,9 @@ PulseGenerator::PulseGenerator() {
     level = START_LEVEL;
     duty = START_DUTY;
     mode = PWM;
+    ton = timer_get_ton();
+    toff = timer_get_toff();
+    count = timer_get_count();
 }
 
 void PulseGenerator::setMode(Mode mode) {
