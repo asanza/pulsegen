@@ -128,7 +128,11 @@ static void init_hw(struct timer_config* config) {
 	HAL_NVIC_SetPriority(TIM3_IRQn, 8, 0);
 	HAL_NVIC_EnableIRQ(TIM3_IRQn);
 
+	HAL_NVIC_SetPriority(TIM2_IRQn, 8, 0);
+	HAL_NVIC_EnableIRQ(TIM2_IRQn);
+
 	__HAL_RCC_TIM3_CLK_ENABLE();
+	__HAL_RCC_TIM2_CLK_ENABLE();
 	__HAL_RCC_AFIO_CLK_ENABLE();
 	__HAL_RCC_GPIOC_CLK_ENABLE();
 
@@ -149,14 +153,11 @@ static void init_hw(struct timer_config* config) {
 
 
 void timer_start( void ) {
-	__HAL_TIM_SET_COMPARE(&tim3, TIM_CHANNEL_3, 0xFFF0);
-	__HAL_TIM_SET_COUNTER(&tim3, 10);
-	__HAL_TIM_SET_AUTORELOAD(&tim3, 0xFFFF);
-
-	if( config.mode == HAL_TIMER_PWM )
-	HAL_TIM_PWM_Start(&tim3, TIM_CHANNEL_3);
-	else
-	HAL_TIM_OC_Start(&tim3, TIM_CHANNEL_3);
+	if( config.mode == HAL_TIMER_PWM ) {
+		HAL_TIM_PWM_Start(&tim3, TIM_CHANNEL_3);
+	} else {
+//		HAL_TIM_OC_Start(&tim3, TIM_CHANNEL_3);
+	}
 }
 
 void timer_init( enum timer_mode _mode )
@@ -184,15 +185,23 @@ void timer_set_freq(int freq) {
 }
 
 void timer_set_duty( int duty ) {
+	if( config.mode != HAL_TIMER_PWM ) {
+		return;
+	}
+	if(duty < 1 && duty > 99) {
+		return;
+	}
+	config.duty = duty;
 	__HAL_TIM_SetCompare(&tim3, TIM_CHANNEL_3, duty);
 }
 
 
 void timer_stop( void ) {
-	if( config.mode == HAL_TIMER_PWM )
+	if( config.mode == HAL_TIMER_PWM ) {
 		HAL_TIM_PWM_Stop(&tim3, TIM_CHANNEL_3);
-	else
+	} else {
 		HAL_TIM_OC_Stop(&tim3, TIM_CHANNEL_3);
+	}
 }
 
 void timer_set_count( uint32_t _count ) {
@@ -244,6 +253,10 @@ int timer_get_toff(void) {
 void TIM3_IRQHandler(void)
 {
 	HAL_TIM_IRQHandler(&tim3);
+}
+
+void TIM2_IRQHandler( void ) {
+	HAL_TIM_IRQHandler(&tim2);
 }
 
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
