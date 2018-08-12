@@ -10,7 +10,7 @@
 static uint32_t reftimer;
 static struct system_state *state;
 
-#define UPDATE_PERIOD 1
+#define UPDATE_PERIOD 25
 
 static UG_GUI gui;
 
