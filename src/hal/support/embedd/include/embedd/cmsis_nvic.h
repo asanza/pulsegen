@@ -9,18 +9,19 @@
 
 #include <stdint.h>
 
-#define NVIC_NUM_VECTORS      (16 + 109)   // CORE + MCU Peripherals
-#define NVIC_USER_IRQ_OFFSET  16
+#define NVIC_NUM_VECTORS (16 + 67) // CORE + MCU Peripherals
+#define NVIC_USER_IRQ_OFFSET 16
 
 #include "stm32f1xx.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-void NVIC_Relocate(void);
-void NVIC_SetVector(IRQn_Type IRQn, uint32_t vector);
-uint32_t NVIC_GetVector(IRQn_Type IRQn);
+    void NVIC_Relocate(void);
+    void NVIC_SetVector(IRQn_Type IRQn, uint32_t vector);
+    uint32_t NVIC_GetVector(IRQn_Type IRQn);
 
 #ifdef __cplusplus
 }
@@ -38,18 +39,19 @@ uint32_t NVIC_GetVector(IRQn_Type IRQn);
 
 #include <stdint.h>
 
-#define NVIC_NUM_VECTORS      (16 + 109)   // CORE + MCU Peripherals
-#define NVIC_USER_IRQ_OFFSET  16
+#define NVIC_NUM_VECTORS (16 + 109) // CORE + MCU Peripherals
+#define NVIC_USER_IRQ_OFFSET 16
 
 #include "stm32f7xx.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-void NVIC_Relocate(void);
-void NVIC_SetVector(IRQn_Type IRQn, uint32_t vector);
-uint32_t NVIC_GetVector(IRQn_Type IRQn);
+    void NVIC_Relocate(void);
+    void NVIC_SetVector(IRQn_Type IRQn, uint32_t vector);
+    uint32_t NVIC_GetVector(IRQn_Type IRQn);
 
 #ifdef __cplusplus
 }

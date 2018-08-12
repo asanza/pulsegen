@@ -3,7 +3,7 @@
 CPU = -mcpu=cortex-m3
 FPU =
 FLOAT-ABI =
-OPT = -O0  -gdwarf-2 -g3
+OPT = -O0  -gdwarf-3 -ggdb -mthumb
 
 MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 
@@ -11,9 +11,9 @@ PART = STM32F107xC
 
 ### Build flags for all targets
 CFLAGS = $(MCU) -D$(PART) -ffunction-sections -fdata-sections
-CFLAGS += -Wall -Wno-variadic-macros -Wno-packed-bitfield-compat
-CFLAGS += $(OPT) #-DUSE_FULL_LL_DRIVER
-CFLAGS += -nostartfiles -ffreestanding # -fstack-protector-strong
+CFLAGS += -Wall #-Wno-variadic-macros #-Wno-packed-bitfield-compat
+CFLAGS += $(OPT) -DUSE_FULL_LL_DRIVER -DUSE_HAL_DRIVER
+CFLAGS += -nostartfiles #-ffreestanding # -fstack-protector-strong
 
 CFLAGS += $(INC) -Wfatal-errors  -DSTM32F107xC
 CPPFLAGS += $(INC) -Wfatal-errors -fno-rtti -fno-exceptions -nostartfiles -ffreestanding
@@ -24,7 +24,7 @@ CPPFLAGS += -fno-non-call-exceptions -fno-use-cxa-atexit -std=gnu++11
 CFLAGS += -MMD -MP
 
 LDFLAGS = $(MCU)
-LDFLAGS += -Wl,--cref --specs=nano.specs #--specs=nosys.specs
+LDFLAGS += -Wl,--cref --specs=nano.specs --specs=nosys.specs
 
 ARFLAGS = #$(PLUGIN)#--plugin=$(shell arm-none-eabi-gcc --print-file-name=liblto_plugin.so)
 

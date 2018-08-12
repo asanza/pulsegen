@@ -44,7 +44,7 @@ void evt_loop(void)
 {
     int i;
     struct Event evt;
-    if (xQueueReceive(evtq, &evt, 250 / portTICK_PERIOD_MS))
+    if (xQueueReceive(evtq, &evt, 10 / portTICK_PERIOD_MS))
     {
         do
         {

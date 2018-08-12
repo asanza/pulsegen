@@ -13,6 +13,8 @@
 
 static struct system_state state;
 
+// extern unsigned long uxCriticalNesting;
+
 /* manage system events */
 void device_listener(enum system_event type, uint32_t data)
 {
@@ -42,15 +44,15 @@ void key_handler(enum key_type key)
 		break;
 	/* level */
 	case KEY_TA2:
-		type = EVT_KEY_DUTY;
+		type = EVT_KEY_LEVEL;
 		break;
 	/* offtime duty */
 	case KEY_TA3:
-		type = EVT_KEY_COUNT;
+		type = EVT_KEY_DUTY;
 		break;
 	/* change mode */
 	case KEY_TA4:
-		type = EVT_KEY_FREQ;
+		type = EVT_KEY_MODE;
 		break;
 	/* count */
 	case KEY_TA5:
@@ -83,6 +85,7 @@ static void timming_tasks(void *arg)
 
 int main(void)
 {
+	// uxCriticalNesting = 0xaaaaaaaa;
 	hal_gpio_init_out(5, 0);
 	hal_gpio_init_out(6, 1);
 	hal_gpio_init_out(POWER_HOLD, 1);
