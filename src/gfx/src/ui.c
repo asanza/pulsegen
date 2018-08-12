@@ -1,7 +1,9 @@
-#include "ui.h"
+#include "gfx/ui.h"
 #include "assert.h"
 #include "stdio.h"
 #include "string.h"
+#include "ugui/ugui.h"
+#include "hal/SSD1351.h"
 
 #define UISIM_RGB(R, G, B) (R << 16 | G << 8 | B)
 
@@ -10,9 +12,35 @@ static struct system_state *state;
 
 #define UPDATE_PERIOD 1
 
-void ui_init(struct system_state *_state, UG_GUI *gui)
+static UG_GUI gui;
+
+static UG_RESULT _HW_FillFrame(UG_S16 x1, UG_S16 y1, UG_S16 x2, UG_S16 y2,
+                               UG_COLOR c)
+{
+    // SSD1351_fillframe(x1, y1, x2, y2, c);
+    // return UG_RESULT_OK;
+    return UG_RESULT_FAIL;
+}
+
+static UG_RESULT _HW_DrawLine(UG_S16 x1, UG_S16 y1, UG_S16 x2, UG_S16 y2,
+                              UG_COLOR c)
+{
+
+    return UG_RESULT_FAIL;
+}
+
+void ui_init(struct system_state *_state)
 {
     state = _state;
+
+    disp_init();
+
+    UG_Init(&gui, disp_pset, 128, 128);
+
+    UG_DriverRegister(DRIVER_FILL_FRAME, (void *)_HW_FillFrame);
+    UG_DriverRegister(DRIVER_DRAW_LINE, (void *)_HW_DrawLine);
+
+    disp_on();
 
     UG_FontSelect(&FONT_6X10);
     UG_SetBackcolor(UISIM_RGB(0, 0, 0));

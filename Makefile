@@ -33,10 +33,7 @@ SRCS += $(call rwildcard,src/sys/src,*.c)
 SRCS += $(call rwildcard,src/pulsegen/src,*.c)
 
 SRCS += $(call rwildcard,src/gfx/src,*.c)
-
-CPPSRCS  = $(call rwildcard,src/pulsegen/src,*.cc)
-CPPSRCS += src/main.cc src/controller.cc
-CPPSRCS += $(call rwildcard,src/gfx/src,*.cc)
+SRCS += src/main.c
 
 ASMSRC = $(call rwildcard,src/hal/src,*.s)
 

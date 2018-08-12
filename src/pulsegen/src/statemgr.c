@@ -1,7 +1,7 @@
-#include "statemgr.h"
+#include "pulsegen/statemgr.h"
 
 #include <stdbool.h>
-#include "systate.h"
+#include "pulsegen/systate.h"
 
 struct limits
 {

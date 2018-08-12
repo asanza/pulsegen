@@ -7,6 +7,7 @@ extern "C"
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <sys/evt.h>
 
     enum mode
     {
@@ -29,19 +30,6 @@ extern "C"
         FREQUENCY,
         DUTY,
         NONE
-    };
-
-    enum system_event
-    {
-        EVT_NONE,
-        EVT_KEY_MODE,
-        EVT_KEY_FREQ,
-        EVT_KEY_DUTY,
-        EVT_KEY_LEVEL,
-        EVT_KEY_COUNT,
-        EVT_ENC_DOWN,
-        EVT_ENC_UP,
-        EVT_ENC_PUSH
     };
 
     struct system_state

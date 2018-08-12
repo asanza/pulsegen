@@ -19,8 +19,8 @@
 #ifndef UI_H
 #define UI_H
 
-#include "systate.h"
-#include <ugui/ugui.h>
+#include "sys/evt.h"
+#include <pulsegen/systate.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -28,7 +28,7 @@ extern "C"
 #endif
 
     /* initialize the ui*/
-    void ui_init(struct system_state *state, UG_GUI *gui);
+    void ui_init(struct system_state *state);
 
     /* call regularly from your main loop */
     void ui_update(void);

@@ -1,6 +1,8 @@
 #ifndef SYS_EVT_H_
 #define SYS_EVT_H_
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C"
 {
