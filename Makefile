@@ -35,9 +35,10 @@ SRCS += $(FREERTOS_PATH)/FreeRTOS/event_groups.c \
 		$(FREERTOS_PATH)/FreeRTOS/queue.c \
 		$(FREERTOS_PATH)/FreeRTOS/stream_buffer.c \
 		$(FREERTOS_PATH)/FreeRTOS/tasks.c \
-		$(FREERTOS_PATH)/FreeRTOS/timers.c 
-SRCS += $(FREERTOS_PATH)/FreeRTOS/portable/GCC/ARM_CM3/port.c
-SRCS += $(FREERTOS_PATH)/FreeRTOS/portable/MemMang/heap_1.c
+		$(FREERTOS_PATH)/FreeRTOS/timers.c \
+		$(FREERTOS_PATH)/FreeRTOS/portable/GCC/ARM_CM3/port.c \
+		$(FREERTOS_PATH)/FreeRTOS/portable/MemMang/heap_1.c
+
 SRCS += $(call rwildcard,src/sys/src,*.c)
 SRCS += $(call rwildcard,src/pulsegen/src,*.c)
 
@@ -80,7 +81,7 @@ debug:
 
 %.o: %.s
 	$(vecho) "AS $<"
-	$(Q) $(AS) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+	$(Q) $(AS) -c $(CFLAGS) $< -o $@
 
 $(DEPS): ;
 .PRECIOUS: $(DEPS)

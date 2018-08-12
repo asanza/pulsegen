@@ -32,10 +32,10 @@ ARFLAGS = #$(PLUGIN)#--plugin=$(shell arm-none-eabi-gcc --print-file-name=liblto
 
 TRGT	= arm-none-eabi-
 CC		= $(TRGT)gcc -std=gnu11
-CPP		= $(TRGT)g++
+CPP		= $(TRGT)gcc
 LD		= $(TRGT)ld
 CP		= $(TRGT)objcopy
-AS		= $(TRGT)gcc -x assembler-with-cpp
+AS		= $(TRGT)gcc
 AR		= $(TRGT)ar
 OD		= $(TRGT)objdump
 SZ		= $(TRGT)size

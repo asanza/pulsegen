@@ -9,5 +9,5 @@ set -m
 JLinkGDBServer -select USB -device STM32F107RC -if JTAG -speed auto -noir  -port 3333 -singlerun>jlink.log 2>&1 &
 jlinkpid=$!
 set +m
-bash -c "arm-none-eabi-gdb -x tools/gdb.init -tui"
+bash -c "arm-none-eabi-gdb -x tools/gdb.init" # -tui"
 fi
