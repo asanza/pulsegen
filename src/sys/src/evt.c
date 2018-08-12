@@ -7,44 +7,54 @@ static int index = 0;
 static event_listener_t fn[5];
 static QueueHandle_t evtq;
 
-struct Event {
-    enum EventType type;
+struct Event
+{
+    enum system_event type;
     uint32_t data;
 };
 
-void evt_init( void ) {
+void evt_init(void)
+{
     evtq = xQueueCreate(10, sizeof(struct Event));
 }
 
-void evt_register_listener(event_listener_t listener) {
-    if(index < sizeof(fn)/sizeof(struct Event)){
+void evt_register_listener(event_listener_t listener)
+{
+    if (index < sizeof(fn) / sizeof(struct Event))
+    {
         fn[index++] = listener;
     }
 }
 
-void evt_queue(enum EventType type, uint32_t data) {
+void evt_queue(enum system_event type, uint32_t data)
+{
     struct Event evt = {.type = type, .data = data};
     xQueueSend(evtq, &evt, portMAX_DELAY);
 }
 
-void evt_queue_from_isr(enum EventType type, uint32_t data) {
+void evt_queue_from_isr(enum system_event type, uint32_t data)
+{
     struct Event evt = {.type = type, .data = data};
     portBASE_TYPE woken;
     xQueueSendFromISR(evtq, &evt, &woken);
     portYIELD_FROM_ISR(woken);
 }
 
-void evt_loop( void ) {
+void evt_loop(void)
+{
     int i;
     struct Event evt;
-    if ( xQueueReceive(evtq, &evt, 250 / portTICK_PERIOD_MS) ) {
-        do {
-            for( i = 0; i < index; i++)
+    if (xQueueReceive(evtq, &evt, 250 / portTICK_PERIOD_MS))
+    {
+        do
+        {
+            for (i = 0; i < index; i++)
             {
-                if(fn[i]){
+                if (fn[i])
+                {
                     fn[i](evt.type, evt.data);
                 }
             }
-        } while ( xQueueReceive(evtq, &evt, 0));
+        } while (xQueueReceive(evtq, &evt, 0));
     }
 }

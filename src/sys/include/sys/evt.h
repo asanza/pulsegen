@@ -2,28 +2,29 @@
 #define SYS_EVT_H_
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-enum EventType {
-    KEY_POWER,
-    KEY_MODE,
-    KEY_FREQ,
-    KEY_DUTY,
-    KEY_LEVEL,
-    KEY_COUNT,
-    ENCODER_INCREASE,
-    ENCODER_DECREASE,
-    OUTPUT_ON,
-	OUTPUT_OFF
-};
+    enum system_event
+    {
+        EVT_NONE,
+        EVT_KEY_MODE,
+        EVT_KEY_FREQ,
+        EVT_KEY_DUTY,
+        EVT_KEY_LEVEL,
+        EVT_KEY_COUNT,
+        EVT_ENC_DOWN,
+        EVT_ENC_UP,
+        EVT_ENC_PUSH
+    };
 
-typedef void(*event_listener_t)(enum EventType type, uint32_t data);
-void evt_init( void );
-void evt_register_listener(event_listener_t listener);
-void evt_queue_from_isr(enum EventType type, uint32_t data);
-void evt_queue(enum EventType type, uint32_t data);
-void evt_loop(void);
+    typedef void (*event_listener_t)(enum system_event type, uint32_t data);
+    void evt_init(void);
+    void evt_register_listener(event_listener_t listener);
+    void evt_queue_from_isr(enum system_event type, uint32_t data);
+    void evt_queue(enum system_event type, uint32_t data);
+    void evt_loop(void);
 
 #ifdef __cplusplus
 }

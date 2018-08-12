@@ -15,8 +15,6 @@
 #define MIN_PULSE_COUNT 1
 #define _PERIOD ( 100 + 1 )
 
-static TIM_HandleTypeDef tim3, tim2;
-
 extern uint32_t SystemCoreClock;
 
 
@@ -56,71 +54,43 @@ uint32_t timer_get_freq( void ) {
 	return config.frequency;
 }
 
-static void set_mode_pwm( struct timer_config* config ) {
 
-	TIM_ClockConfigTypeDef clk_src_cfg;
-	TIM_MasterConfigTypeDef master_cfg;
-	TIM_OC_InitTypeDef oc_cfg;
+
+static void set_mode_pwm( struct timer_config* config ) {
 
 	uint16_t prescaler = get_prescaler( config->frequency );
 	config->frequency = get_frequency(prescaler);
 
-	tim3.Instance = TIM3;
-	tim3.Init.Prescaler = prescaler;
-	tim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	tim3.Init.Period = _PERIOD;
-	tim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-	HAL_ASSERT(HAL_TIM_Base_Init(&tim3)==HAL_OK);
+	TIM3->PSC = prescaler; /* prescaler */
+	TIM3->ARR = _PERIOD;
 
-	clk_src_cfg.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-	clk_src_cfg.ClockPrescaler = TIM_CLOCKPRESCALER_DIV1;
-	HAL_ASSERT(HAL_TIM_ConfigClockSource(&tim3, &clk_src_cfg)==HAL_OK);
+	TIM3->CCR3 = config->duty;
 
+	TIM3->CR1 &= ~TIM_CR1_CKD;
+	TIM3->CR1 |= TIM_CLOCKDIVISION_DIV1;
+	TIM3->CR1 &= ~(TIM_CR1_DIR | TIM_CR1_CMS);
+	TIM3->CR1 |= TIM_COUNTERMODE_UP;
 
-	HAL_ASSERT(HAL_TIM_PWM_Init(&tim3)==HAL_OK);
-	HAL_ASSERT(HAL_TIM_OnePulse_Init(&tim3, TIM_OPMODE_REPETITIVE) == HAL_OK );
+	TIM3->CCMR2 &= ~TIM_CCMR2_OC3M;
+	TIM3->CCMR2 &= ~TIM_CCMR2_CC3S;
+	TIM3->CCMR2 |= TIM_OCMODE_PWM1;
+	TIM3->SMCR |= TIM_SMCR_TS_0;
+	TIM3->SMCR |= (TIM_SMCR_SMS_1 | TIM_SMCR_SMS_2 | TIM_SMCR_SMS_0);
 
-	master_cfg.MasterOutputTrigger = TIM_TRGO_RESET;
-	master_cfg.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	HAL_ASSERT(HAL_TIMEx_MasterConfigSynchronization(&tim3, &master_cfg)==HAL_OK);
+	TIM3->CR1 &= ~TIM_CR1_OPM;
 
-	oc_cfg.OCMode = TIM_OCMODE_PWM2;
-	oc_cfg.Pulse = config->duty;
-	oc_cfg.OCPolarity = TIM_OCPOLARITY_LOW;
-	oc_cfg.OCFastMode = TIM_OCFAST_ENABLE;
-	HAL_ASSERT(HAL_TIM_PWM_ConfigChannel(&tim3, &oc_cfg, TIM_CHANNEL_3)==HAL_OK);
+	TIM2->PSC = 0;
+	TIM2->ARR = 0xFFFE;
+	TIM2->CCR3 = 0;
+	TIM2->CR1 |= TIM_CLOCKDIVISION_DIV1;
+	TIM2->CR1 |= TIM_COUNTERMODE_UP;
+
+	TIM2->CR2 |= TIM_CR2_MMS_1;
 
 }
 
 static void set_mode_pulse( struct timer_config* config ) {
 
-	TIM_ClockConfigTypeDef clk_src_cfg;
-	TIM_MasterConfigTypeDef master_cfg;
-	TIM_OC_InitTypeDef oc_cfg;
-
-	tim3.Instance = TIM3;
-	tim3.Init.Prescaler = 1;
-	tim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
-	tim3.Init.Period = 0xFFFF;
-	tim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-	HAL_ASSERT(HAL_TIM_Base_Init(&tim3)==HAL_OK);
-
-	clk_src_cfg.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-	clk_src_cfg.ClockPrescaler = TIM_CLOCKPRESCALER_DIV1;
-	HAL_ASSERT(HAL_TIM_ConfigClockSource(&tim3, &clk_src_cfg)==HAL_OK);
-
-
-	HAL_ASSERT(HAL_TIM_OC_Init(&tim3)==HAL_OK);
-	HAL_ASSERT(HAL_TIM_OnePulse_Init(&tim3, TIM_OPMODE_SINGLE) == HAL_OK );
-
-	master_cfg.MasterOutputTrigger = TIM_TRGO_OC3REF;
-	master_cfg.MasterSlaveMode = TIM_MASTERSLAVEMODE_ENABLE;
-	HAL_ASSERT(HAL_TIMEx_MasterConfigSynchronization(&tim3, &master_cfg)==HAL_OK);
-
-	oc_cfg.OCMode = TIM_OCMODE_PWM1;
-	oc_cfg.Pulse = 20;
-	oc_cfg.OCPolarity = TIM_OCPOLARITY_LOW;
-	HAL_ASSERT(HAL_TIM_OC_ConfigChannel(&tim3, &oc_cfg, TIM_CHANNEL_3)==HAL_OK);
 }
 
 static void init_hw(struct timer_config* config) {
@@ -154,7 +124,9 @@ static void init_hw(struct timer_config* config) {
 
 void timer_start( void ) {
 	if( config.mode == HAL_TIMER_PWM ) {
-		HAL_TIM_PWM_Start(&tim3, TIM_CHANNEL_3);
+		TIM2->CR1 |= TIM_CR1_CEN;
+		TIM3->CCER |= TIM_CCER_CC3E;	/* output enable */
+		TIM3->CR1 |= TIM_CR1_CEN;
 	} else {
 //		HAL_TIM_OC_Start(&tim3, TIM_CHANNEL_3);
 	}
@@ -180,7 +152,7 @@ void timer_set_freq(int freq) {
 			if(prescaler != 0xFFFF) prescaler++;
 		}
 	}
-	__HAL_TIM_PRESCALER( &tim3, prescaler );
+	TIM3->PSC = prescaler;
 	config.frequency = get_frequency( prescaler );
 }
 
@@ -192,15 +164,14 @@ void timer_set_duty( int duty ) {
 		return;
 	}
 	config.duty = duty;
-	__HAL_TIM_SetCompare(&tim3, TIM_CHANNEL_3, duty);
 }
 
 
 void timer_stop( void ) {
 	if( config.mode == HAL_TIMER_PWM ) {
-		HAL_TIM_PWM_Stop(&tim3, TIM_CHANNEL_3);
+		TIM3->CCER &= ~TIM_CCER_CC3E;	/* output enable */
+		TIM3->CR1 &= ~TIM_CR1_CEN;
 	} else {
-		HAL_TIM_OC_Stop(&tim3, TIM_CHANNEL_3);
 	}
 }
 
@@ -219,10 +190,8 @@ void timer_set_mode( enum timer_mode _mode ) {
 	timer_stop();
 	config.mode = _mode;
 	if( _mode == HAL_TIMER_PWM ) {
-		HAL_TIM_PWM_DeInit(&tim3);
 		set_mode_pwm(&config);
 	} else {
-		HAL_TIM_OC_DeInit(&tim3);
 		set_mode_pulse(&config);
 	}
 }
@@ -252,11 +221,9 @@ int timer_get_toff(void) {
 
 void TIM3_IRQHandler(void)
 {
-	HAL_TIM_IRQHandler(&tim3);
 }
 
 void TIM2_IRQHandler( void ) {
-	HAL_TIM_IRQHandler(&tim2);
 }
 
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {

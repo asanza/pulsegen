@@ -30,6 +30,7 @@ SRCS += $(call rwildcard,src/os/src,*.c)
 SRCS += src/os/portable/GCC/ARM_CM3/port.c
 SRCS += src/os/portable/MemMang/heap_1.c
 SRCS += $(call rwildcard,src/sys/src,*.c)
+SRCS += $(call rwildcard,src/pulsegen/src,*.c)
 
 SRCS += $(call rwildcard,src/gfx/src,*.c)
 
