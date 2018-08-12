@@ -2,7 +2,7 @@ include common.mk
 
 TARGET = dist/pulsegen
 
-FREERTOS_PATH = src/os/amazon-freertos
+FREERTOS_PATH = src/os/amazon-freertos/lib
 
 LIBS +=
 LDFLAGS += -Wl,-Tsrc/hal/STM32F107RCTx_FLASH.ld
@@ -20,6 +20,8 @@ INC += -I$(FREERTOS_PATH)/include
 INC += -I$(FREERTOS_PATH)/FreeRTOS/portable/GCC/ARM_CM3
 INC += -Isrc/gfx/include
 INC += -Isrc/pulsegen/include
+INC += -Isrc/os
+INC += -I$(FREERTOS_PATH)/include/private
 INC += -Isrc/sys/include
 INC += -Isrc/hal/support/embedd/include
 
@@ -28,7 +30,12 @@ SRCS += $(call rwildcard,src/hal/support/embedd/src,*.c)
 SRCS += $(call rwildcard,src/hal/src,*.c)
 
 
-SRCS += $(call rwildcard,$(FREERTOS_PATH)/FreeRTOS,*.c)
+SRCS += $(FREERTOS_PATH)/FreeRTOS/event_groups.c \
+		$(FREERTOS_PATH)/FreeRTOS/list.c \
+		$(FREERTOS_PATH)/FreeRTOS/queue.c \
+		$(FREERTOS_PATH)/FreeRTOS/stream_buffer.c \
+		$(FREERTOS_PATH)/FreeRTOS/tasks.c \
+		$(FREERTOS_PATH)/FreeRTOS/timers.c 
 SRCS += $(FREERTOS_PATH)/FreeRTOS/portable/GCC/ARM_CM3/port.c
 SRCS += $(FREERTOS_PATH)/FreeRTOS/portable/MemMang/heap_1.c
 SRCS += $(call rwildcard,src/sys/src,*.c)
