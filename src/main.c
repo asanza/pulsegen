@@ -21,6 +21,8 @@ void device_listener(enum system_event type, uint32_t data)
 
 void event_loop(void *param)
 {
+	evt_init();
+	evt_register_listener(device_listener);
 	while (1)
 	{
 		evt_loop();
@@ -85,8 +87,6 @@ int main(void)
 	hal_gpio_init_out(6, 1);
 	hal_gpio_init_out(POWER_HOLD, 1);
 	keybd_init(key_handler);
-	evt_init();
-	evt_register_listener(device_listener);
 	state_init(&state);
 	ui_init(&state);
 	xTaskCreate(event_loop, "evtloop", 1020, NULL, 3, NULL);
@@ -111,8 +111,4 @@ void vApplicationMallocFailedHook(void)
 	asm("BKPT");
 	while (1)
 		;
-}
-
-void user_init(void)
-{
 }

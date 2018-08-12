@@ -5,17 +5,17 @@
 #include <hal/SSD1351.h>
 
 /* user initialization to be called before c++ constructors */
-extern void user_init( void );
+extern void user_init(void);
 
-#if !defined  (HSE_VALUE)
-  #define HSE_VALUE    ((uint32_t)8000000) /*!< Default value of the External oscillator in Hz.
-                                                This value can be provided and adapted by the user application. */
-#endif /* HSE_VALUE */
+#if !defined(HSE_VALUE)
+#define HSE_VALUE ((uint32_t)8000000) /*!< Default value of the External oscillator in Hz. \
+                                           This value can be provided and adapted by the user application. */
+#endif                                /* HSE_VALUE */
 
-#if !defined  (HSI_VALUE)
-  #define HSI_VALUE    ((uint32_t)8000000) /*!< Default value of the Internal oscillator in Hz.
-                                                This value can be provided and adapted by the user application. */
-#endif /* HSI_VALUE */
+#if !defined(HSI_VALUE)
+#define HSI_VALUE ((uint32_t)8000000) /*!< Default value of the Internal oscillator in Hz. \
+                                           This value can be provided and adapted by the user application. */
+#endif                                /* HSI_VALUE */
 
 /*!< Uncomment the following line if you need to use external SRAM  */
 #if defined(STM32F100xE) || defined(STM32F101xE) || defined(STM32F101xG) || defined(STM32F103xE) || defined(STM32F103xG)
@@ -25,29 +25,26 @@ extern void user_init( void );
 /*!< Uncomment the following line if you need to relocate your vector Table in
      Internal SRAM. */
 /* #define VECT_TAB_SRAM */
-#define VECT_TAB_OFFSET  0x0 /*!< Vector Table base offset field.
-                                  This value must be a multiple of 0x200. */
-
-
+#define VECT_TAB_OFFSET 0x0 /*!< Vector Table base offset field. \
+                                 This value must be a multiple of 0x200. */
 
 /*******************************************************************************
 *  Clock Definitions
 *******************************************************************************/
-#if defined(STM32F100xB) ||defined(STM32F100xE)
-  uint32_t SystemCoreClock         = 24000000;        /*!< System Clock Frequency (Core Clock) */
-#else /*!< HSI Selected as System Clock source */
-  uint32_t SystemCoreClock         = 72000000;        /*!< System Clock Frequency (Core Clock) */
+#if defined(STM32F100xB) || defined(STM32F100xE)
+uint32_t SystemCoreClock = 24000000; /*!< System Clock Frequency (Core Clock) */
+#else                                /*!< HSI Selected as System Clock source */
+uint32_t SystemCoreClock = 72000000; /*!< System Clock Frequency (Core Clock) */
 #endif
 
 const uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
-const uint8_t APBPrescTable[8] =  {0, 0, 0, 0, 1, 2, 3, 4};
+const uint8_t APBPrescTable[8] = {0, 0, 0, 0, 1, 2, 3, 4};
 
 #if defined(STM32F100xE) || defined(STM32F101xE) || defined(STM32F101xG) || defined(STM32F103xE) || defined(STM32F103xG)
 #ifdef DATA_IN_ExtSRAM
-  static void SystemInit_ExtMemCtl(void);
+static void SystemInit_ExtMemCtl(void);
 #endif /* DATA_IN_ExtSRAM */
 #endif /* STM32F100xE || STM32F101xE || STM32F101xG || STM32F103xE || STM32F103xG */
-
 
 static void SystemClock_Config(void);
 
@@ -59,7 +56,7 @@ static void SystemClock_Config(void);
   * @param  None
   * @retval None
   */
-void SystemInit (void)
+void SystemInit(void)
 {
   /* Reset the RCC clock configuration to the default reset state(for debug purpose) */
   /* Set HSION bit */
@@ -102,9 +99,9 @@ void SystemInit (void)
 #endif /* STM32F105xC */
 
 #if defined(STM32F100xE) || defined(STM32F101xE) || defined(STM32F101xG) || defined(STM32F103xE) || defined(STM32F103xG)
-  #ifdef DATA_IN_ExtSRAM
-    SystemInit_ExtMemCtl();
-  #endif /* DATA_IN_ExtSRAM */
+#ifdef DATA_IN_ExtSRAM
+  SystemInit_ExtMemCtl();
+#endif /* DATA_IN_ExtSRAM */
 #endif
 
 #ifdef VECT_TAB_SRAM
@@ -113,15 +110,12 @@ void SystemInit (void)
   SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH. */
 #endif
 
-    /* initialize system */
-    HAL_Init();
-    SystemClock_Config();
-    SystemCoreClockUpdate();
-    /* relocate interrupt vector */
-    NVIC_Relocate();
-    /* initialize display */
-    disp_init();
-    user_init();
+  /* initialize system */
+  HAL_Init();
+  SystemClock_Config();
+  SystemCoreClockUpdate();
+  /* relocate interrupt vector */
+  NVIC_Relocate();
 }
 
 /**
@@ -159,7 +153,7 @@ void SystemInit (void)
   * @param  None
   * @retval None
   */
-void SystemCoreClockUpdate (void)
+void SystemCoreClockUpdate(void)
 {
   uint32_t tmp = 0, pllmull = 0, pllsource = 0;
 
@@ -176,88 +170,88 @@ void SystemCoreClockUpdate (void)
 
   switch (tmp)
   {
-    case 0x00:  /* HSI used as system clock */
-      SystemCoreClock = HSI_VALUE;
-      break;
-    case 0x04:  /* HSE used as system clock */
-      SystemCoreClock = HSE_VALUE;
-      break;
-    case 0x08:  /* PLL used as system clock */
+  case 0x00: /* HSI used as system clock */
+    SystemCoreClock = HSI_VALUE;
+    break;
+  case 0x04: /* HSE used as system clock */
+    SystemCoreClock = HSE_VALUE;
+    break;
+  case 0x08: /* PLL used as system clock */
 
-      /* Get PLL clock source and multiplication factor ----------------------*/
-      pllmull = RCC->CFGR & RCC_CFGR_PLLMULL;
-      pllsource = RCC->CFGR & RCC_CFGR_PLLSRC;
+    /* Get PLL clock source and multiplication factor ----------------------*/
+    pllmull = RCC->CFGR & RCC_CFGR_PLLMULL;
+    pllsource = RCC->CFGR & RCC_CFGR_PLLSRC;
 
 #if !defined(STM32F105xC) && !defined(STM32F107xC)
-      pllmull = ( pllmull >> 18) + 2;
+    pllmull = (pllmull >> 18) + 2;
 
-      if (pllsource == 0x00)
-      {
-        /* HSI oscillator clock divided by 2 selected as PLL clock entry */
-        SystemCoreClock = (HSI_VALUE >> 1) * pllmull;
-      }
-      else
-      {
- #if defined(STM32F100xB) || defined(STM32F100xE)
-       prediv1factor = (RCC->CFGR2 & RCC_CFGR2_PREDIV1) + 1;
-       /* HSE oscillator clock selected as PREDIV1 clock entry */
-       SystemCoreClock = (HSE_VALUE / prediv1factor) * pllmull;
- #else
-        /* HSE selected as PLL clock entry */
-        if ((RCC->CFGR & RCC_CFGR_PLLXTPRE) != (uint32_t)RESET)
-        {/* HSE oscillator clock divided by 2 */
-          SystemCoreClock = (HSE_VALUE >> 1) * pllmull;
-        }
-        else
-        {
-          SystemCoreClock = HSE_VALUE * pllmull;
-        }
- #endif
-      }
+    if (pllsource == 0x00)
+    {
+      /* HSI oscillator clock divided by 2 selected as PLL clock entry */
+      SystemCoreClock = (HSI_VALUE >> 1) * pllmull;
+    }
+    else
+    {
+#if defined(STM32F100xB) || defined(STM32F100xE)
+      prediv1factor = (RCC->CFGR2 & RCC_CFGR2_PREDIV1) + 1;
+      /* HSE oscillator clock selected as PREDIV1 clock entry */
+      SystemCoreClock = (HSE_VALUE / prediv1factor) * pllmull;
 #else
-      pllmull = pllmull >> 18;
-
-      if (pllmull != 0x0D)
-      {
-         pllmull += 2;
+      /* HSE selected as PLL clock entry */
+      if ((RCC->CFGR & RCC_CFGR_PLLXTPRE) != (uint32_t)RESET)
+      { /* HSE oscillator clock divided by 2 */
+        SystemCoreClock = (HSE_VALUE >> 1) * pllmull;
       }
       else
-      { /* PLL multiplication factor = PLL input clock * 6.5 */
-        pllmull = 13 / 2;
-      }
-
-      if (pllsource == 0x00)
       {
-        /* HSI oscillator clock divided by 2 selected as PLL clock entry */
-        SystemCoreClock = (HSI_VALUE >> 1) * pllmull;
+        SystemCoreClock = HSE_VALUE * pllmull;
+      }
+#endif
+    }
+#else
+    pllmull = pllmull >> 18;
+
+    if (pllmull != 0x0D)
+    {
+      pllmull += 2;
+    }
+    else
+    { /* PLL multiplication factor = PLL input clock * 6.5 */
+      pllmull = 13 / 2;
+    }
+
+    if (pllsource == 0x00)
+    {
+      /* HSI oscillator clock divided by 2 selected as PLL clock entry */
+      SystemCoreClock = (HSI_VALUE >> 1) * pllmull;
+    }
+    else
+    { /* PREDIV1 selected as PLL clock entry */
+
+      /* Get PREDIV1 clock source and division factor */
+      prediv1source = RCC->CFGR2 & RCC_CFGR2_PREDIV1SRC;
+      prediv1factor = (RCC->CFGR2 & RCC_CFGR2_PREDIV1) + 1;
+
+      if (prediv1source == 0)
+      {
+        /* HSE oscillator clock selected as PREDIV1 clock entry */
+        SystemCoreClock = (HSE_VALUE / prediv1factor) * pllmull;
       }
       else
-      {/* PREDIV1 selected as PLL clock entry */
+      { /* PLL2 clock selected as PREDIV1 clock entry */
 
-        /* Get PREDIV1 clock source and division factor */
-        prediv1source = RCC->CFGR2 & RCC_CFGR2_PREDIV1SRC;
-        prediv1factor = (RCC->CFGR2 & RCC_CFGR2_PREDIV1) + 1;
-
-        if (prediv1source == 0)
-        {
-          /* HSE oscillator clock selected as PREDIV1 clock entry */
-          SystemCoreClock = (HSE_VALUE / prediv1factor) * pllmull;
-        }
-        else
-        {/* PLL2 clock selected as PREDIV1 clock entry */
-
-          /* Get PREDIV2 division factor and PLL2 multiplication factor */
-          prediv2factor = ((RCC->CFGR2 & RCC_CFGR2_PREDIV2) >> 4) + 1;
-          pll2mull = ((RCC->CFGR2 & RCC_CFGR2_PLL2MUL) >> 8 ) + 2;
-          SystemCoreClock = (((HSE_VALUE / prediv2factor) * pll2mull) / prediv1factor) * pllmull;
-        }
+        /* Get PREDIV2 division factor and PLL2 multiplication factor */
+        prediv2factor = ((RCC->CFGR2 & RCC_CFGR2_PREDIV2) >> 4) + 1;
+        pll2mull = ((RCC->CFGR2 & RCC_CFGR2_PLL2MUL) >> 8) + 2;
+        SystemCoreClock = (((HSE_VALUE / prediv2factor) * pll2mull) / prediv1factor) * pllmull;
       }
+    }
 #endif /* STM32F105xC */
-      break;
+    break;
 
-    default:
-      SystemCoreClock = HSI_VALUE;
-      break;
+  default:
+    SystemCoreClock = HSI_VALUE;
+    break;
   }
 
   /* Compute HCLK clock frequency ----------------*/
@@ -329,9 +323,9 @@ static void SystemClock_Config(void)
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
   RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
-    /**Initializes the CPU, AHB and APB busses clocks
+  /**Initializes the CPU, AHB and APB busses clocks
     */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV2;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
@@ -346,10 +340,9 @@ static void SystemClock_Config(void)
     hal_error(__FILE__, __LINE__);
   }
 
-    /**Initializes the CPU, AHB and APB busses clocks
+  /**Initializes the CPU, AHB and APB busses clocks
     */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
@@ -369,15 +362,15 @@ static void SystemClock_Config(void)
 
   HAL_RCC_MCOConfig(RCC_MCO, RCC_MCO1SOURCE_HSE, RCC_MCODIV_1);
 
-    /**Configure the Systick interrupt time
+  /**Configure the Systick interrupt time
     */
-  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
 
-    /**Configure the Systick
+  /**Configure the Systick
     */
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
-    /**Configure the Systick interrupt time
+  /**Configure the Systick interrupt time
     */
   __HAL_RCC_PLLI2S_ENABLE();
 
@@ -386,11 +379,10 @@ static void SystemClock_Config(void)
 
   /* disable systick interrupt. Will be enabled again by rtos */
   SysTick->CTRL = 0;
-
 }
 
-
-void _init( void ) {
+void _init(void)
+{
 }
 
 void HAL_MspInit(void)
@@ -419,7 +411,7 @@ void HAL_MspInit(void)
   /* SysTick_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(SysTick_IRQn, 15, 0);
 
-    /**ENABLE: Full SWJ (JTAG-DP + SW-DP): Reset State
+  /**ENABLE: Full SWJ (JTAG-DP + SW-DP): Reset State
     */
   __HAL_AFIO_REMAP_SWJ_ENABLE();
 

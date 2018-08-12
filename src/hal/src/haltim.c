@@ -1,18 +1,18 @@
 #include "stm32f1xx_hal.h"
+#include "stm32f107xc.h"
 #include "stm32f1xx_hal_tim.h"
 
-static TIM_HandleTypeDef        hTIM6;
-static uint32_t                 uwIncrementState = 0;
+static TIM_HandleTypeDef hTIM6;
 
 HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
-  RCC_ClkInitTypeDef    clkconfig;
-  uint32_t              uwTimclock = 0;
-  uint32_t              uwPrescalerValue = 0;
-  uint32_t              pFLatency;
+  RCC_ClkInitTypeDef clkconfig;
+  uint32_t uwTimclock = 0;
+  uint32_t uwPrescalerValue = 0;
+  uint32_t pFLatency;
 
   /*Configure the TIM6 IRQ priority */
-  HAL_NVIC_SetPriority(TIM6_IRQn, TickPriority ,0);
+  HAL_NVIC_SetPriority(TIM6_IRQn, TickPriority, 0);
 
   /* Enable the TIM6 global Interrupt */
   HAL_NVIC_EnableIRQ(TIM6_IRQn);
@@ -27,7 +27,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   uwTimclock = HAL_RCC_GetPCLK2Freq();
 
   /* Compute the prescaler value to have TIM6 counter clock equal to 1MHz */
-  uwPrescalerValue = (uint32_t) ((uwTimclock / 1000000) - 1);
+  uwPrescalerValue = (uint32_t)((uwTimclock / 1000000) - 1);
 
   /* Initialize TIM6 */
   hTIM6.Instance = TIM6;
@@ -42,7 +42,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   hTIM6.Init.Prescaler = uwPrescalerValue;
   hTIM6.Init.ClockDivision = 0;
   hTIM6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  if(HAL_TIM_Base_Init(&hTIM6) == HAL_OK)
+  if (HAL_TIM_Base_Init(&hTIM6) == HAL_OK)
   {
     /* Start the TIM time Base generation in interrupt mode */
     return HAL_TIM_Base_Start_IT(&hTIM6);
