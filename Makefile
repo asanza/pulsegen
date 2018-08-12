@@ -49,7 +49,7 @@ ASMSRC = $(call rwildcard,src/hal/src,*.s)
 DIRS =
 
 OBJS  = $(patsubst %.c,%.o, $(SRCS))
-OBJS += $(patsubst %.cc,%.o, $(CPPSRCS))
+# OBJS += $(patsubst %.cc,%.o, $(CPPSRCS))
 OBJS += $(patsubst %.s, %.o, $(ASMSRC))
 
 DEPS = $(patsubst %.o,%.d,$(OBJS))

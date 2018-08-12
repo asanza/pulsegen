@@ -56,15 +56,17 @@ int _kill(int pid, int sig)
 void _exit(int status)
 {
 	_kill(status, -1);
-	while (1) {
-	}                       /* Make sure we hang here */
+	while (1)
+	{
+	} /* Make sure we hang here */
 }
 
 int _read(int file, char *ptr, int len)
 {
 	int DataIdx;
 
-	for (DataIdx = 0; DataIdx < len; DataIdx++) {
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
+	{
 		//*ptr++ = __io_getchar();
 	}
 
@@ -73,7 +75,7 @@ int _read(int file, char *ptr, int len)
 
 int _write(int file, char *ptr, int len)
 {
-	int DataIdx;
+	// int DataIdx;
 
 	// for (DataIdx = 0; DataIdx < len; DataIdx++)
 	// 	brd_uart_write( HAL_UART_0, *ptr++ );
@@ -95,15 +97,18 @@ caddr_t _sbrk(int nbytes)
 	extern char end;
 
 	/* The statically held previous end of the heap, with its initialization. */
-	static char *heap_ptr = (char*)&end;    /* Previous end */
-	static char *stack_ptr = (char*)&__stack;
+	static char *heap_ptr = (char *)&end; /* Previous end */
+	static char *stack_ptr = (char *)&__stack;
 
-	if ((stack_ptr - (heap_ptr + nbytes)) > STACK_BUFFER ) {
-		caddr_t base  = heap_ptr;
+	if ((stack_ptr - (heap_ptr + nbytes)) > STACK_BUFFER)
+	{
+		caddr_t base = heap_ptr;
 		heap_ptr += nbytes;
 		avail_heap_space = stack_ptr - heap_ptr;
 		return base;
-	}else {
+	}
+	else
+	{
 		errno = ENOMEM;
 		return (caddr_t)-1;
 	}
@@ -113,7 +118,6 @@ int _close(int file)
 {
 	return -1;
 }
-
 
 int _fstat(int file, struct stat *st)
 {
@@ -186,7 +190,6 @@ void __error__(char *pcFilename, unsigned long ulLine)
 #else
 void __error__(char *pcFilename, unsigned long ulLine)
 {
-
 }
 #endif
 
