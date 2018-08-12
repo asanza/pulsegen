@@ -1,0 +1,3 @@
+[submodule "src/os/amazon-freertos"]
+	path = src/os/amazon-freertos
+	url = https://github.com/aws/amazon-freertos
