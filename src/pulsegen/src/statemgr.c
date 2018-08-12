@@ -343,3 +343,8 @@ void state_init(struct system_state *st)
     st->update = update;
     st->set_parameter = set_param;
 }
+
+void state_update(struct system_state *st, enum system_event evt, void *arg)
+{
+    st->update(evt, arg);
+}
