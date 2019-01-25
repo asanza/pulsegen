@@ -80,11 +80,14 @@ set(STM_HAL_DRIVER_INCLUDES
 "${STM32F1xx_HAL_DIR}/Inc"
 "${CMSIS_DIR}/Device/ST/STM32F1xx/Include"
 "${CMSIS_DIR}/Include"
-"stm32f1xx/"
+"${CMAKE_CURRENT_LIST_DIR}/stm32f107/"
 )
 
 set(BASELIB_SOURCES
-    ${STM_HAL_DRIVERS}
+    "${STM_HAL_DRIVERS}"
+    "${CMAKE_CURRENT_LIST_DIR}/support/embedd/src/cmsis_nvic.c"
+    "${CMAKE_CURRENT_LIST_DIR}/stm32f107/startup_stm32f107xc.s"
+    "${CMAKE_CURRENT_LIST_DIR}/stm32f107/system_stm32f1xx.c"
     # "${CMAKE_CURRENT_LIST_DIR}/stm32f1xx/hal_sys.c"
 )
 
@@ -94,6 +97,10 @@ add_library(archlib
 
 target_include_directories(archlib PRIVATE
     ${STM_HAL_DRIVER_INCLUDES}
+)
+
+target_include_directories(archlib PUBLIC
+  "${CMAKE_CURRENT_LIST_DIR}/support/embedd/include"
 )
 
 target_compile_options(archlib PRIVATE

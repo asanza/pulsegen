@@ -1,11 +1,11 @@
 #include "stm32f1xx.h"
 #include "privfn.h"
 #include <embedd/cmsis_nvic.h>
-#include <hal/error.h>
-#include <hal/SSD1351.h>
 
-/* user initialization to be called before c++ constructors */
-extern void user_init(void);
+__attribute__((__weak__)) void hal_error(const char* file, int line)
+{
+  asm("bkpt");
+}
 
 #if !defined(HSE_VALUE)
 #define HSE_VALUE ((uint32_t)8000000) /*!< Default value of the External oscillator in Hz. \
