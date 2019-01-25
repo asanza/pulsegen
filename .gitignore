@@ -2,7 +2,8 @@
 *.log
 .cproject
 .project
-cpc20_plat Debug.cfg
+
+*.hex
 
 *.dep
 *.o
@@ -18,8 +19,6 @@ build/
 
 *.creator
 *.creator.user
-cpc20.files
-cpc20.includes
 src/platform/stP1kAlM
 
 platform/libs/LwIP_old

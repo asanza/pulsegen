@@ -3,7 +3,7 @@
 set(APP_DIR "${CMAKE_CURRENT_LIST_DIR}")
 set(DEPLOY_FILE "${APP_DIR}/../../dist/display_node_${GIT_BRANCH}_${GIT_COMMIT_HASH}.hex")
 
-set(APP_LINKER_SCRIPT "-Wl,-T${APP_DIR}/arch/stm32f107/STM32F107RCTx_FLASH.ld")
+set(APP_LINKER_SCRIPT "-Wl,-T${APP_DIR}/../arch/stm32f107/STM32F107RCTx_FLASH.ld")
 
 
 set(APP_SOURCES
