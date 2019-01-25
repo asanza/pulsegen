@@ -108,7 +108,7 @@ ADD_SUBDIRECTORY(src/arch)
 # ADD_SUBDIRECTORY(src/lib)
 # ADD_SUBDIRECTORY(src/os)
 # ADD_SUBDIRECTORY(src/sys)
-# ADD_SUBDIRECTORY(src/app)
+ADD_SUBDIRECTORY(src/app)
 
 find_program(openocd "openocd")
 
