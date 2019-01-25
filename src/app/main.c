@@ -1,6 +1,9 @@
 
+#include <os/os.h>
+
 void main( void )
 {
+	os_init();
 	asm("bkpt");
 }
 

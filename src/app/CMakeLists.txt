@@ -18,7 +18,7 @@ add_executable(app
 target_include_directories(app PRIVATE
 )
 
-target_link_libraries(app archlib ${APP_LINKER_SCRIPT})
+target_link_libraries(app archlib oslib ${APP_LINKER_SCRIPT})
 
 target_compile_options(app PRIVATE
 )

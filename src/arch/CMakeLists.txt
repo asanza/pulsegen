@@ -88,6 +88,7 @@ set(BASELIB_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/support/embedd/src/cmsis_nvic.c"
     "${CMAKE_CURRENT_LIST_DIR}/stm32f107/startup_stm32f107xc.s"
     "${CMAKE_CURRENT_LIST_DIR}/stm32f107/system_stm32f1xx.c"
+    "${CMAKE_CURRENT_LIST_DIR}/stm32f107/system.c"
     # "${CMAKE_CURRENT_LIST_DIR}/stm32f1xx/hal_sys.c"
 )
 

@@ -1,22 +1,22 @@
 /**
-  *************** (C) COPYRIGHT 2016 STMicroelectronics ************************
+  *************** (C) COPYRIGHT 2017 STMicroelectronics ************************
   * @file      startup_stm32f107xc.s
   * @author    MCD Application Team
-  * @version   V4.1.0
-  * @date      29-April-2016
+  * @version   V4.2.0
+  * @date      31-March-2017
   * @brief     STM32F107xC Devices vector table for Atollic toolchain.
   *            This module performs:
   *                - Set the initial SP
   *                - Set the initial PC == Reset_Handler,
   *                - Set the vector table entries with the exceptions ISR address
-  *                - Configure the clock system
+  *                - Configure the clock system   
   *                - Branches to main in the C library (which eventually
   *                  calls main()).
   *            After Reset the Cortex-M3 processor is in Thread mode,
   *            priority is Privileged, and the Stack is set to Main.
   ******************************************************************************
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -48,7 +48,7 @@
   .fpu softvfp
   .thumb
 
-.global __isr_vector
+.global g_pfnVectors
 .global Default_Handler
 
 /* start address for the initialization values of the .data section.
@@ -108,38 +108,29 @@ LoopFillZerobss:
   bcc FillZerobss
 
 /* Call the clock system intitialization function.*/
-  bl  SystemInit
+    bl  SystemInit
+/* Call the system initialization (clock, etc...) */
+    bl _init
+/* Call static constructors */
+    bl __libc_init_array
 /* Call the application's entry point.*/
   bl main
   bx lr
 .size Reset_Handler, .-Reset_Handler
 
 /**
- * @brief  This code load the number of the executing interrupt
-           into register 2 (r2) before entering an infinite
-           loop.
+ * @brief  This is the code that gets called when the processor receives an
+ *         unexpected interrupt.  This simply enters an infinite loop, preserving
+ *         the system state for examination by a debugger.
+ *
  * @param  None
- * @retval None
+ * @retval : None
 */
-.section  .text.Default_Handler,"ax",%progbits
+    .section .text.Default_Handler,"ax",%progbits
 Default_Handler:
-  /* Load the address of the interrupt control register into r3. */
-  ldr r3, NVIC_INT_CTRL_CONST
-  /* Load the value of the interrupt control register into r2 from the
-  address held in r3. */
-  ldr r2, [r3, #0]
-  /* The interrupt number is in the least significant byte - clear all
-  other bits. */
-  uxtb r2, r2
 Infinite_Loop:
-  /* Now sit in an infinite loop - the number of the executing interrupt
-  is held in r2. */
-  b  Infinite_Loop
-  .size  Default_Handler, .-Default_Handler
-
-.align 4
-/* The address of the NVIC interrupt control register. */
-NVIC_INT_CTRL_CONST: .word 0xe000ed04
+  b Infinite_Loop
+  .size Default_Handler, .-Default_Handler
 
 /******************************************************************************
 *
@@ -149,11 +140,11 @@ NVIC_INT_CTRL_CONST: .word 0xe000ed04
 *
 ******************************************************************************/
   .section .isr_vector,"a",%progbits
-  .type __isr_vector, %object
-  .size __isr_vector, .-__isr_vector
+  .type g_pfnVectors, %object
+  .size g_pfnVectors, .-g_pfnVectors
 
 
-__isr_vector:
+g_pfnVectors:
 
   .word _estack
   .word Reset_Handler
