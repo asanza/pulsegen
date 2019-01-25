@@ -21,9 +21,6 @@ target_include_directories(app PRIVATE
 target_link_libraries(app archlib ${APP_LINKER_SCRIPT})
 
 target_compile_options(app PRIVATE
-    -Os
-    -fomit-frame-pointer
-    -fexpensive-optimizations
 )
 
 add_custom_command(TARGET app POST_BUILD

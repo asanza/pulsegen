@@ -16,7 +16,7 @@ project(NUCLEO_103 C ASM)
 add_compile_options(
     -mcpu=cortex-m3 
     -fomit-frame-pointer
-    -Os 
+    -O0
     -gdwarf-3 
     -ggdb 
     -mthumb
@@ -85,8 +85,6 @@ execute_process(
 
 # add custom definitions if debug build active
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-  # disable calibration rutines in debug mode.
-  add_definitions(-DNO_CALIB)
   # some debug info
   add_compile_options(-ggdb)
   message("-- Warning: This is a debug build. Not suitable for production purposes")
