@@ -114,3 +114,4 @@ add_custom_target(flash DEPENDS app
   COMMAND ${openocd} -f board/st_nucleo_f103rb.cfg 
       -c "program app reset"
       -c "exit")
+#
