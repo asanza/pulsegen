@@ -3,7 +3,7 @@
 
 void main( void )
 {
-	os_init();
+	os_start();
 	asm("bkpt");
 }
 

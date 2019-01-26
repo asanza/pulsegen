@@ -2,6 +2,8 @@
 #include <stm32f1xx_ll_system.h>
 #include <stm32f1xx_ll_cortex.h>
 #include <stm32f1xx_ll_utils.h>
+#include <hal/sys.h>
+#include <stdint.h>
 
 static void SystemClock_Config(void)
 {
@@ -54,4 +56,11 @@ static void SystemClock_Config(void)
 void _init( void )
 {
   SystemClock_Config();
+}
+
+bool hal_sys_is_irq( void )
+{
+	uint32_t result;
+  asm volatile ("MRS %0, ipsr" : "=r" (result) );
+	return(result != 0);
 }

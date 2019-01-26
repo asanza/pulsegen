@@ -38,6 +38,7 @@ set(OS_SOURCES
 add_library(oslib
   ${FREERTOS_SOURCES}
   "${CMAKE_CURRENT_LIST_DIR}/src/os.c"  
+  "${CMAKE_CURRENT_LIST_DIR}/src/queue.c"  
 )
 
 target_include_directories(oslib PRIVATE

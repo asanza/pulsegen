@@ -63,5 +63,8 @@
         "mpc*": true,
         "gmp*": true,
         "isl*": true
+    },
+    "files.associations": {
+        "queue.h": "c"
     }
 }

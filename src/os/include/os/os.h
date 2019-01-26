@@ -14,8 +14,14 @@
 extern "C"{
 #endif
 
-void os_init( void );
+#include <stdint.h>
+#include <stdbool.h>
 
+void os_start( void );
+
+void os_enter_critical( void );
+void os_exit_critical( void );
+uint32_t os_get_tick_count( void );
 
 #ifdef __cplusplus
 }
