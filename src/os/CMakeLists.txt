@@ -22,7 +22,7 @@ set(FREERTOS_SOURCES
 "${FREERTOS_DIR}/lib/FreeRTOS/tasks.c"
 "${FREERTOS_DIR}/lib/FreeRTOS/timers.c"
 "${FREERTOS_DIR}/lib/FreeRTOS/portable/GCC/ARM_CM3/port.c"
-"${FREERTOS_DIR}/lib/FreeRTOS/portable/MemMang/heap_4.c"
+"${FREERTOS_DIR}/lib/FreeRTOS/portable/MemMang/heap_3.c"
 )
 
 set(FREERTOS_INCLUDES
@@ -53,6 +53,8 @@ target_compile_options(oslib PRIVATE
     -fomit-frame-pointer
     -fexpensive-optimizations
 )
+
+target_link_libraries(oslib archlib)
 
 target_compile_definitions(oslib PUBLIC
 )

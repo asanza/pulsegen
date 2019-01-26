@@ -101,7 +101,8 @@ target_include_directories(archlib PRIVATE
 )
 
 target_include_directories(archlib PUBLIC
-  "${CMAKE_CURRENT_LIST_DIR}/support/embedd/include"
+"${CMAKE_CURRENT_LIST_DIR}/support/embedd/include"
+"${CMAKE_CURRENT_LIST_DIR}/include"
 )
 
 target_compile_options(archlib PRIVATE
