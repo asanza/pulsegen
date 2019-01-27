@@ -31,6 +31,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sys/times.h>
+#include <hal/sys.h>
 
 /* Reserve at least STACK_BUFFER bytes for stack usage */
 #define MIN_STACK_SIZE 1024
@@ -41,6 +42,8 @@ static uint32_t avail_heap_space;
 /* We use the errno variable used by the system dependent layer.  */
 #undef errno
 extern int errno;
+
+static hal_mutex_t syslock;
 
 int _getpid(void)
 {
@@ -96,22 +99,31 @@ caddr_t _sbrk(int nbytes)
 	extern uint32_t __stack;
 	extern char end;
 
-	/* The statically held previous end of the heap, with its initialization. */
-	static char *heap_ptr = (char *)&end; /* Previous end */
-	static char *stack_ptr = (char *)&__stack;
+	caddr_t retval;
 
-	if ((stack_ptr - (heap_ptr + nbytes)) > STACK_BUFFER)
+
+	if(hal_sys_lock(&syslock) == false)
 	{
-		caddr_t base = heap_ptr;
-		heap_ptr += nbytes;
-		avail_heap_space = stack_ptr - heap_ptr;
-		return base;
-	}
-	else
-	{
-		errno = ENOMEM;
-		return (caddr_t)-1;
-	}
+		errno = EBUSY;
+		retval = (caddr_t) -1;
+	} else {
+		/* The statically held previous end of the heap, with its initialization. */
+		static char *heap_ptr = (char *)&end; /* Previous end */
+		static char *stack_ptr = (char *)&__stack;
+		
+		if ((stack_ptr - (heap_ptr + nbytes)) > STACK_BUFFER) {
+			caddr_t base = heap_ptr;
+			heap_ptr += nbytes;
+			avail_heap_space = stack_ptr - heap_ptr;
+			retval = base;
+		}	else {
+			errno = ENOMEM;
+			retval = (caddr_t) -1;
+		}
+		hal_sys_unlock(&syslock);
+	}	
+	
+	return retval;
 }
 
 int _close(int file)
