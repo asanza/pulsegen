@@ -6,6 +6,11 @@
 extern "C" {
 #endif
 
+#define GPIO_PORTA(x) (( 0 * 16 ) + x) 
+#define GPIO_PORTB(x) (( 1 * 16 ) + x) 
+#define GPIO_PORTC(x) (( 2 * 16 ) + x) 
+#define GPIO_PORTD(x) (( 3 * 16 ) + x) 
+
 /*
  * The "mode" of the gpio. The gpio is either an input, output, or it is
  * "not connected" (the pin specified is not functioning as a gpio)

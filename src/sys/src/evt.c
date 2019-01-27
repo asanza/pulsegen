@@ -2,6 +2,7 @@
 #include <task.h>
 #include <queue.h>
 #include <sys/evt.h>
+#include <assert.h>
 
 static int index = 0;
 static event_listener_t fn[5];
@@ -23,6 +24,8 @@ void evt_register_listener(event_listener_t listener)
     if (index < sizeof(fn) / sizeof(struct Event))
     {
         fn[index++] = listener;
+    } else {
+        assert(0);
     }
 }
 

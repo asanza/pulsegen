@@ -106,6 +106,8 @@ extern uint32_t SystemCoreClock;
 #define configQUEUE_REGISTRY_SIZE 8
 #define configCHECK_FOR_STACK_OVERFLOW 1
 #define configUSE_MALLOC_FAILED_HOOK 1
+#define INCLUDE_xTaskGetHandle                  1
+
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 0

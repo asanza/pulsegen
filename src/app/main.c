@@ -1,10 +1,17 @@
 
+#include <stdlib.h>
 #include <os/os.h>
+#include <os/threads.h>
+
+static void test_thread( void* args )
+{
+	while(true);
+}
 
 void main( void )
 {
+	os_thread_new("test", test_thread, NULL, 100, 3);
 	os_start();
-	asm("bkpt");
 }
 
 // #include <FreeRTOS.h>
