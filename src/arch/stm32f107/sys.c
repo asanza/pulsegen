@@ -1,3 +1,4 @@
+#include <stm32f1xx.h>
 #include <stm32f1xx_ll_rcc.h>
 #include <stm32f1xx_ll_system.h>
 #include <stm32f1xx_ll_cortex.h>
@@ -63,4 +64,22 @@ bool hal_sys_is_irq( void )
 	uint32_t result;
   asm volatile ("MRS %0, ipsr" : "=r" (result) );
 	return(result != 0);
+}
+
+bool hal_sys_lock(hal_mutex_t *lock)
+{
+  if (__LDREXB((unsigned char volatile *)lock) != 0) {
+    return false;
+  }
+  if (__STREXB(1, (unsigned char volatile *)lock) != 0) {
+    return false;
+  }
+  __DMB();
+  return true;
+}
+
+void hal_sys_unlock(hal_mutex_t *lock)
+{
+  __DMB();
+  *lock = 0;
 }
