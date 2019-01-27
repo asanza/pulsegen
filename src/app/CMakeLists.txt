@@ -24,7 +24,7 @@ target_compile_options(app PRIVATE
 )
 
 add_custom_command(TARGET app POST_BUILD
-    COMMAND arm-none-eabi-objcopy -O ihex app ${APP_DIR}/../../dist/display_node_m31m_${GIT_VERSION}.hex)
+    COMMAND arm-none-eabi-objcopy -O ihex app ${APP_DIR}/../../dist/app_${GIT_VERSION}.hex)
 
 add_custom_command(TARGET app POST_BUILD
     COMMAND arm-none-eabi-size --format=berkeley app
