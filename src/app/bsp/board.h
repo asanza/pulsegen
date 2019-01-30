@@ -13,7 +13,11 @@
 extern "C"{
 #endif
 
+#include <hal/gpio.h>
 
+#define POWER_HOLD GPIO_PORTB(1)
+#define GREEN_LED  GPIO_PORTA(6)
+#define RED_LED	   GPIO_PORTA(5)
 
 #ifdef __cplusplus
 }

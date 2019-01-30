@@ -75,6 +75,7 @@
   */
 
 #include "stm32f1xx.h"
+#include <embed/cmsis_nvic.h>
 
 /**
   * @}
@@ -219,6 +220,8 @@ void SystemInit (void)
     SystemInit_ExtMemCtl(); 
   #endif /* DATA_IN_ExtSRAM */
 #endif 
+
+NVIC_Relocate();
 
 #ifdef VECT_TAB_SRAM
   SCB->VTOR = SRAM_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM. */

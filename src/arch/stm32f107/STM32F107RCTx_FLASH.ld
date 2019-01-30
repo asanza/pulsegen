@@ -72,6 +72,7 @@ SECTIONS
   {
     . = ALIGN(4);
 	__isr_vector_start = .;
+  __isr_vector = .;
     KEEP(*(.isr_vector)) /* Startup code */
 	__isr_vector_end = .;
     . = ALIGN(4);
