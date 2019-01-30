@@ -24,9 +24,9 @@
     - +:test/**
     - -:test/support
   :source:
-    - src/**
+    - src/app/pulsegen/src
   :include:
-    - src/base/include
+    - src/app/pulsegen/include
   :support:
     - test/support
   
@@ -44,7 +44,7 @@
 
 :unity:
   :defines:
-    - UNITY_INCLUDE_CONFIG_H
+    - "UNITY_OUTPUT_CHAR=sh_putchar"
 
 :cmock:
   :mock_prefix: mock_
@@ -133,6 +133,7 @@
   :common: &common_libraries []
   :test:
     - *common_libraries
+  :source:
   :release:
     - *common_libraries
 
