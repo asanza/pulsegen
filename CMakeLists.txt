@@ -108,10 +108,11 @@ ADD_SUBDIRECTORY(src/os)
 ADD_SUBDIRECTORY(src/sys)
 ADD_SUBDIRECTORY(src/app)
 
-find_program(openocd "openocd")
+find_program(jlink "JLinkGDBServer")
+find_program(gdb "arm-none-eabi-gdb")
 
-add_custom_target(flash DEPENDS app 
-  COMMAND ${openocd} -f board/st_nucleo_f103rb.cfg 
-      -c "program app reset"
-      -c "exit")
+add_custom_target(debug DEPENDS app 
+  COMMAND ${jlink} -select USB -device STM32F107RC -if JTAG -speed auto -noir  -port 3333 -singlerun
+  USES_TERMINAL
+)
 #
