@@ -4,6 +4,7 @@
 .project
 *.cortex*
 *.hex
+*.vscode
 
 *.dep
 *.o
