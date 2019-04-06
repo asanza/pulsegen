@@ -1,0 +1,5 @@
+add_subdirectory(arch)
+add_subdirectory(os)
+add_subdirectory(sys)
+add_subdirectory(lib)
+# add_subdirectory(drv)
