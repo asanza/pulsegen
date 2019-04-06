@@ -22,7 +22,7 @@ set(FREERTOS_SOURCES
 "${FREERTOS_DIR}/lib/FreeRTOS/tasks.c"
 "${FREERTOS_DIR}/lib/FreeRTOS/timers.c"
 "${FREERTOS_DIR}/lib/FreeRTOS/portable/GCC/ARM_CM3/port.c"
-"${FREERTOS_DIR}/lib/FreeRTOS/portable/MemMang/heap_3.c"
+# "${FREERTOS_DIR}/lib/FreeRTOS/portable/MemMang/heap_3.c"
 )
 
 set(FREERTOS_INCLUDES
@@ -40,6 +40,7 @@ add_library(oslib
   "${CMAKE_CURRENT_LIST_DIR}/src/os.c"  
   "${CMAKE_CURRENT_LIST_DIR}/src/queue.c"  
   "${CMAKE_CURRENT_LIST_DIR}/src/threads.c"  
+  "${CMAKE_CURRENT_LIST_DIR}/src/syscalls.c"  
 )
 
 target_include_directories(oslib PRIVATE
@@ -56,7 +57,10 @@ target_compile_options(oslib PRIVATE
     -fexpensive-optimizations
 )
 
-target_link_libraries(oslib archlib)
+target_link_libraries(oslib archlib
+"-Xlinker --wrap=malloc"
+"-Xlinker --wrap=_malloc_r" 
+)
 
 target_compile_definitions(oslib PUBLIC
 )

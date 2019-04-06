@@ -50,12 +50,11 @@
 
 /* Entry Point */
 ENTRY(Reset_Handler)
+HEAP_SIZE  = DEFINED(__heap_size__)  ? __heap_size__  : 0x4000;
+STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x0400;
 
 /* Highest address of the user mode stack */
 _estack = 0x20010000;    /* end of RAM */
-/* Generate a link error if heap and stack don't fit into RAM */
-_Min_Heap_Size = 0x200;      /* required amount of heap  */
-_Min_Stack_Size = 0x400; /* required amount of stack */
 
 /* Specify the memory areas */
 MEMORY
@@ -178,11 +177,11 @@ SECTIONS
   ._user_heap_stack :
   {
     . = ALIGN(8);
+    __end__ = .;
     PROVIDE ( end = . );
-    PROVIDE ( _end = . );
-    . = . + _Min_Heap_Size;
-    . = . + _Min_Stack_Size;
-    . = ALIGN(8);
+    __HeapBase = .;
+    . += HEAP_SIZE ;
+    __HeapLimit = .;
   } >RAM
 
   /* .stack_dummy section doesn't contains any symbols. It is only
@@ -190,7 +189,9 @@ SECTIONS
    * values to stack symbols later */
   .stack_dummy (COPY):
   {
+    . = ALIGN(8);
       *(.stack*)
+    . += STACK_SIZE;
   } > RAM
 
   /* Set stack top to end of RAM, and stack limit move down by
