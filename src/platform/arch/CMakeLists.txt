@@ -90,7 +90,6 @@ set(BASELIB_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/stm32f107/system_stm32f1xx.c"
     "${CMAKE_CURRENT_LIST_DIR}/stm32f107/sys.c"
     "${CMAKE_CURRENT_LIST_DIR}/stm32f107/gpio.c"
-    # "${CMAKE_CURRENT_LIST_DIR}/stm32f1xx/hal_sys.c"
 )
 
 add_library(archlib

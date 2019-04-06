@@ -8,7 +8,7 @@
 #  */
 
 add_library(syslib
-"${CMAKE_CURRENT_LIST_DIR}/syscalls.c"  
+"${CMAKE_CURRENT_LIST_DIR}/sys_debug.c"  
 # "${CMAKE_CURRENT_LIST_DIR}/evt.c"  
 )
 
