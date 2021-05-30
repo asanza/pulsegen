@@ -1,24 +1,24 @@
 add_subdirectory(vendor)
 
-# set(TARGET hal)
+set(TARGET hal)
 
-# set(${TARGET}_SOURCES
-#     ${CMAKE_CURRENT_LIST_DIR}/src/croutine.c
-#     ${CMAKE_CURRENT_LIST_DIR}/src/event_groups.c
-#     ${CMAKE_CURRENT_LIST_DIR}/src/list.c
-#     ${CMAKE_CURRENT_LIST_DIR}/src/queue.c
-#     ${CMAKE_CURRENT_LIST_DIR}/src/tasks.c
-#     ${CMAKE_CURRENT_LIST_DIR}/src/timers.c
-# )
+set(${TARGET}_SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/src/dac.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/error.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/gpio.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/haltim.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/keybd.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/privfn.h
+    ${CMAKE_CURRENT_LIST_DIR}/src/SSD1351.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/startup_stm32f107xc.s
+    ${CMAKE_CURRENT_LIST_DIR}/src/system_stm32f1xx.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/timer.c
+)
 
-# add_library(${TARGET} ${${TARGET}_SOURCES})
-# # target_link_libraries(cbor freertos hal)
-# target_include_directories(${TARGET} PRIVATE
-#     "${CMAKE_CURRENT_LIST_DIR}/portable/GCC/ARM_CM3"
-# )
+add_library(${TARGET} ${${TARGET}_SOURCES})
 
-# target_include_directories(${TARGET} PUBLIC
-#   "${CMAKE_CURRENT_LIST_DIR}/include"
-# )
+target_include_directories(${TARGET} PUBLIC
+  "${CMAKE_CURRENT_LIST_DIR}/include"
+)
 
-# target_compile_options(${TARGET} PRIVATE -Wno-extra)
+target_link_libraries(${TARGET} PRIVATE hal_stm32f1xx)

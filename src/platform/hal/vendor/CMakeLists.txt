@@ -49,12 +49,13 @@ set(${TARGET}_SOURCES
 add_library(${TARGET} ${${TARGET}_SOURCES})
 # target_link_libraries(cbor freertos hal)
 target_include_directories(${TARGET} PUBLIC
-    "${CMAKE_CURRENT_LIST_DIR}/STM32F1xx_HAL_Driver/Inc"
+    ${CMAKE_CURRENT_LIST_DIR}/STM32F1xx_HAL_Driver/Inc
+    ${CMAKE_CURRENT_LIST_DIR}/CMSIS/Device/ST/STM32F1xx/Include
+    ${CMAKE_CURRENT_LIST_DIR}/CMSIS/Include
+    ${CMAKE_CURRENT_LIST_DIR}/embedd/include
 )
 
 target_include_directories(${TARGET} PRIVATE
-  "${CMAKE_CURRENT_LIST_DIR}/CMSIS/Include"
-  "${CMAKE_CURRENT_LIST_DIR}/CMSIS/Device/ST/STM32F1xx/Include"
 )
 
 target_compile_options(${TARGET} PRIVATE -Wno-extra)
