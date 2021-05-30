@@ -7,6 +7,8 @@ set(${TARGET}_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/src/queue.c
     ${CMAKE_CURRENT_LIST_DIR}/src/tasks.c
     ${CMAKE_CURRENT_LIST_DIR}/src/timers.c
+    ${CMAKE_CURRENT_LIST_DIR}/portable/GCC/ARM_CM3/port.c
+    ${CMAKE_CURRENT_LIST_DIR}/portable/MemMang/heap_1.c
 )
 
 add_library(${TARGET} ${${TARGET}_SOURCES})
