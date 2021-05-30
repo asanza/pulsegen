@@ -49,6 +49,8 @@ else()
   add_compile_definitions(NDEBUG)
 endif()
 
+add_compile_definitions(STM32F107xC)
+
 include(${CMAKE_MODULE_PATH}/gitversion.cmake)
 get_repository_version()
 add_definitions(-DGIT_VERSION=\"${GIT_VERSION}\")
