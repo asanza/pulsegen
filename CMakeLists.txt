@@ -61,4 +61,4 @@ add_definitions(-DGIT_COMMIT_HASH=${GIT_COMMIT_HASH})
 add_definitions(-DGIT_COMMIT_HASH_HEX=0x${GIT_COMMIT_HASH})
 
 add_subdirectory(src/platform)
-# add_subdirectory(src/application/upg200)
+add_subdirectory(src/application)
