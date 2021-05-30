@@ -7,7 +7,6 @@ set(${TARGET}_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/src/error.c
     ${CMAKE_CURRENT_LIST_DIR}/src/gpio.c
     ${CMAKE_CURRENT_LIST_DIR}/src/haltim.c
-    ${CMAKE_CURRENT_LIST_DIR}/src/keybd.c
     ${CMAKE_CURRENT_LIST_DIR}/src/privfn.h
     ${CMAKE_CURRENT_LIST_DIR}/src/system_stm32f1xx.c
     ${CMAKE_CURRENT_LIST_DIR}/src/timer.c

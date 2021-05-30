@@ -1,5 +1,4 @@
-#include <hal/keybd.h>
-#include <hal/error.h>
+#include <keybd.h>
 #include "stm32f1xx_hal.h"
 
 static key_handler_t keyfn;
@@ -57,7 +56,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
             case GPIO_PIN_13: keyfn(KEY_POW); break;
             case GPIO_PIN_14: manageEncoder(GPIO_PIN_14); break;
             case GPIO_PIN_15: manageEncoder(GPIO_PIN_15); break;
-            default: HAL_ASSERT(0);
         }
     }
 }
