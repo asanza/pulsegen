@@ -31,11 +31,9 @@ add_compile_options(
     -ffunction-sections
     -fdata-sections
     -Wall
-    -nostartfiles
-    -ffreestanding
     -Wfatal-errors
-    -specs=nano.specs
     -nostartfiles
+    -specs=nano.specs
     -std=gnu11
 )
 

@@ -2,10 +2,6 @@
 #include "privfn.h"
 #include <embedd/cmsis_nvic.h>
 #include <hal/error.h>
-#include <hal/SSD1351.h>
-
-/* user initialization to be called before c++ constructors */
-extern void user_init( void );
 
 #if !defined  (HSE_VALUE)
   #define HSE_VALUE    ((uint32_t)8000000) /*!< Default value of the External oscillator in Hz.
@@ -119,9 +115,6 @@ void SystemInit (void)
     SystemCoreClockUpdate();
     /* relocate interrupt vector */
     NVIC_Relocate();
-    /* initialize display */
-    disp_init();
-    user_init();
 }
 
 /**
@@ -387,10 +380,6 @@ static void SystemClock_Config(void)
   /* disable systick interrupt. Will be enabled again by rtos */
   SysTick->CTRL = 0;
 
-}
-
-
-void _init( void ) {
 }
 
 void HAL_MspInit(void)
