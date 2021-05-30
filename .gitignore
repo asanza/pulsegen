@@ -1,8 +1,5 @@
 # eclipse project files
 *.log
-.cproject
-.project
-cpc20_plat Debug.cfg
 
 *.dep
 *.o
@@ -13,76 +10,3 @@ cpc20_plat Debug.cfg
 *.map
 
 build/
-
-.settings/
-
-*.creator
-*.creator.user
-cpc20.files
-cpc20.includes
-src/platform/stP1kAlM
-
-platform/libs/LwIP_old
-
-.tags
-.tags1
-
-.mxproject
-
-*.diff
-*.patch
-*.orig
-*.rej
-
-*~
-.#*
-*#
-
-*.flt
-*.gmo
-*.info
-*.la
-*.lo
-*.o
-*.pyc
-*.tmp
-
-.deps
-.libs
-
-autom4te.cache
-config.cache
-config.h
-config.intl
-config.log
-config.status
-libtool
-POTFILES
-*-POTFILES
-
-TAGS
-TAGS.sub
-
-.local.vimrc
-.lvimrc
-
-.clang-format
-
-.gdbinit
-.gdb_history
-
-# ignore core files, but not java/net/protocol/core/
-core
-!core/
-
-lost+found
-
-# ignore ./contrib/gcc_update output
-LAST_UPDATED
-REVISION
-
-# ignore in-tree prerequisites
-/mpfr*
-/mpc*
-/gmp*
-/isl*
