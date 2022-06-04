@@ -2,6 +2,7 @@
 #include <task.h>
 #include <hal/gpio.h>
 #include <ssd1351.h>
+#include <ugui.h>
 
 #define GREEN_LED  GPIO_PIN(GPIO_PORT_A, 6)
 #define RED_LED  GPIO_PIN(GPIO_PORT_A, 5)
@@ -20,12 +21,19 @@ void test(void* arg)
     }
 }
 
+static UG_GUI ugui;
+
 void display( void * arg ) 
 {
     uint32_t i = 0;
     disp_init();
     disp_on();
-    disp_checkerboard();
+
+    UG_Init(&ugui, disp_pset, 128, 128);
+    UG_FontSelect(&FONT_8X12);
+    UG_FontSetHSpace(0);
+    UG_PutString(0, 0, "Hello Fucker!");
+
     while(1) {
         // disp_fillframe(0, 0, 100, 100, i++);
     }

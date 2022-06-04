@@ -18,6 +18,7 @@ target_link_libraries(${target}.elf
     ssd1351
     hal
     sys
+    ugui
     -Wl,--no-whole-archive
 )
 
