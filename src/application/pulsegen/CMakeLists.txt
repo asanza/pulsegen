@@ -2,6 +2,7 @@ set(target upg200)
 
 set(sources
     ${CMAKE_CURRENT_LIST_DIR}/main.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/pgen.cc
     ${CMAKE_CURRENT_LIST_DIR}/startup_stm32f107xc.s
 )
 
