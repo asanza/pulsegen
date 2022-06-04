@@ -8,5 +8,6 @@
 *.elf
 *.bin
 *.map
-
+*.hex
 build/
+.vscode

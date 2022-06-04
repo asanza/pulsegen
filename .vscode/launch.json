@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/build/src/application/pulsegen/upg200.elf",
+            "name": "Firmware",
+            "device": "STM32F107RC",
+            "interface": "jtag",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            // "rtos": "FreeRTOS",
+            // "debuggerArgs": ["-x", "${workspaceRoot}/tools/jlink/gdbinit"],
+            "svdFile": "${workspaceRoot}/tools/jlink/STM32F107.svd"
+        },{
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/build/src/application/Boot/Boot.elf",
+            "name": "Boot",
+            "request": "launch",
+            "gdbPath": "gdb-multiarch",
+            "device": "STM32F107RC",
+            "interface": "swd",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "svdFile": "${workspaceRoot}/tools/jlink/STM32F107.svd"
+        }
+    ]
+}

@@ -91,12 +91,12 @@ int system_get_free_heap_size(void)
 
 caddr_t _sbrk(int nbytes)
 {
-	extern uint32_t __stack;
+	extern uint32_t _end;
 	extern char end;
 
 	/* The statically held previous end of the heap, with its initialization. */
 	static char *heap_ptr = (char*)&end;    /* Previous end */
-	static char *stack_ptr = (char*)&__stack;
+	static char *stack_ptr = (char*)&_end;
 
 	if ((stack_ptr - (heap_ptr + nbytes)) > STACK_BUFFER ) {
 		caddr_t base  = heap_ptr;

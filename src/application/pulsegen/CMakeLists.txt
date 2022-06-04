@@ -5,11 +5,20 @@ set(sources
     ${CMAKE_CURRENT_LIST_DIR}/startup_stm32f107xc.s
 )
 
-add_executable(${target} ${sources})
+set(LINKER_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/STM32F107RCTx_FLASH.ld CACHE INTERNAL "LINKER_SCRIPT")
 
-target_link_libraries(${target} 
-    -Xlinker -T${CMAKE_CURRENT_LIST_DIR}/STM32F107RCTx_FLASH.ld
+add_executable(${target}.elf ${sources})
+
+target_link_libraries(${target}.elf
+    -Xlinker -T${LINKER_SCRIPT}
+    -Xlinker -Map=${target}.map
     freertos
     hal
     sys
+)
+
+set_target_properties(${target}.elf PROPERTIES LINK_DEPENDS ${LINKER_SCRIPT})
+
+add_custom_target(${target}_${GIT_VERSION}.hex COMMAND 
+    ${CMAKE_OBJCOPY} -O ihex ${target}.elf ${PROJECT_SOURCE_DIR}/dist/${target}_${GIT_VERSION}.hex
 )

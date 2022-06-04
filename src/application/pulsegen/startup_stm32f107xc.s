@@ -59,9 +59,9 @@ defined in linker script */
 /* end address for the .data section. defined in linker script */
 .word _edata
 /* start address for the .bss section. defined in linker script */
-.word _sbss
+.word __bss_start__
 /* end address for the .bss section. defined in linker script */
-.word _ebss
+.word __bss_end__
 
 .equ  BootRAM, 0xF1E0F85F
 /**
@@ -89,12 +89,12 @@ CopyDataInit:
   adds r1, r1, #4
 
 LoopCopyDataInit:
-  ldr r0, =_sdata
+  ldr r0, =__bss_start__
   ldr r3, =_edata
   adds r2, r0, r1
   cmp r2, r3
   bcc CopyDataInit
-  ldr r2, =_sbss
+  ldr r2, =__bss_start__
   b LoopFillZerobss
 
 /* Zero fill the bss segment. */
@@ -103,12 +103,12 @@ FillZerobss:
   str r3, [r2], #4
 
 LoopFillZerobss:
-  ldr r3, = _ebss
+  ldr r3, = __bss_end__
   cmp r2, r3
   bcc FillZerobss
 
 /* Call the clock system intitialization function.*/
-    bl  SystemInit
+  bl  SystemInit
 /* Call static constructors */
     bl __libc_init_array
 /* Call the application's entry point.*/
@@ -157,7 +157,7 @@ NVIC_INT_CTRL_CONST: .word 0xe000ed04
 
 __isr_vector:
 
-  .word _estack
+  .word __stack
   .word Reset_Handler
   .word NMI_Handler
   .word HardFault_Handler

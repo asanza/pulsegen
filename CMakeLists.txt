@@ -1,5 +1,5 @@
 
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.16)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -24,17 +24,22 @@ project(upg200 LANGUAGES C ASM DESCRIPTION "Universal Pulse Generator")
 
 add_compile_options(
     -mcpu=cortex-m3
+    -mthumb
     -O0  
     -gdwarf-3 
     -ggdb
-    -mthumb
     -ffunction-sections
     -fdata-sections
+    -fno-omit-frame-pointer
     -Wall
     -Wfatal-errors
     -nostartfiles
-    -specs=nano.specs
+    -specs=nosys.specs
     -std=gnu11
+)
+
+add_link_options(    
+  -mcpu=cortex-m3
 )
 
 if( CMAKE_BUILD_TYPE STREQUAL "Debug" )
@@ -60,3 +65,12 @@ add_definitions(-DGIT_COMMIT_HASH_HEX=0x${GIT_COMMIT_HASH})
 
 add_subdirectory(src/platform)
 add_subdirectory(src/application)
+
+add_custom_target(flash COMMAND ${Python_EXECUTABLE} 
+    ${SCRIPTS_PATH}/jlink_flasher.py
+    -d "STM32F107RC"
+    -iface "SWD"
+    ${CMAKE_SOURCE_DIR}/dist/upg200_${GIT_VERSION}.hex
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/dist
+    DEPENDS upg200_${GIT_VERSION}.hex
+)

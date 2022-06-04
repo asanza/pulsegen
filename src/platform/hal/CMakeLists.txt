@@ -10,6 +10,7 @@ set(${TARGET}_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/src/privfn.h
     ${CMAKE_CURRENT_LIST_DIR}/src/system_stm32f1xx.c
     ${CMAKE_CURRENT_LIST_DIR}/src/timer.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/uart.c
     ${CMAKE_CURRENT_LIST_DIR}/vendor/embedd/src/cmsis_nvic.c
 )
 
