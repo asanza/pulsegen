@@ -12,9 +12,11 @@ add_executable(${target}.elf ${sources})
 target_link_libraries(${target}.elf
     -Xlinker -T${LINKER_SCRIPT}
     -Xlinker -Map=${target}.map
+    -Wl,--whole-archive
     freertos
     hal
     sys
+    -Wl,--no-whole-archive
 )
 
 set_target_properties(${target}.elf PROPERTIES LINK_DEPENDS ${LINKER_SCRIPT})
