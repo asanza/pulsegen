@@ -12,6 +12,8 @@ void disp_pset(int16_t x, int16_t y, uint32_t color);
 void disp_fillframe(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t color);
 void disp_on( void );
 void disp_off( void );
+void disp_rainbow( void );
+void disp_checkerboard( void );
 
 #ifdef __cplusplus
 }

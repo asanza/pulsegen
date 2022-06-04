@@ -6,6 +6,8 @@ set(${TARGET}_SOURCES
 
 add_library(${TARGET} ${${TARGET}_SOURCES})
 
+target_compile_options(${TARGET} PRIVATE -Wno-unused-function)
+
 target_include_directories(${TARGET} PUBLIC
   "${CMAKE_CURRENT_LIST_DIR}"
 )

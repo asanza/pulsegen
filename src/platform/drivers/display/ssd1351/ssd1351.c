@@ -130,7 +130,7 @@ static void Set_Function_Selection(unsigned char d)
 // 0xAF (0x01) => Display On (Sleep Mode Off)
 
 
-void Set_Phase_Length(unsigned char d)
+static void Set_Phase_Length(unsigned char d)
 {
 	write_command(0xB1);                    // Phase 1 (Reset) & Phase 2 (Pre-Charge) Period Adjustment
 	write_data(d);                          // Default => 0x82 (8 Display Clocks [Phase 2] / 5 Display Clocks [Phase 1])
@@ -139,7 +139,7 @@ void Set_Phase_Length(unsigned char d)
 }
 
 
-void Set_Display_Enhancement(unsigned char d)
+static void Set_Display_Enhancement(unsigned char d)
 {
 	write_command(0xB2);                    // Display Enhancement
 	write_data(d);                          // Default => 0x00 (Normal)
@@ -148,7 +148,7 @@ void Set_Display_Enhancement(unsigned char d)
 }
 
 
-void Set_Display_Clock(unsigned char d)
+static void Set_Display_Clock(unsigned char d)
 {
 	write_command(0xB3);                    // Set Display Clock Divider / Oscillator Frequency
 	write_data(d);                          // Default => 0x00
@@ -157,7 +157,7 @@ void Set_Display_Clock(unsigned char d)
 }
 
 
-void Set_VSL(unsigned char d)
+static void Set_VSL(unsigned char d)
 {
 	write_command(0xB4);                    // Set Segment Low Voltage
 	write_data(0xA0 | d);                   // Default => 0xA0
@@ -168,35 +168,35 @@ void Set_VSL(unsigned char d)
 }
 
 
-void Set_GPIO(unsigned char d)
+static void Set_GPIO(unsigned char d)
 {
 	write_command(0xB5);                    // General Purpose IO
 	write_data(d);                          // Default => 0x0A (GPIO Pins output Low Level.)
 }
 
 
-void Set_Precharge_Period(unsigned char d)
+static void Set_Precharge_Period(unsigned char d)
 {
 	write_command(0xB6);                    // Set Second Pre-Charge Period
 	write_data(d);                          // Default => 0x08 (8 Display Clocks)
 }
 
 
-void Set_Precharge_Voltage(unsigned char d)
+static void Set_Precharge_Voltage(unsigned char d)
 {
 	write_command(0xBB);                    // Set Pre-Charge Voltage Level
 	write_data(d);                          // Default => 0x17 (0.50*VCC)
 }
 
 
-void Set_VCOMH(unsigned char d)
+static void Set_VCOMH(unsigned char d)
 {
 	write_command(0xBE);                    // Set COM Deselect Voltage Level
 	write_data(d);                          // Default => 0x05 (0.82*VCC)
 }
 
 
-void Set_Contrast_Color(unsigned char a, unsigned char b, unsigned char c)
+static void Set_Contrast_Color(unsigned char a, unsigned char b, unsigned char c)
 {
 	write_command(0xC1);                    // Set Contrast Current for Color A, B, C
 	write_data(a);                          // Default => 0x8A (Color A)
@@ -205,21 +205,21 @@ void Set_Contrast_Color(unsigned char a, unsigned char b, unsigned char c)
 }
 
 
-void Set_Master_Current(unsigned char d)
+static void Set_Master_Current(unsigned char d)
 {
 	write_command(0xC7);                    // Master Contrast Current Control
 	write_data(d);                          //  Default => 0x0F (Maximum)
 }
 
 
-void Set_Multiplex_Ratio(unsigned char d)
+static void Set_Multiplex_Ratio(unsigned char d)
 {
 	write_command(0xCA);                    // Set Multiplex Ratio
 	write_data(d);                          // Default => 0x7F (1/128 Duty)
 }
 
 
-void Set_Command_Lock(unsigned char d)
+static void Set_Command_Lock(unsigned char d)
 {
 	write_command(0xFD);                    // Set Command Lock
 	write_data(d);                          // Default => 0x12
@@ -233,7 +233,7 @@ void Set_Command_Lock(unsigned char d)
 //  Patterns
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-unsigned char Ascii_1[][5] = {                  // Refer to "Times New Roman" Font Database...
+static unsigned char Ascii_1[][5] = {                  // Refer to "Times New Roman" Font Database...
 	//   Basic Characters
 	{ 0x00, 0x00, 0x00, 0x00, 0x00 },       //
 	{ 0x00, 0x00, 0x4F, 0x00, 0x00 },       //   (  1)  ! - 0x0021 Exclamation Mark
@@ -489,7 +489,7 @@ unsigned char Ascii_1[][5] = {                  // Refer to "Times New Roman" Fo
 //    f: Line Color - RRRRRGGG
 //    g: Line Color - GGGBBBBB
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Draw_Rectangle(unsigned char a, unsigned char b, unsigned char c,
+static void Draw_Rectangle(unsigned char a, unsigned char b, unsigned char c,
 			unsigned char d, unsigned char e, unsigned char f, unsigned char g)
 {
 	unsigned char i, j;
@@ -542,7 +542,7 @@ void Draw_Rectangle(unsigned char a, unsigned char b, unsigned char c,
 //    a: RRRRRGGG
 //    b: GGGBBBBB
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Fill_RAM(unsigned char a, unsigned char b)
+static void Fill_RAM(unsigned char a, unsigned char b)
 {
 	unsigned char i, j;
 
@@ -568,7 +568,7 @@ void Fill_RAM(unsigned char a, unsigned char b)
 //    e: RRRRRGGG
 //    f: GGGBBBBB
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Fill_Block(unsigned char a, unsigned char b, unsigned char c,
+static void Fill_Block(unsigned char a, unsigned char b, unsigned char c,
 					unsigned char d, unsigned char e, unsigned char f)
 {
 	unsigned char i, j;
@@ -588,7 +588,7 @@ void Fill_Block(unsigned char a, unsigned char b, unsigned char c,
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //  Show Checkboard (Full Screen)
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Checkerboard()
+static void Checkerboard()
 {
 	unsigned char i, j;
 
@@ -615,7 +615,7 @@ void Checkerboard()
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //  Show Color Bar (Full Screen)
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Rainbow()
+static void Rainbow()
 {
 	// White => Column 1~16
 	Fill_Block(0x00, 0x0F, 0x00, MAX_ROWS, 0xFF, 0xFF);
@@ -654,7 +654,7 @@ void Rainbow()
 //    e: Start X Address
 //    f: Start Y Address
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Show_Font57(unsigned char a, unsigned char b, unsigned char c,
+static void Show_Font57(unsigned char a, unsigned char b, unsigned char c,
 					unsigned char d, unsigned char e, unsigned char f)
 {
 	unsigned char *Src_Pointer;
@@ -702,7 +702,7 @@ void Show_Font57(unsigned char a, unsigned char b, unsigned char c,
 //    e: Start Y Address
 //    * Must write "0" in the end...
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Show_String(unsigned char a, unsigned char *Data_Pointer, unsigned char b,
+static void Show_String(unsigned char a, unsigned char *Data_Pointer, unsigned char b,
 					unsigned char c, unsigned char d, unsigned char e)
 {
 	unsigned char *Src_Pointer;
@@ -728,7 +728,7 @@ void Show_String(unsigned char a, unsigned char *Data_Pointer, unsigned char b,
 //    c: Row Address of Start
 //    d: Row Address of End
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Show_256_Pattern(unsigned char *Data_Pointer, unsigned char a,
+static void Show_256_Pattern(unsigned char *Data_Pointer, unsigned char a,
 							unsigned char b, unsigned char c, unsigned char d)
 {
 	unsigned char *Src_Pointer;
@@ -748,7 +748,7 @@ void Show_256_Pattern(unsigned char *Data_Pointer, unsigned char a,
 }
 
 
-void Show_64k_Pattern(unsigned char *Data_Pointer, unsigned char a,
+static void Show_64k_Pattern(unsigned char *Data_Pointer, unsigned char a,
 						unsigned char b, unsigned char c, unsigned char d)
 {
 	unsigned char *Src_Pointer;
@@ -770,7 +770,7 @@ void Show_64k_Pattern(unsigned char *Data_Pointer, unsigned char a,
 }
 
 
-void Show_256k_Pattern(unsigned char *Data_Pointer, unsigned char a,
+static void Show_256k_Pattern(unsigned char *Data_Pointer, unsigned char a,
 						unsigned char b, unsigned char c, unsigned char d)
 {
 	unsigned char *Src_Pointer;
@@ -803,7 +803,7 @@ void Show_256k_Pattern(unsigned char *Data_Pointer, unsigned char a,
 //    b: Set Numbers of Row Scroll per Step
 //    c: Set Time Interval between Each Scroll Step
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Vertical_Scroll(unsigned char a, unsigned char b, unsigned char c)
+static void Vertical_Scroll(unsigned char a, unsigned char b, unsigned char c)
 {
 	unsigned int i, j;
 
@@ -839,7 +839,7 @@ void Vertical_Scroll(unsigned char a, unsigned char b, unsigned char c)
 //    e: Set Time Interval between Each Scroll Step in Terms of Frame Frequency
 //    f: Delay Time
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Horizontal_Scroll(unsigned char a, unsigned char b, unsigned char c,
+static void Horizontal_Scroll(unsigned char a, unsigned char b, unsigned char c,
 						unsigned char d, unsigned char e, unsigned char f)
 {
 	write_command(0x96);                    // Horizontal Scroll Setup
@@ -856,7 +856,7 @@ void Horizontal_Scroll(unsigned char a, unsigned char b, unsigned char c,
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //  Deactivate Scrolling (Full Screen)
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Deactivate_Scroll()
+static void Deactivate_Scroll()
 {
 	write_command(0x9E);                    // Deactivate Scrolling
 }
@@ -865,7 +865,7 @@ void Deactivate_Scroll()
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //  Fade In (Full Screen)
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Fade_In()
+static void Fade_In()
 {
 	unsigned int i;
 
@@ -880,7 +880,7 @@ void Fade_In()
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //  Fade Out (Full Screen)
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Fade_Out()
+static void Fade_Out()
 {
 	unsigned int i;
 
@@ -898,7 +898,7 @@ void Fade_Out()
 //    "0x00" Enter Sleep Mode
 //    "0x01" Exit Sleep Mode
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Sleep(unsigned char a)
+static void Sleep(unsigned char a)
 {
 	switch (a) {
 	case 0:
@@ -915,7 +915,7 @@ void Sleep(unsigned char a)
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //  Gray Scale Table Setting (Full Screen)
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-void Set_Gray_Scale_Table()
+static void Set_Gray_Scale_Table()
 {
 	write_command(0xB8);
 	write_data(0x02);                       // Gray Scale Level 1
@@ -984,12 +984,12 @@ void Set_Gray_Scale_Table()
 }
 
 
-void Set_Linear_Gray_Scale_Table()
+static void Set_Linear_Gray_Scale_Table()
 {
 	write_command(0xB9);                    // Default
 }
 
-void OLED_Init()
+static void OLED_Init()
 {
 	// reset display
 	HAL_GPIO_WritePin(DISPL_PORT, DISPL_RES, GPIO_PIN_RESET);
@@ -1070,4 +1070,12 @@ void disp_on(void) {
 
 void disp_off(void) {
 	Set_Display_On_Off(0x00);
+}
+
+void disp_rainbow( void ) {
+    Rainbow();
+}
+
+void disp_checkerboard( void ) {
+    Checkerboard();
 }
